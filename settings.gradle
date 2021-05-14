@@ -1,2 +1,3 @@
+include ':kyc_Camera'
 include ':app'
 rootProject.name = "UserIdentify"
