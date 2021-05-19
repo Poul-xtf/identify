@@ -1,19 +1,24 @@
 package com.wotransfer.identify
 
 import android.app.Activity
-import android.hardware.Camera
+import android.media.Image
+import android.media.ImageReader
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
+import com.example.kyc_camera.impl.BaseManager
 import com.example.kyc_camera.impl.CameraPreviewManager
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.ByteBuffer
 
 
-class MainActivity : Activity(), Camera.PictureCallback {
-    var path = Environment.getExternalStorageDirectory().absolutePath
+@RequiresApi(Build.VERSION_CODES.KITKAT)
+class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -21,23 +26,16 @@ class MainActivity : Activity(), Camera.PictureCallback {
 
     fun startPhoto(view: View) {
         CameraPreviewManager.getInstance()
+                ?.startReferenceFace(true)
+                ?.startReferenceCard(false)
                 ?.setCameraPreview(camera_p)
-                ?.setPictureCallback(this)
+//                ?.setPictureCallback(this)
                 ?.startTakePhoto()
     }
 
-    override fun onPictureTaken(p0: ByteArray?, p1: Camera?) {
-        Log.d("MainActivity->", "$path")
-        val byte = p0
-        try {
-            val fileOutputStream = FileOutputStream(File("$path/1.png"))
-            fileOutputStream.write(byte, 0, byte?.size!!)
-            fileOutputStream.close()
-            println("Make Picture success,Please find image in$path ")
-        } catch (ex: Exception) {
-            println("Exception:$ex")
-            ex.printStackTrace()
-
+    fun getPhoto(view: View) {
+        CameraPreviewManager.getInstance()?.statusMap?.forEach { (t, u )->
+            Log.d("xtf->","$t---$u")
         }
     }
 }

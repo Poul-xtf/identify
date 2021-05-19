@@ -5,10 +5,17 @@
     android:orientation="vertical">
 
 
-    <com.example.kyc_camera.view.CameraPreview
+    <com.example.kyc_camera.view.Camera2Preview
         android:id="@+id/camera_p1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+<!--    <com.example.kyc_camera.view.Camera2FacePreview-->
+<!--        android:id="@+id/camera_face_p1"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="gone" />-->
+
 
     <ImageView
         android:id="@+id/iv_crop"

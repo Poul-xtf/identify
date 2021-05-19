@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.res.Configuration
 import android.hardware.Camera
 import android.hardware.Camera.AutoFocusCallback
-import android.hardware.Camera.PictureCallback
+import android.hardware.camera2.*
+import android.media.ImageReader
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
@@ -12,6 +13,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.RequiresApi
 import com.example.kyc_camera.view.util.openCamera
+
 
 open class CameraPreview : SurfaceView, SurfaceHolder.Callback {
 
@@ -21,6 +23,7 @@ open class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     private var camera: Camera? = null
     private var mExceptionCallback: ExceptionInterface? = null
     private val TAG = CameraPreview::class.java.name
+    private val mImageReader: ImageReader? = null
 
 
     interface ExceptionInterface {
@@ -30,23 +33,24 @@ open class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     init {
         init()
     }
+
     constructor(context: Context) : super(context) {
         mContext = context
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context,attrs) {
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         mContext = context
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs,defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         mContext = context
         init()
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr,defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
         mContext = context
         init()
     }
@@ -75,7 +79,7 @@ open class CameraPreview : SurfaceView, SurfaceHolder.Callback {
     override fun surfaceCreated(holder: SurfaceHolder) {
         mSurfaceHolder = holder
         if (mCameraId < 0) {
-            initCamera(Camera.CameraInfo.CAMERA_FACING_BACK)
+            initCamera(CameraCharacteristics.LENS_FACING_FRONT)
         } else {
             initCamera(mCameraId)
         }
@@ -162,6 +166,7 @@ open class CameraPreview : SurfaceView, SurfaceHolder.Callback {
         return bestSize!!
     }
 
+
     /**
      * 对焦，在CameraActivity中触摸对焦
      */
@@ -201,7 +206,7 @@ open class CameraPreview : SurfaceView, SurfaceHolder.Callback {
      *
      * @param pictureCallback 在pictureCallback处理拍照回调
      */
-    fun takePhoto(pictureCallback: PictureCallback?) {
+    fun takePhoto(pictureCallback: Camera.PictureCallback?) {
         if (camera != null) {
             camera!!.takePicture(null, null, pictureCallback)
         }
