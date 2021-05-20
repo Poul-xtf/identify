@@ -17,20 +17,6 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
-    signingConfigs {
-        debug {
-            storeFile file("signature/facesdk-library.keystore") // 需要修改成您的签名文件路径
-            storePassword 'android'        // 需要修改成您的签名文件密码
-            keyAlias 'androiddebugkey'     // 需要修改成您的签名文件别名
-            keyPassword 'android'          // 需要修改成您的签名文件别名密码
-        }
-        release {
-            storeFile file("signature/facesdk-library.keystore") // 需要修改成您的签名文件路径
-            storePassword 'android'        // 需要修改成您的签名文件密码
-            keyAlias 'androiddebugkey'     // 需要修改成您的签名文件别名
-            keyPassword 'android'          // 需要修改成您的签名文件别名密码
-        }
-    }
     buildTypes {
         debug {
             minifyEnabled false

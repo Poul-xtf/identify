@@ -1,13 +1,15 @@
 package com.example.kyc_camera.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.baidu.idl.face.platform.FaceEnvironment
 import com.baidu.idl.face.platform.FaceSDKManager
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.baidu.idl.face.platform.listener.IInitCallback
-import com.example.kyc_camera.Constants.Companion.KEY_QUALITY_LEVEL_SAVE
+import com.baidu.idl.face.platform.ui.FaceLivenessActivity
 import com.example.kyc_camera.Constants.Companion.QUALITY_NORMAL
 import com.example.kyc_camera.R
 import com.example.kyc_camera.faceutil.manager.QualityConfigManager
@@ -26,10 +28,19 @@ class KycCameraActivity : AppCompatActivity() {
     var isActionLive = true
     private var livenessList: List<LivenessTypeEnum> = ArrayList()
 
+    private var licenseId: String = ""
+    private var licenseFileName: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kyc_view)
+        getIntentData()
         init()
+    }
+
+    private fun getIntentData() {
+        licenseId = intent.getStringExtra("licenseId").toString()
+        licenseFileName = intent.getStringExtra("licenseFileName").toString()
     }
 
     private fun init() {
@@ -38,20 +49,19 @@ class KycCameraActivity : AppCompatActivity() {
             Toast.makeText(this, "初始化失败 = json配置文件解析出错", Toast.LENGTH_SHORT).show()
             return
         }
-        FaceSDKManager.getInstance().initialize(this, "WotransferIdentify-face-android",
-                "idl-license.face-android", object : IInitCallback {
+        FaceSDKManager.getInstance().initialize(this, licenseId, licenseFileName, object : IInitCallback {
             override fun initSuccess() {
                 runOnUiThread {
-//                    Log.e(FragmentActivity.TAG, "初始化成功")
-//                    showToast("初始化成功")
+                    Log.e("xtf->", "初始化成功")
+                    startActivity(Intent(this@KycCameraActivity, FaceLivenessActivity::class.java))
+                    finish()
 //                    mIsInitSuccess = true
                 }
             }
 
             override fun initFailure(errCode: Int, errMsg: String) {
                 runOnUiThread {
-//                    Log.e(FragmentActivity.TAG, "初始化失败 = $errCode $errMsg")
-//                    showToast("初始化失败 = $errCode, $errMsg")
+                    Log.e("xtf->", "初始化失败 = $errCode $errMsg")
 //                    mIsInitSuccess = false
                 }
             }

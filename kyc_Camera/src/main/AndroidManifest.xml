@@ -3,7 +3,7 @@
     package="com.example.kyc_camera">
 
     <application>
-
+        <activity android:name="com.baidu.idl.face.platform.ui.FaceLivenessActivity" />
         <receiver
             android:name="com.baidu.liantian.LiantianReceiver"
             android:exported="false">

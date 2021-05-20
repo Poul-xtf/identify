@@ -1,4 +1,4 @@
-package com.example.kyc_camera.impl
+package com.example.kyc_camera.manager
 
 
 open class BaseManager {

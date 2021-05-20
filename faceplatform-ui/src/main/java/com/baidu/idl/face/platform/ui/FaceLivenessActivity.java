@@ -45,6 +45,7 @@ import com.baidu.idl.face.platform.model.ImageInfo;
 import com.baidu.idl.face.platform.stat.Ast;
 import com.baidu.idl.face.platform.ui.utils.BrightnessUtils;
 import com.baidu.idl.face.platform.ui.utils.CameraUtils;
+import com.baidu.idl.face.platform.ui.utils.SecRequest;
 import com.baidu.idl.face.platform.ui.utils.VolumeUtils;
 import com.baidu.idl.face.platform.ui.widget.FaceDetectRoundView;
 import com.baidu.idl.face.platform.utils.APIUtils;
@@ -487,7 +488,8 @@ public class FaceLivenessActivity extends Activity implements
 
         if (status == FaceStatusNewEnum.OK) {
             mIsCompletion = true;
-            // saveAllImage(base64ImageCropMap, base64ImageSrcMap);
+//            SecRequest.sendMessage(this, "", 0);
+            saveAllImage(base64ImageCropMap, base64ImageSrcMap);
         }
         // 打点
         Ast.getInstance().faceHit("liveness");
@@ -649,7 +651,15 @@ public class FaceLivenessActivity extends Activity implements
                     return Float.valueOf(score2).compareTo(Float.valueOf(score1));
                 }
             });
-            setImageView1(list1);
+//            setImageView1(list1);
+
+            int secType = mFaceConfig.getSecType();
+            String base64;
+            if (secType == 0) {
+                base64 = list1.get(0).getValue().getBase64();
+            } else {
+                base64 = list1.get(0).getValue().getSecBase64();
+            }
         }
 
         if (imageSrcMap != null && imageSrcMap.size() > 0) {
@@ -667,7 +677,15 @@ public class FaceLivenessActivity extends Activity implements
                     return Float.valueOf(score2).compareTo(Float.valueOf(score1));
                 }
             });
-            setImageView2(list2);
+//            setImageView2(list2);
+            String bmpStr = list2.get(0).getValue().getBase64();
+            int secType = mFaceConfig.getSecType();
+            String base64;
+            if (secType == 0) {
+                base64 = bmpStr;
+            } else {
+                base64 = list2.get(0).getValue().getBase64();
+            }
         }
     }
 
