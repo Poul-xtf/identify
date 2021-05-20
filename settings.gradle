@@ -1,3 +1,6 @@
 include ':kyc_Camera'
 include ':app'
+include ':faceplatform-release'
+include ':faceplatform-ui'
+include ':app'
 rootProject.name = "UserIdentify"

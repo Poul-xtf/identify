@@ -17,7 +17,25 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("signature/facesdk-library.keystore") // 需要修改成您的签名文件路径
+            storePassword 'android'        // 需要修改成您的签名文件密码
+            keyAlias 'androiddebugkey'     // 需要修改成您的签名文件别名
+            keyPassword 'android'          // 需要修改成您的签名文件别名密码
+        }
+        release {
+            storeFile file("signature/facesdk-library.keystore") // 需要修改成您的签名文件路径
+            storePassword 'android'        // 需要修改成您的签名文件密码
+            keyAlias 'androiddebugkey'     // 需要修改成您的签名文件别名
+            keyPassword 'android'          // 需要修改成您的签名文件别名密码
+        }
+    }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -38,6 +56,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
+    implementation project(path: ':faceplatform-ui')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

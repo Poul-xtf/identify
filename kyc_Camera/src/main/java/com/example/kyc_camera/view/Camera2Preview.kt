@@ -9,6 +9,7 @@ import android.media.ImageReader
 import android.os.*
 import android.os.Looper.getMainLooper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.widget.Toast
@@ -84,7 +85,8 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         //to PREVIEW
         when (msg.what) {
             MSG_OPEN_CAMERA -> {
-                val cameraId = msg.obj as String
+                Log.d("xtf->", "${msg.obj}")
+                val cameraId = if (msg.obj != 0) msg.obj as String else "0"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     mCameraManager?.openCamera(cameraId, object : CameraDevice.StateCallback() {
                         override fun onOpened(camera: CameraDevice) {

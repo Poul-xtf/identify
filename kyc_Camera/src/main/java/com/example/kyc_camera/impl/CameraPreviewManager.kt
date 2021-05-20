@@ -1,6 +1,6 @@
 package com.example.kyc_camera.impl
 
-import android.media.ImageReader
+import com.example.kyc_camera.faceutil.observeUtil.StateObserver
 import com.example.kyc_camera.view.CameraPreviewImplView
 
 class CameraPreviewManager : BaseManager() {
@@ -34,6 +34,11 @@ class CameraPreviewManager : BaseManager() {
     fun setCameraPreview(cameraPreview: CameraPreviewImplView): CameraPreviewManager {
         this.cameraPreview = cameraPreview
 //        this.cameraPreview?.startPhoto()
+        return instance!!
+    }
+
+    fun addObserverFaceChange(stateObserver: StateObserver): CameraPreviewManager{
+        cameraPreview?.setObserver(stateObserver)
         return instance!!
     }
 

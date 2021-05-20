@@ -2,4 +2,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kyc_camera">
 
+    <application>
+
+        <receiver
+            android:name="com.baidu.liantian.LiantianReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.baidu.action.Liantian.VIEW" />
+
+                <category android:name="com.baidu.category.liantian" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
+        <service
+            android:name="com.baidu.liantian.LiantianService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.baidu.action.Liantian.VIEW" />
+
+                <category android:name="com.baidu.category.liantian" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+    </application>
 </manifest>
