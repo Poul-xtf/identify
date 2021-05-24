@@ -1,4 +1,4 @@
-include ':kyc_Camera'
+include ':identify'
 include ':app'
 include ':faceplatform-release'
 include ':faceplatform-ui'
