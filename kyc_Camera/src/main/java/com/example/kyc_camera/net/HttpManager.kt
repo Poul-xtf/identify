@@ -30,6 +30,4 @@ class HttpManager(httpClient: HttpClient, httpCallBackListener: HttpCallBackList
             throw NullPointerException("请求地址为空，请检查您的地址")
         }
     }
-
-
 }

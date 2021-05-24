@@ -1,16 +1,19 @@
 package com.example.kyc_camera.manager
 
+import com.example.kyc_camera.view.util.EnumType
+
 
 open class BaseManager {
-    var statusMap = HashMap<String, Boolean>()
+    companion object {
+        var statusMap = HashMap<EnumType, Boolean>()
+    }
+    init {
+        //默认只做证件认证
+        statusMap(EnumType.CARD, false)
+        statusMap(EnumType.FACE, false)
+    }
 }
 
-var baseManager: BaseManager? = null
-
 operator fun <K, V> HashMap<K, V>.invoke(k: K, v: V) {
-    baseManager?.run {
-        statusMap[k as String] = v as Boolean
-    } ?: kotlin.run {
-        baseManager = BaseManager()
-    }
+    BaseManager.statusMap[k as EnumType] = v as Boolean
 }

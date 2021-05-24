@@ -27,6 +27,7 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="10dp"
         android:onClick="getPhoto"
+        android:visibility="gone"
         android:text="获取信息" />
 
 </FrameLayout>

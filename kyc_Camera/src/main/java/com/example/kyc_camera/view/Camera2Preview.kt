@@ -55,10 +55,6 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         mExceptionCallback = callback
     }
 
-    init {
-        init()
-    }
-
     constructor(context: Context) : super(context) {
         mContext = context
         init()
@@ -136,6 +132,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
     }
 
     private fun init() {
+        Log.d("xtf->22","11")
         val surfaceHolder = holder
         surfaceHolder.addCallback(this)
         surfaceHolder.setKeepScreenOn(true)
@@ -284,7 +281,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
     }
 
     override fun onSuccess(temp: String) {
-        referenceTypeListener?.onSuccess()
+        referenceTypeListener?.onSuccess(temp)
     }
 
     override fun onFiled() {

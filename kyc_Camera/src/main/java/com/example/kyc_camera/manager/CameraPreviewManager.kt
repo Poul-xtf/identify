@@ -1,6 +1,6 @@
 package com.example.kyc_camera.manager
 
-import com.example.kyc_camera.faceutil.observeInterface.StateObserver
+import com.example.kyc_camera.observeInterface.StateObserver
 import com.example.kyc_camera.view.CameraPreviewImplView
 import com.example.kyc_camera.view.util.EnumType
 
@@ -21,14 +21,15 @@ class CameraPreviewManager : BaseManager() {
     }
 
     //人脸认证
+
     fun startReferenceFace(faceStatus: Boolean): CameraPreviewManager? {
-        super.statusMap(EnumType.FACE.toString(),faceStatus)
+        statusMap(EnumType.FACE, faceStatus)
         return instance
     }
 
     //证件认证
     fun startReferenceCard(cardStatus: Boolean): CameraPreviewManager? {
-        super.statusMap(EnumType.FACE.toString(),cardStatus)
+        statusMap(EnumType.CARD, cardStatus)
         return instance
     }
 
@@ -37,7 +38,7 @@ class CameraPreviewManager : BaseManager() {
         return instance
     }
 
-    fun addObserverFaceChange(stateObserver: StateObserver): CameraPreviewManager?{
+    fun addObserverFaceOrCardChange(stateObserver: StateObserver): CameraPreviewManager? {
         cameraPreview?.setObserver(stateObserver)
         return instance
     }

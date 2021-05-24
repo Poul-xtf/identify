@@ -1,5 +1,5 @@
 package com.example.kyc_camera.view
 
 interface ReferenceTypeListener {
-    fun onSuccess()
+    fun onSuccess(temp:String)
 }

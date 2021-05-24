@@ -6,6 +6,7 @@ package com.baidu.idl.face.platform.ui;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
@@ -474,6 +475,7 @@ public class FaceLivenessActivity extends Activity implements
 
     @Override
     public void onError(int error, Camera camera) {
+        Log.d("xtf-->error", error + "");
     }
 
     @Override
@@ -483,13 +485,18 @@ public class FaceLivenessActivity extends Activity implements
         if (mIsCompletion) {
             return;
         }
-
         onRefreshView(status, message, currentLivenessCount);
 
         if (status == FaceStatusNewEnum.OK) {
+            //识别成功
             mIsCompletion = true;
 //            SecRequest.sendMessage(this, "", 0);
             saveAllImage(base64ImageCropMap, base64ImageSrcMap);
+            //todo 返回人脸图片给业务
+            Intent intent = new Intent();
+//            intent.putExtra()
+            setResult(1, intent);
+
         }
         // 打点
         Ast.getInstance().faceHit("liveness");

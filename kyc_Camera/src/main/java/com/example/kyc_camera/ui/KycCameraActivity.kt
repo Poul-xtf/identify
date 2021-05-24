@@ -53,7 +53,7 @@ class KycCameraActivity : AppCompatActivity() {
             override fun initSuccess() {
                 runOnUiThread {
                     Log.e("xtf->", "初始化成功")
-                    startActivity(Intent(this@KycCameraActivity, FaceLivenessActivity::class.java))
+                    startActivityForResult(Intent(this@KycCameraActivity, FaceLivenessActivity::class.java), 0)
                     finish()
 //                    mIsInitSuccess = true
                 }
@@ -66,6 +66,15 @@ class KycCameraActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (resultCode) {
+            1 -> {
+
+            }
+        }
     }
 
     /**
