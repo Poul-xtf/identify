@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="i_tip_camera">未申请相机权限</string>
+    <string name="i_tip_file">未申请文件权限</string>
+
+    <string name="i_face_error">初始化失败 = json配置文件解析出错</string>
+    <string name="i_preview_error">配置失败</string>
+
+
+</resources>

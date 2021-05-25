@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.wotransfer.identify">
+    package="com.wotransfer.identify.example">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -39,9 +39,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity android:name=".OcrReferenceActivity"/>
 
         <!--人脸识别配置-->
-        <activity android:name="com.example.kyc_camera.ui.KycCameraActivity" />
+        <activity android:name="com.wotransfer.identify.ui.KycCameraActivity" />
 
         <!--将com.baidu.idl.face.demo替换成您工程的包名-->
         <provider
