@@ -51,6 +51,7 @@ class KycCameraActivity : AppCompatActivity() {
             showToast(getString(R.string.i_face_error))
             return
         }
+
         FaceSDKManager.getInstance().initialize(this, licenseId, licenseFileName, object : IInitCallback {
             override fun initSuccess() {
                 runOnUiThread {

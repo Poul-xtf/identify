@@ -1,20 +1,22 @@
 package com.wotransfer.identify.example
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
-import com.wotransfer.identify.Constants
+import com.wotransfer.identify.manager.CameraLaunch
 
-import com.wotransfer.identify.ui.KycCameraActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 @RequiresApi(Build.VERSION_CODES.KITKAT)
 class MainActivity : Activity() {
     private val tag = MainActivity::class.java.simpleName
+
+
+    private var licenseId: String = "WotransferIdentify-face-android"
+    private var licenseFileName: String = "WotransferIdentify-face-android"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,30 +25,38 @@ class MainActivity : Activity() {
 
     /**
      * ocr拍照认证
+     *
+     * 参数可传可不传
      */
     fun startPhoto(view: View) {
-        val intent = Intent(this, OcrReferenceActivity::class.java)
-        intent.putExtra(Constants.FACE, false)
-        intent.putExtra(Constants.CARD, true)
-        startActivity(intent)
+        CameraLaunch<CameraLaunch.LaunchType>()
+            .startView(CameraLaunch.LaunchType.CAMERA_OCR)
     }
 
     /**
      * 人脸识别
+     *
+     * 必须要传licenseId，licenseFileName
      */
     fun startFace(view: View) {
-        val intent = Intent(this, KycCameraActivity::class.java)
-        intent.putExtra(Constants.LICENSE_ID, "WotransferIdentify-face-android")
-        intent.putExtra(Constants.LICENSE_FILE_NAME, "WotransferIdentify-face-android")
-        startActivity(intent)
-
+        CameraLaunch<CameraLaunch.LaunchType>()
+            .startView(CameraLaunch.LaunchType.CAMERA_FACE,
+                licenseId = licenseId,
+                licenseFileName = licenseFileName)
     }
 
+    /**
+     * ocr拍照认证+人脸识别
+     *
+     *
+     */
     fun startAll(view: View) {
-        val intent = Intent(this, OcrReferenceActivity::class.java)
-        intent.putExtra(Constants.FACE, et_face.text.toString().isEmpty())
-        intent.putExtra(Constants.CARD, et_ocr.text.toString().isEmpty())
-        startActivity(intent)
+        CameraLaunch<CameraLaunch.LaunchType>()
+            .startView(CameraLaunch.LaunchType.ALL,
+                et_face.text.toString().isEmpty(),
+                et_ocr.text.toString().isEmpty(),
+                licenseId,
+                licenseFileName)
     }
 
 }

@@ -1,7 +1,9 @@
 package com.wotransfer.identify.view
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.ImageFormat
 import android.hardware.camera2.*
 import android.media.Image
@@ -12,6 +14,7 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.wotransfer.identify.R
 import com.wotransfer.identify.net.HttpCallBackListener
 import com.wotransfer.identify.net.HttpClient
@@ -23,7 +26,8 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 
 
-open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callback, HttpCallBackListener {
+open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callback,
+    HttpCallBackListener {
 
     private var mContext: Context? = null
     private var mSurfaceHolder: SurfaceHolder? = null
@@ -51,6 +55,12 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         const val SIGNIN_PIC_HEIGHT = 720
     }
 
+    private var permissionList = arrayListOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
     interface ExceptionInterface {
         fun throwableCameraIsNull()
     }
@@ -69,13 +79,22 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         mContext = context
         init()
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    ) {
         mContext = context
         init()
     }
@@ -178,7 +197,32 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
             TODO("VERSION.SDK_INT < LOLLIPOP")
         }
         loadImageReader()
+        if (checkPermission()) {
+            return
+        }
         startOpenCamera(cameraId)
+    }
+
+    //检查权限
+    private fun checkPermission(): Boolean {
+        var content: String? = null
+        permissionList.forEachIndexed { index, permission ->
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                content = when (index) {
+                    0 -> {
+                        context.getString(R.string.i_tip_camera)
+                    }
+                    else -> context.getString(R.string.i_tip_file)
+                }
+                showToast(content!!)
+                return false
+            }
+        }
+        return true
     }
 
     /**
@@ -217,33 +261,45 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
      */
     private fun takePreview() {
         try {
-            val previewRequestBuilder: CaptureRequest.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW) as CaptureRequest.Builder
-            } else {
-                TODO("VERSION.SDK_INT < LOLLIPOP")
-            }
+            val previewRequestBuilder: CaptureRequest.Builder =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW) as CaptureRequest.Builder
+                } else {
+                    TODO("VERSION.SDK_INT < LOLLIPOP")
+                }
             previewRequestBuilder.addTarget(mSurfaceHolder!!.surface)
             // 创建CameraCaptureSession，该对象负责管理处理预览请求和拍照请求
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mCameraDevice?.createCaptureSession(listOf(mSurfaceHolder!!.surface, mImageReader!!.surface), object : CameraCaptureSession.StateCallback() {
-                    override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
-                        if (null == mCameraDevice) return
-                        camera = cameraCaptureSession
-                        try {
-                            previewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE)
-                            previewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH)
-                            // 显示预览
-                            val previewRequest = previewRequestBuilder.build()
-                            camera?.setRepeatingRequest(previewRequest, null, mainHandler)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                mCameraDevice?.createCaptureSession(
+                    listOf(
+                        mSurfaceHolder!!.surface,
+                        mImageReader!!.surface
+                    ), object : CameraCaptureSession.StateCallback() {
+                        override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
+                            if (null == mCameraDevice) return
+                            camera = cameraCaptureSession
+                            try {
+                                previewRequestBuilder.set(
+                                    CaptureRequest.CONTROL_AF_MODE,
+                                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+                                )
+                                previewRequestBuilder.set(
+                                    CaptureRequest.CONTROL_AE_MODE,
+                                    CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
+                                )
+                                // 显示预览
+                                val previewRequest = previewRequestBuilder.build()
+                                camera?.setRepeatingRequest(previewRequest, null, mainHandler)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
-                    }
 
-                    override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
-                        showToast(mContext?.getString(R.string.i_preview_error)!!)
-                    }
-                }, mainHandler)
+                        override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
+                            showToast(mContext?.getString(R.string.i_preview_error)!!)
+                        }
+                    }, mainHandler
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -262,10 +318,17 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         val captureRequestBuilder: CaptureRequest.Builder
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {
-                captureRequestBuilder = mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE) as CaptureRequest.Builder
+                captureRequestBuilder =
+                    mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE) as CaptureRequest.Builder
                 captureRequestBuilder.addTarget(mImageReader!!.surface)
-                captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE)
-                captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH)
+                captureRequestBuilder.set(
+                    CaptureRequest.CONTROL_AF_MODE,
+                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+                )
+                captureRequestBuilder.set(
+                    CaptureRequest.CONTROL_AE_MODE,
+                    CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
+                )
                 // 获取手机方向
 //                val rotation: Int = resources.configuration.orientation
                 // 根据设备方向计算设置照片的方向

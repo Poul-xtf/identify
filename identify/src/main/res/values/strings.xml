@@ -3,6 +3,11 @@
     <string name="i_tip_camera">未申请相机权限</string>
     <string name="i_tip_file">未申请文件权限</string>
 
+    <!--code=1  licenseId或者licenseName不正确-->
+    <!--code=2  licenseId或者licenseName缺少-->
+    <string name="i_tip_license_1">code=1</string>
+    <string name="i_tip_license_2">code=2</string>
+
     <string name="i_face_error">初始化失败 = json配置文件解析出错</string>
     <string name="i_preview_error">配置失败</string>
 

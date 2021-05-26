@@ -40,11 +40,6 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
     private var mCameraID = CameraCharacteristics.LENS_FACING_BACK
     private var resultUrl: String? = null
 
-    private var permissionList = arrayListOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_FINE_LOCATION)
-
     init {
         initView()
     }
@@ -61,6 +56,10 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
         val maxSize = screenMinSize / 9.0f * 16.0f
         mSurfaceViewWidth = screenMinSize.toInt()
         mSurfaceViewHeight = if (maxSize > screenHeight) screenHeight else maxSize.toInt()
+
+        val linearParams: LayoutParams = camera_p1.layoutParams as LayoutParams
+        linearParams.height = screenWidth / (9.0f * 16.0f).toInt()
+        camera_p1.layoutParams = linearParams
     }
 
     /**
@@ -169,9 +168,7 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
 
     //认证开始
     fun takePhoto(statusMap: HashMap<EnumType, Boolean>) {
-        if (!checkPermission()) {
-            return
-        }
+
         this.statusMap = statusMap
         if (statusMap[EnumType.CARD]!!) {//判断是否需要证件认证
             camera_p1?.startTakePicture(this)
@@ -206,23 +203,6 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
     }
 
 
-    //检查权限
-    private fun checkPermission(): Boolean {
-        var content: String? = null
-        permissionList.forEachIndexed { index, permission ->
-            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                content = when (index) {
-                    0 -> {
-                        context.getString(R.string.i_tip_camera)
-                    }
-                    else -> context.getString(R.string.i_tip_file)
-                }
-                showToast(content!!)
-                return false
-            }
-        }
-        return true
-    }
 
 //    //设置数据
 //    fun <T : Any?> setMsg(msg: T, type: EnumType, state: Boolean, content: String?) {
