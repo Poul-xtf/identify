@@ -2,6 +2,7 @@ package com.wotransfer.identify.manager
 
 import com.wotransfer.identify.observeInterface.StateObserver
 import com.wotransfer.identify.view.CameraPreviewImplView
+import com.wotransfer.identify.view.util.EnumStatus
 import com.wotransfer.identify.view.util.EnumType
 
 class CameraPreviewManager : BaseManager() {
@@ -37,7 +38,12 @@ class CameraPreviewManager : BaseManager() {
     }
 
     fun addObserverFaceOrCardChange(stateObserver: StateObserver): CameraPreviewManager? {
-        cameraPreview?.setObserver(stateObserver)
+        cameraPreview?.setObserver(EnumStatus.CAMERA_TYPE,stateObserver)
+        return instance
+    }
+
+    fun addObserverCameraChange(stateObserver: StateObserver): CameraPreviewManager? {
+        cameraPreview?.setObserver(EnumStatus.CAMERA_REPEAT,stateObserver)
         return instance
     }
 

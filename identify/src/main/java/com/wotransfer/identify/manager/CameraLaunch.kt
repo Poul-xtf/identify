@@ -10,7 +10,7 @@ import com.wotransfer.identify.ui.OcrReferenceActivity
 import com.wotransfer.identify.util.showToast
 import java.lang.NullPointerException
 
-class CameraLaunch<T> {
+class CameraLaunch {
 
     companion object {
         @SuppressLint("StaticFieldLeak")
@@ -20,7 +20,7 @@ class CameraLaunch<T> {
         }
     }
 
-    fun startView(
+    fun <T> startView(
         t: T, /*vararg params: Any*/
         face: Boolean? = null,
         card: Boolean? = null,
@@ -35,23 +35,26 @@ class CameraLaunch<T> {
                     intent.putExtra(Constants.CARD, card)
                     intent.putExtra(Constants.LICENSE_ID, licenseId)
                     intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
-                    context?.startActivity(intent)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    it.startActivity(intent)
                 }
                 LaunchType.CAMERA_FACE -> {
                     if (licenseId == "" || licenseFileName == "") {
-                        showToast(it.getString(R.string.i_tip_license_1))
+                        it.showToast(it.getString(R.string.i_tip_license_1))
                         return
                     }
                     val intent = Intent(it, KycCameraActivity::class.java)
                     intent.putExtra(Constants.LICENSE_ID, licenseId)
                     intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
-                    context?.startActivity(intent)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    it.startActivity(intent)
                 }
                 else -> {
-                    val intent = Intent(context, OcrReferenceActivity::class.java)
+                    val intent = Intent(it, OcrReferenceActivity::class.java)
                     intent.putExtra(Constants.FACE, face)
                     intent.putExtra(Constants.CARD, card)
-                    context?.startActivity(intent)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    it.startActivity(intent)
                 }
             }
         } ?: let {

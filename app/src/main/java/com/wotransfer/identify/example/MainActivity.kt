@@ -29,8 +29,7 @@ class MainActivity : Activity() {
      * 参数可传可不传
      */
     fun startPhoto(view: View) {
-        CameraLaunch<CameraLaunch.LaunchType>()
-            .startView(CameraLaunch.LaunchType.CAMERA_OCR)
+        CameraLaunch().startView(CameraLaunch.LaunchType.CAMERA_OCR)
     }
 
     /**
@@ -39,10 +38,9 @@ class MainActivity : Activity() {
      * 必须要传licenseId，licenseFileName
      */
     fun startFace(view: View) {
-        CameraLaunch<CameraLaunch.LaunchType>()
-            .startView(CameraLaunch.LaunchType.CAMERA_FACE,
-                licenseId = licenseId,
-                licenseFileName = licenseFileName)
+        CameraLaunch().startView(CameraLaunch.LaunchType.CAMERA_FACE,
+            licenseId = licenseId,
+            licenseFileName = licenseFileName)
     }
 
     /**
@@ -51,12 +49,11 @@ class MainActivity : Activity() {
      *
      */
     fun startAll(view: View) {
-        CameraLaunch<CameraLaunch.LaunchType>()
-            .startView(CameraLaunch.LaunchType.ALL,
-                et_face.text.toString().isEmpty(),
-                et_ocr.text.toString().isEmpty(),
-                licenseId,
-                licenseFileName)
+        CameraLaunch().startView(CameraLaunch.LaunchType.ALL,
+            et_face.text.toString().isEmpty(),
+            et_ocr.text.toString().isEmpty(),
+            licenseId,
+            licenseFileName)
     }
 
 }

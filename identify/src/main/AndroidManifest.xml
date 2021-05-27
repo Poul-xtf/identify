@@ -31,5 +31,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
+
+        <!--将com.baidu.idl.face.demo替换成您工程的包名-->
+        <provider
+            android:name="com.baidu.liantian.LiantianProvider"
+            android:authorities="com.wotransfer.identify.liantian.ac.provider"
+            android:exported="true" />
     </application>
 </manifest>

@@ -11,6 +11,8 @@ import android.media.ImageReader
 import android.os.*
 import android.os.Looper.getMainLooper
 import android.util.AttributeSet
+import android.util.Log
+import android.util.Size
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.RequiresApi
@@ -20,12 +22,14 @@ import com.wotransfer.identify.net.HttpCallBackListener
 import com.wotransfer.identify.net.HttpClient
 import com.wotransfer.identify.net.HttpManager
 import com.wotransfer.identify.net.getUrl
+import com.wotransfer.identify.util.CameraUtil
 import com.wotransfer.identify.util.showToast
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callback,
     HttpCallBackListener {
 
@@ -53,6 +57,8 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         private const val MSG_LOAD_IMG: Int = 5
         const val SIGNIN_PIC_WIDTH = 1280
         const val SIGNIN_PIC_HEIGHT = 720
+        var cameraOutPutSizes: List<Size>? = null
+
     }
 
     private var permissionList = arrayListOf(
@@ -60,6 +66,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
+
 
     interface ExceptionInterface {
         fun throwableCameraIsNull()
@@ -88,7 +95,6 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         init()
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
         attrs,
@@ -105,49 +111,50 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         when (msg.what) {
             MSG_OPEN_CAMERA -> {
                 val cameraId = if (msg.obj != 0) msg.obj as String else "0"
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mCameraManager?.openCamera(cameraId, object : CameraDevice.StateCallback() {
-                        override fun onOpened(camera: CameraDevice) {
-                            mCameraDevice = camera
-                            startTakePreView()
-                        }
+                mCameraManager?.openCamera(cameraId, object : CameraDevice.StateCallback() {
+                    override fun onOpened(camera: CameraDevice) {
+                        mCameraDevice = camera
+                        startTakePreView()
+                    }
 
-                        override fun onDisconnected(camera: CameraDevice) {
-                        }
+                    override fun onDisconnected(camera: CameraDevice) {
+                    }
 
-                        override fun onError(camera: CameraDevice, error: Int) {
-                        }
+                    override fun onError(camera: CameraDevice, error: Int) {
+                    }
 
-                    }, mainHandler)
-                }
+                }, mainHandler)
             }
             MSG_START_PREVIEW -> takePreview()
             MSG_START_PICTURE -> takePicture()
             MSG_LOAD_IMG -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mImageReader = ImageReader.newInstance(1080, 1920, ImageFormat.JPEG, 1)
-                    mImageReader?.setOnImageAvailableListener({ reader ->
-                        mCameraDevice!!.close()
-                        val image: Image = reader.acquireNextImage()
-                        val buffer: ByteBuffer = image.planes[0].buffer
-                        val bytes = ByteArray(buffer.remaining())
-                        buffer.get(bytes)
-                        try {
-                            resultUrl = "$path/pic.png"
-                            val fileOutputStream = FileOutputStream(File(resultUrl))
-                            fileOutputStream.write(bytes, 0, bytes.size)
-                            fileOutputStream.close()
-                            println("success,Please find image in$path ")
-                            referenceTypeListener?.onTakeSuccess(resultUrl!!)
-//                            takePhotoBase(path)
-//                            uploadCard()
-                        } catch (ex: Exception) {
-                            println("Exception:$ex")
-                            ex.printStackTrace()
+                mImageReader = ImageReader.newInstance(cameraOutPutSizes!![5].width,
+                    cameraOutPutSizes!![5].height,
+                    ImageFormat.JPEG,
+                    1)
+                mImageReader?.setOnImageAvailableListener({ reader ->
+                    mCameraDevice!!.close()
+                    val image: Image = reader.acquireNextImage()
+                    val buffer: ByteBuffer = image.planes[0].buffer
 
-                        }
-                    }, mainHandler)
-                }
+                    Log.d("Camera2Debug", "Y-channel bytes received: " + buffer.remaining())
+
+                    val bytes = ByteArray(buffer.remaining())
+                    buffer.get(bytes)
+                    try {
+                        resultUrl = "$path/pic.png"
+                        val fileOutputStream = FileOutputStream(File(resultUrl))
+                        fileOutputStream.write(bytes, 0, bytes.size)
+                        fileOutputStream.close()
+                        println("success,Please find image in$path ")
+                        referenceTypeListener?.onTakeSuccess(resultUrl!!)
+//                            uploadCard()
+                    } catch (ex: Exception) {
+                        println("Exception:$ex")
+                        ex.printStackTrace()
+
+                    }
+                }, mainHandler)
             }
             MSG_UPLOAD_CARD -> {//上传图片
                 HttpManager.getInstance(HttpClient(), this)?.startRequest(getUrl())
@@ -161,6 +168,9 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         val surfaceHolder = holder
         surfaceHolder.addCallback(this)
         surfaceHolder.setKeepScreenOn(true)
+
+        CameraUtil.init(context)
+        cameraOutPutSizes = CameraUtil.getInstance().getCameraOutPutSizes()
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
@@ -174,10 +184,11 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         mSurfaceHolder = holder
+        mSurfaceHolder!!.setFixedSize(cameraOutPutSizes!![5].width,
+            cameraOutPutSizes!![5].height)
+
         if (mCameraId < 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                initCamera(CameraCharacteristics.LENS_FACING_FRONT)
-            }
+            initCamera(CameraCharacteristics.LENS_FACING_FRONT)
         } else {
             initCamera(mCameraId)
         }
@@ -190,14 +201,11 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         handlerThread.start()
         childHandler = Handler(handlerThread.looper, this)
 
-        mCameraManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        mCameraManager =
             mContext?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
-        } else {
-            TODO("VERSION.SDK_INT < LOLLIPOP")
-        }
         loadImageReader()
-        if (checkPermission()) {
+        if (!checkPermission()) {
             return
         }
         startOpenCamera(cameraId)
@@ -218,7 +226,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
                     }
                     else -> context.getString(R.string.i_tip_file)
                 }
-                showToast(content!!)
+                context.showToast(content!!)
                 return false
             }
         }
@@ -262,45 +270,40 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
     private fun takePreview() {
         try {
             val previewRequestBuilder: CaptureRequest.Builder =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW) as CaptureRequest.Builder
-                } else {
-                    TODO("VERSION.SDK_INT < LOLLIPOP")
-                }
+                mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW) as CaptureRequest.Builder
+
             previewRequestBuilder.addTarget(mSurfaceHolder!!.surface)
             // 创建CameraCaptureSession，该对象负责管理处理预览请求和拍照请求
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mCameraDevice?.createCaptureSession(
-                    listOf(
-                        mSurfaceHolder!!.surface,
-                        mImageReader!!.surface
-                    ), object : CameraCaptureSession.StateCallback() {
-                        override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
-                            if (null == mCameraDevice) return
-                            camera = cameraCaptureSession
-                            try {
-                                previewRequestBuilder.set(
-                                    CaptureRequest.CONTROL_AF_MODE,
-                                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
-                                )
-                                previewRequestBuilder.set(
-                                    CaptureRequest.CONTROL_AE_MODE,
-                                    CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
-                                )
-                                // 显示预览
-                                val previewRequest = previewRequestBuilder.build()
-                                camera?.setRepeatingRequest(previewRequest, null, mainHandler)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+            mCameraDevice?.createCaptureSession(
+                listOf(
+                    mSurfaceHolder!!.surface,
+                    mImageReader!!.surface
+                ), object : CameraCaptureSession.StateCallback() {
+                    override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
+                        if (null == mCameraDevice) return
+                        camera = cameraCaptureSession
+                        try {
+                            previewRequestBuilder.set(
+                                CaptureRequest.CONTROL_AF_MODE,
+                                CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+                            )
+                            previewRequestBuilder.set(
+                                CaptureRequest.CONTROL_AE_MODE,
+                                CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
+                            )
+                            // 显示预览
+                            val previewRequest = previewRequestBuilder.build()
+                            camera?.setRepeatingRequest(previewRequest, null, mainHandler)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
+                    }
 
-                        override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
-                            showToast(mContext?.getString(R.string.i_preview_error)!!)
-                        }
-                    }, mainHandler
-                )
-            }
+                    override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
+                        context.showToast(mContext?.getString(R.string.i_preview_error)!!)
+                    }
+                }, mainHandler
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -316,28 +319,26 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
     private fun takePicture() {
         if (mCameraDevice == null) return
         val captureRequestBuilder: CaptureRequest.Builder
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            try {
-                captureRequestBuilder =
-                    mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE) as CaptureRequest.Builder
-                captureRequestBuilder.addTarget(mImageReader!!.surface)
-                captureRequestBuilder.set(
-                    CaptureRequest.CONTROL_AF_MODE,
-                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
-                )
-                captureRequestBuilder.set(
-                    CaptureRequest.CONTROL_AE_MODE,
-                    CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
-                )
-                // 获取手机方向
+        try {
+            captureRequestBuilder =
+                mCameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE) as CaptureRequest.Builder
+            captureRequestBuilder.addTarget(mImageReader!!.surface)
+            captureRequestBuilder.set(
+                CaptureRequest.CONTROL_AF_MODE,
+                CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+            )
+            captureRequestBuilder.set(
+                CaptureRequest.CONTROL_AE_MODE,
+                CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
+            )
+            // 获取手机方向
 //                val rotation: Int = resources.configuration.orientation
-                // 根据设备方向计算设置照片的方向
-                captureRequestBuilder[CaptureRequest.JPEG_ORIENTATION] = 90
-                val mCaptureRequest = captureRequestBuilder.build()
-                camera?.capture(mCaptureRequest, null, mainHandler)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            // 根据设备方向计算设置照片的方向
+            captureRequestBuilder[CaptureRequest.JPEG_ORIENTATION] = 90
+            val mCaptureRequest = captureRequestBuilder.build()
+            camera?.capture(mCaptureRequest, null, mainHandler)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -345,11 +346,10 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
     private fun release() {
         // 释放Camera资源
         mCameraDevice?.run {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                close()
-            }
+            close()
             null
         }
+        mSurfaceHolder = null
     }
 
     override fun onSuccess(temp: String) {

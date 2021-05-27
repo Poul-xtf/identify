@@ -48,7 +48,7 @@ class KycCameraActivity : AppCompatActivity() {
     private fun init() {
         val success = setFaceConfig()
         if (!success) {
-            showToast(getString(R.string.i_face_error))
+            this.showToast(getString(R.string.i_face_error))
             return
         }
 

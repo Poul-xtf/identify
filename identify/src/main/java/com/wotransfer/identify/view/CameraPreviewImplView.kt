@@ -1,22 +1,22 @@
 package com.wotransfer.identify.view
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.hardware.camera2.CameraCharacteristics
+import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
+import androidx.annotation.RequiresApi
 import com.wotransfer.identify.Constants.Companion.KYC_TAG
 import com.wotransfer.identify.R
 import com.wotransfer.identify.observeInterface.StateObserver
 import com.wotransfer.identify.util.*
+import com.wotransfer.identify.view.util.EnumStatus
 import com.wotransfer.identify.view.util.EnumType
 import kotlinx.android.synthetic.main.camera_impl_view.view.*
 import java.io.BufferedOutputStream
@@ -27,11 +27,12 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), ReferenceTypeListener {
+class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs),
+    ReferenceTypeListener {
 
     private var statusMap = HashMap<EnumType, Boolean>()
 
-    private var observerList = arrayListOf<StateObserver>()
+    private var observerList = HashMap<EnumStatus, StateObserver>()
 
     private var ocrData: String? = null
 
@@ -40,6 +41,11 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
     private var mCameraID = CameraCharacteristics.LENS_FACING_BACK
     private var resultUrl: String? = null
 
+    fun updateView(){
+        camera_p1.visibility = View.VISIBLE
+        iv_crop.visibility = View.VISIBLE
+        camera_crop.setImageBitmap(null)
+    }
     init {
         initView()
     }
@@ -58,17 +64,19 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
         mSurfaceViewHeight = if (maxSize > screenHeight) screenHeight else maxSize.toInt()
 
         val linearParams: LayoutParams = camera_p1.layoutParams as LayoutParams
-        linearParams.height = screenWidth / (9.0f * 16.0f).toInt()
+        linearParams.height = (screenMinSize / 9.0f * 16.0f).toInt()
+        linearParams.width = screenMinSize.toInt()
         camera_p1.layoutParams = linearParams
     }
 
     /**
      * 拍照成功-开始剪裁
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onTakeSuccess(imgPath: String) {
         resultUrl = imgPath
         try {
-            if (imgPath == null || imgPath.isEmpty() || !isFileExist(imgPath)) {
+            if (imgPath.isEmpty() || !isFileExist(imgPath)) {
                 return
             }
             val degree: Int = readPictureDegree(imgPath)
@@ -79,9 +87,11 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
             val picHeight = min(options.outWidth, options.outHeight)
             //计算裁剪位置
             val left: Float = camera_crop.left.toFloat() / mSurfaceViewWidth.toFloat()
-            val top: Float = (camera_crop_container.top.toFloat() - camera_p1.top.toFloat()) / mSurfaceViewHeight.toFloat()
+            val top: Float =
+                (camera_crop_container.top.toFloat() - camera_p1.top.toFloat()) / mSurfaceViewHeight.toFloat()
             val right: Float = camera_crop.right.toFloat() / mSurfaceViewWidth.toFloat()
-            val bottom: Float = (camera_crop_container.bottom.toFloat()) / mSurfaceViewHeight.toFloat()
+            val bottom: Float =
+                (camera_crop_container.bottom.toFloat()) / mSurfaceViewHeight.toFloat()
             var scaleX = 1
             if (Camera2Preview.SIGNIN_PIC_WIDTH in 1 until picWidth) {
                 scaleX = picWidth / Camera2Preview.SIGNIN_PIC_WIDTH
@@ -94,7 +104,8 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
             if (inSampleSize == 1) {
                 options.inSampleSize = inSampleSize
             } else {
-                options.inSampleSize = 2.0.pow((Integer.toBinaryString(inSampleSize).length - 1).toDouble()).toInt()
+                options.inSampleSize =
+                    2.0.pow((Integer.toBinaryString(inSampleSize).length - 1).toDouble()).toInt()
                 options.inPreferredConfig = Bitmap.Config.RGB_565
             }
             val x = (left * picHeight).toInt() / options.inSampleSize
@@ -104,10 +115,6 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
 
             //设置做真实解码
             options.inJustDecodeBounds = false
-
-            //设置，解码不占用系统核心内存，随时可以释放
-//            options.inInputShareable = true
-//            options.inPurgeable = true
             var cropBitmap = BitmapFactory.decodeFile(imgPath, options)
             val matrix = Matrix()
             if (mCameraID == CameraCharacteristics.LENS_FACING_FRONT) {
@@ -116,16 +123,22 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
             } else {
                 matrix.postRotate(degree.toFloat()) // 图片旋转90度；camera生成的图片和预览方向都是以手机屏幕右上角为原点向下为X轴正方向，向左为Y轴正方向的坐标系，所以预览方向和生成图片后都需要旋转90度
             }
-            cropBitmap = Bitmap.createBitmap(cropBitmap, 0, 0, cropBitmap.width, cropBitmap.height, matrix, true)
+            cropBitmap = Bitmap.createBitmap(cropBitmap,
+                0,
+                0,
+                cropBitmap.width,
+                cropBitmap.height,
+                matrix,
+                true)
             if (x + width <= cropBitmap.width) {
                 //裁剪及保存到文件
                 cropBitmap = Bitmap.createBitmap(cropBitmap,
-                        x,
-                        y,
-                        width,
-                        height)
+                    x,
+                    y,
+                    width,
+                    height)
             }
-            val cropFile: File = getCropFile()!!
+            val cropFile: File = getCropFile()
             val bos = BufferedOutputStream(FileOutputStream(cropFile))
             cropBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
             bos.flush()
@@ -140,17 +153,17 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
             val bitmap = BitmapFactory.decodeFile(resultUrl)
             camera_crop.setImageBitmap(bitmap)
             camera_p1.uploadCard(resultUrl)
+            observerList[EnumStatus.CAMERA_REPEAT]!!.stateChange(EnumType.CARD, true, "")
             return
         } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
-
     /**
      * @return 拍摄图片裁剪文件
      */
-    private fun getCropFile(): File? {
+    private fun getCropFile(): File {
         return if (TextUtils.isEmpty(resultUrl) || TextUtils.isEmpty(resultUrl?.trim { it <= ' ' })) {
             if (isExternalStorageExist()) {
                 File(context.getExternalFilesDir(""), "pictureCrop.png")
@@ -162,8 +175,8 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
         }
     }
 
-    fun setObserver(stateObserver: StateObserver) {
-        observerList.add(stateObserver)
+    fun setObserver(type: EnumStatus, stateObserver: StateObserver) {
+        observerList[type] = stateObserver
     }
 
     //认证开始
@@ -171,7 +184,9 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
 
         this.statusMap = statusMap
         if (statusMap[EnumType.CARD]!!) {//判断是否需要证件认证
-            camera_p1?.startTakePicture(this)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                camera_p1?.startTakePicture(this)
+            }
             return
         }
         if (statusMap[EnumType.FACE]!!) {//判断是否需要人脸识别
@@ -187,7 +202,7 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
             startFaceReference()
         } else {
             //反馈给业务
-            observerList[0].stateChange(EnumType.CARD, true, temp)
+            observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD, true, ocrData)
         }
     }
 
@@ -199,11 +214,10 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
             throw IllegalStateException("Observer is not registered")
             return
         }
-        observerList[0].stateChange(EnumType.FACE, true, ocrData)
+        observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.FACE, true, ocrData)
     }
 
-
-
+//
 //    //设置数据
 //    fun <T : Any?> setMsg(msg: T, type: EnumType, state: Boolean, content: String?) {
 //        this.notify(msg, type, state, content)
@@ -211,9 +225,10 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
 //
 //    //更新数据
 //    private fun <T : Any?> notify(msg: T, type: EnumType, state: Boolean, content: String?) {
-//        for (iOb in this.observerList) {
-//            iOb.update(msg, type, state, content)
-//        }
+////        for (iOb in this.observerList) {
+////            iOb.update(msg, type, state, content)
+////        }
+//        observerList[msg as EnumStatus]!!.update(msg, type, state, content)
 //    }
 
 }
