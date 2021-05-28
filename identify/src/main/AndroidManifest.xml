@@ -3,7 +3,7 @@
     package="com.wotransfer.identify">
 
     <application>
-        <activity android:name=".ui.OcrReferenceActivity"/>
+        <activity android:name="com.wotransfer.identify_ui.reference.OcrReferenceActivity"/>
         <activity android:name=".ui.KycCameraActivity"/>
         <activity android:name="com.baidu.idl.face.platform.ui.FaceLivenessActivity" />
         <receiver

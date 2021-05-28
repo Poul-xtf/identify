@@ -2,13 +2,11 @@ package com.wotransfer.identify.util
 
 import android.content.Context
 import android.graphics.ImageFormat
-import android.graphics.SurfaceTexture
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.util.Size
 import androidx.annotation.RequiresApi
-import com.wotransfer.identify.view.Camera2Preview
 
 
 class CameraUtil {
@@ -36,7 +34,7 @@ class CameraUtil {
 
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun getCameraOutPutSizes(): List<Size> {
+    fun getCameraOutPutSizes(minWidth: Int, minHeight: Int): List<Size> {
         val cameraCharacteristics =
             cameraManager?.getCameraCharacteristics(CameraCharacteristics.LENS_FACING_BACK.toString())
         val get = cameraCharacteristics?.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)

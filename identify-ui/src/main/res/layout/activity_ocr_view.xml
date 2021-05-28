@@ -12,16 +12,33 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_500"
         android:layout_gravity="bottom|center"
-        android:background="@color/colorPrimary">
+        android:background="@color/home_text_color_white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_12"
+            android:layout_marginTop="@dimen/dimen_16"
+            android:text="@string/i_text_simple"
+            android:textColor="@color/home_text_color_black"
+            android:textSize="@dimen/sp_24" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_12"
+            android:layout_marginTop="@dimen/dimen_64"
+            android:src="@drawable/shape_card_simple" />
 
         <Button
             android:id="@+id/btn_intent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="startPhoto"
-            android:text="开始拍摄" />
+            android:text="开始拍摄"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_intent_repeat"
@@ -30,7 +47,8 @@
             android:layout_below="@+id/btn_intent"
             android:layout_centerHorizontal="true"
             android:onClick="repeatPhoto"
-            android:text="重新拍摄" />
+            android:text="重新拍摄"
+            android:visibility="gone" />
     </RelativeLayout>
 
 

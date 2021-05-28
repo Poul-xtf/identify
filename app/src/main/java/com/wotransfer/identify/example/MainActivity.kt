@@ -5,7 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
-import com.wotransfer.identify.manager.CameraLaunch
+import com.wotransfer.identify_ui.reference.CameraLaunch
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,7 +29,8 @@ class MainActivity : Activity() {
      * 参数可传可不传
      */
     fun startPhoto(view: View) {
-        CameraLaunch().startView(CameraLaunch.LaunchType.CAMERA_OCR)
+        CameraLaunch()
+            .startView(CameraLaunch.LaunchType.CAMERA_OCR)
     }
 
     /**
@@ -38,9 +39,10 @@ class MainActivity : Activity() {
      * 必须要传licenseId，licenseFileName
      */
     fun startFace(view: View) {
-        CameraLaunch().startView(CameraLaunch.LaunchType.CAMERA_FACE,
-            licenseId = licenseId,
-            licenseFileName = licenseFileName)
+        CameraLaunch()
+            .startView(CameraLaunch.LaunchType.CAMERA_FACE,
+                licenseId = licenseId,
+                licenseFileName = licenseFileName)
     }
 
     /**
@@ -49,11 +51,12 @@ class MainActivity : Activity() {
      *
      */
     fun startAll(view: View) {
-        CameraLaunch().startView(CameraLaunch.LaunchType.ALL,
-            et_face.text.toString().isEmpty(),
-            et_ocr.text.toString().isEmpty(),
-            licenseId,
-            licenseFileName)
+        CameraLaunch()
+            .startView(CameraLaunch.LaunchType.ALL,
+                et_face.text.toString().isEmpty(),
+                et_ocr.text.toString().isEmpty(),
+                licenseId,
+                licenseFileName)
     }
 
 }

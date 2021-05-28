@@ -4,3 +4,4 @@ include ':faceplatform-release'
 include ':faceplatform-ui'
 include ':app'
 rootProject.name = "UserIdentify"
+include ':identify-ui'

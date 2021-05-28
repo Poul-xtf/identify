@@ -64,7 +64,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
     private var permissionList = arrayListOf(
         Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.ACCESS_FINE_LOCATION
+        Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
 
@@ -128,8 +128,8 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
             MSG_START_PREVIEW -> takePreview()
             MSG_START_PICTURE -> takePicture()
             MSG_LOAD_IMG -> {
-                mImageReader = ImageReader.newInstance(cameraOutPutSizes!![5].width,
-                    cameraOutPutSizes!![5].height,
+                mImageReader = ImageReader.newInstance(SIGNIN_PIC_WIDTH,
+                    SIGNIN_PIC_HEIGHT,
                     ImageFormat.JPEG,
                     1)
                 mImageReader?.setOnImageAvailableListener({ reader ->
@@ -170,7 +170,8 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         surfaceHolder.setKeepScreenOn(true)
 
         CameraUtil.init(context)
-        cameraOutPutSizes = CameraUtil.getInstance().getCameraOutPutSizes()
+//        cameraOutPutSizes =
+//            CameraUtil.getInstance().getCameraOutPutSizes(SIGNIN_PIC_WIDTH, SIGNIN_PIC_HEIGHT)
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
@@ -184,8 +185,9 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         mSurfaceHolder = holder
-        mSurfaceHolder!!.setFixedSize(cameraOutPutSizes!![5].width,
-            cameraOutPutSizes!![5].height)
+
+        mSurfaceHolder!!.setFixedSize(SIGNIN_PIC_WIDTH,
+            SIGNIN_PIC_HEIGHT)
 
         if (mCameraId < 0) {
             initCamera(CameraCharacteristics.LENS_FACING_FRONT)

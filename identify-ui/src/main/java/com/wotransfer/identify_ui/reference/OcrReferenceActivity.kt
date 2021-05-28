@@ -1,4 +1,4 @@
-package com.wotransfer.identify.ui
+package com.wotransfer.identify_ui.reference
 
 import android.app.Activity
 import android.content.Intent
@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.wotransfer.identify.Constants
-import com.wotransfer.identify.R
 import com.wotransfer.identify.manager.CameraPreviewManager
 import com.wotransfer.identify.observeInterface.StateObserver
+import com.wotransfer.identify.ui.KycCameraActivity
 import com.wotransfer.identify.util.showToast
 import com.wotransfer.identify.view.util.EnumType
+import com.wotransfer.identify_ui.R
 import kotlinx.android.synthetic.main.activity_ocr_view.*
 import java.util.*
 
@@ -44,7 +45,6 @@ class OcrReferenceActivity : Activity() {
         } ?: let {
             licenseId = ""
         }
-
 
     }
 

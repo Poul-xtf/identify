@@ -12,4 +12,7 @@
     <string name="i_preview_error">配置失败</string>
 
 
+    <string name="i_text_simple">证件上传示例</string>
+
+
 </resources>

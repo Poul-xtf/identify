@@ -1,4 +1,4 @@
-package com.wotransfer.identify.manager
+package com.wotransfer.identify_ui.reference
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,6 @@ import android.content.Intent
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.R
 import com.wotransfer.identify.ui.KycCameraActivity
-import com.wotransfer.identify.ui.OcrReferenceActivity
 import com.wotransfer.identify.util.showToast
 import java.lang.NullPointerException
 
@@ -16,7 +15,7 @@ class CameraLaunch {
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null
         fun register(t: Context) {
-            this.context = t
+            context = t
         }
     }
 

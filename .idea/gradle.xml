@@ -15,10 +15,10 @@
             <option value="$PROJECT_DIR$/faceplatform-release" />
             <option value="$PROJECT_DIR$/faceplatform-ui" />
             <option value="$PROJECT_DIR$/identify" />
+            <option value="$PROJECT_DIR$/identify-ui" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
-        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>
