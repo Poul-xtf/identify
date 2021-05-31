@@ -7,6 +7,7 @@ import com.wotransfer.identify.Constants
 import com.wotransfer.identify.R
 import com.wotransfer.identify.ui.KycCameraActivity
 import com.wotransfer.identify.util.showToast
+import com.wotransfer.identify_ui.IdentifyReferenceActivity
 import java.lang.NullPointerException
 
 class CameraLaunch {
@@ -29,11 +30,12 @@ class CameraLaunch {
         context?.let {
             when (t) {
                 LaunchType.ALL -> {
-                    val intent = Intent(it, OcrReferenceActivity::class.java)
-                    intent.putExtra(Constants.FACE, face)
-                    intent.putExtra(Constants.CARD, card)
-                    intent.putExtra(Constants.LICENSE_ID, licenseId)
-                    intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
+//                    val intent = Intent(it, OcrReferenceActivity::class.java)
+                    val intent = Intent(it, IdentifyReferenceActivity::class.java)
+//                    intent.putExtra(Constants.FACE, face)
+//                    intent.putExtra(Constants.CARD, card)
+//                    intent.putExtra(Constants.LICENSE_ID, licenseId)
+//                    intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }

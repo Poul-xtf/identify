@@ -27,7 +27,7 @@ class OcrReferenceActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ocr_view)
-
+        rl_take.background.alpha = 117
         getIntentData()
     }
 
@@ -56,8 +56,8 @@ class OcrReferenceActivity : Activity() {
                 //拍摄状态
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
                     Log.d(tag, "观察者2")
-                    btn_intent.visibility = View.GONE
-                    btn_intent_repeat.visibility = View.VISIBLE
+//                    btn_intent.visibility = View.GONE
+//                    btn_intent_repeat.visibility = View.VISIBLE
                 }
             })
             ?.addObserverFaceOrCardChange(object : StateObserver {
@@ -95,8 +95,8 @@ class OcrReferenceActivity : Activity() {
     //重新拍摄
     fun repeatPhoto(view: View) {
         camera_p.updateView()
-        btn_intent_repeat.visibility = View.GONE
-        btn_intent.visibility = View.VISIBLE
+//        btn_intent_repeat.visibility = View.GONE
+//        btn_intent.visibility = View.VISIBLE
     }
 
 }

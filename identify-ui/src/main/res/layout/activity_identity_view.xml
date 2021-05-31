@@ -1,7 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/camera_gray_f4"
     android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/dimen_34"
+        android:layout_height="@dimen/dimen_34"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginLeft="@dimen/dimen_16"
+        android:layout_marginTop="@dimen/dimen_14"
+        android:background="@mipmap/icon_back"
+        android:onClick="back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_22"
+        android:layout_marginLeft="@dimen/dimen_22"
+        android:layout_marginTop="@dimen/dimen_64"
+        android:text="@string/i_text_identify"
+        android:textColor="@color/home_text_color_black"
+        android:textSize="@dimen/dimen_24"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_re_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_22"
+        android:layout_marginLeft="@dimen/dimen_22"
+        android:layout_marginTop="@dimen/dimen_106"
+        android:text="@string/i_text_reference_country"
+        android:textColor="@color/camera_gray_50"
+        android:textSize="@dimen/dimen_14"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_change_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_22"
+        android:layout_marginLeft="@dimen/dimen_22"
+        android:layout_marginTop="@dimen/dimen_5"
+        android:text="@string/i_text_change_country"
+        android:textColor="@color/camera_blue_2b"
+        android:textSize="@dimen/dimen_14"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_re_country" />
+
+    <ExpandableListView
+        android:id="@+id/ep_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/dimen_20"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginRight="@dimen/dimen_20"
+        android:divider="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_change_country" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

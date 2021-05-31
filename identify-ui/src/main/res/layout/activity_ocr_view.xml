@@ -26,29 +26,223 @@
             android:textSize="@dimen/sp_24" />
 
         <ImageView
+            android:id="@+id/iv_card_simple"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_12"
             android:layout_marginTop="@dimen/dimen_64"
             android:src="@drawable/shape_card_simple" />
 
-        <Button
-            android:id="@+id/btn_intent"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="startPhoto"
-            android:text="开始拍摄"
-            android:visibility="gone" />
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_65"
+            android:layout_marginRight="@dimen/dimen_13"
+            android:drawableLeft="@drawable/shape_circle_min"
+            android:drawablePadding="@dimen/dimen_5"
+            android:text="@string/i_text_perfect"
+            android:textColor="@color/camera_gray_34"
+            android:textSize="@dimen/dimen_16" />
 
-        <Button
-            android:id="@+id/btn_intent_repeat"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_intent"
-            android:layout_centerHorizontal="true"
-            android:onClick="repeatPhoto"
-            android:text="重新拍摄"
-            android:visibility="gone" />
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_124"
+            android:layout_marginRight="@dimen/dimen_13"
+            android:drawableLeft="@drawable/shape_circle_min"
+            android:drawablePadding="@dimen/dimen_5"
+            android:text="@string/i_text_evenly"
+            android:textColor="@color/camera_gray_34"
+            android:textSize="@dimen/dimen_16" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_186"
+            android:layout_marginRight="@dimen/dimen_13"
+            android:drawableLeft="@drawable/shape_circle_min"
+            android:drawablePadding="@dimen/dimen_5"
+            android:text="@string/i_text_clear"
+            android:textColor="@color/camera_gray_34"
+            android:textSize="@dimen/dimen_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_card_simple"
+            android:layout_marginTop="@dimen/dimen_25"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_96"
+                    android:layout_height="@dimen/dimen_56"
+                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:src="@drawable/shape_card_simple" />
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_17"
+                    android:layout_height="@dimen/dimen_17"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_46"
+                    android:src="@mipmap/icon_error" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dimen_65"
+                    android:text="@string/i_text_miss"
+                    android:textColor="@color/camera_gray_3c"
+                    android:textSize="@dimen/dimen_14" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_96"
+                    android:layout_height="@dimen/dimen_56"
+                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:src="@drawable/shape_card_simple" />
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_17"
+                    android:layout_height="@dimen/dimen_17"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_46"
+                    android:src="@mipmap/icon_error" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dimen_65"
+                    android:text="@string/i_text_blurry"
+                    android:textColor="@color/camera_gray_3c"
+                    android:textSize="@dimen/dimen_14" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_96"
+                    android:layout_height="@dimen/dimen_56"
+                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:src="@drawable/shape_card_simple" />
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_17"
+                    android:layout_height="@dimen/dimen_17"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:layout_marginTop="@dimen/dimen_46"
+                    android:src="@mipmap/icon_error" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dimen_65"
+                    android:text="@string/i_text_flash"
+                    android:textColor="@color/camera_gray_3c"
+                    android:textSize="@dimen/dimen_14" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_take"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dimen_10"
+            android:layout_marginRight="@dimen/dimen_10"
+            android:layout_marginBottom="@dimen/dimen_46"
+            android:background="@drawable/shape_camera_take">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:background="@drawable/shape_camera_flash">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_28"
+                    android:layout_height="@dimen/dimen_28"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/icon_camera_sd" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_take"
+                android:onClick="startPhoto">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_36"
+                    android:layout_height="@dimen/dimen_36"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/icon_camera_take" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dimen_14"
+                android:background="@drawable/shape_camera_back"
+                android:onClick="repeatPhoto">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_34"
+                    android:layout_height="@dimen/dimen_34"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/icon_camera_back" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_intent"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:onClick="startPhoto"-->
+        <!--            android:text="开始拍摄"-->
+        <!--            android:visibility="gone" />-->
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_intent_repeat"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_below="@+id/btn_intent"-->
+        <!--            android:layout_centerHorizontal="true"-->
+        <!--            android:onClick="repeatPhoto"-->
+        <!--            android:text="重新拍摄"-->
+        <!--            android:visibility="gone" />-->
     </RelativeLayout>
 
 
