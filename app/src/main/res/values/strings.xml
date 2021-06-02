@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">UserIdentify</string>
+    <string name="app_token">获取token(注册sdk)</string>
     <string name="app_ocr_btn">Ocr认证</string>
     <string name="app_face_btn">人脸识别</string>
 
-    <string name="app_face_card_btn">开始上传</string>
+    <string name="app_face_card_btn">两者认证</string>
+    <string name="app_face_card_sdk_view">SDK界面</string>
+    <string name="app_face_card_view">自定义view</string>
 
 </resources>

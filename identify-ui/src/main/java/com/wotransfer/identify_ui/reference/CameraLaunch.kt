@@ -30,12 +30,11 @@ class CameraLaunch {
         context?.let {
             when (t) {
                 LaunchType.ALL -> {
-//                    val intent = Intent(it, OcrReferenceActivity::class.java)
-                    val intent = Intent(it, IdentifyReferenceActivity::class.java)
-//                    intent.putExtra(Constants.FACE, face)
-//                    intent.putExtra(Constants.CARD, card)
-//                    intent.putExtra(Constants.LICENSE_ID, licenseId)
-//                    intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
+                    val intent = Intent(it, OcrReferenceActivity::class.java)
+                    intent.putExtra(Constants.FACE, face)
+                    intent.putExtra(Constants.CARD, card)
+                    intent.putExtra(Constants.LICENSE_ID, licenseId)
+                    intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }
@@ -50,12 +49,22 @@ class CameraLaunch {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }
-                else -> {
+                LaunchType.CAMERA_OCR -> {
                     val intent = Intent(it, OcrReferenceActivity::class.java)
                     intent.putExtra(Constants.FACE, face)
                     intent.putExtra(Constants.CARD, card)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
+                }
+                LaunchType.CAMERA_VIEW -> {
+                    val intent = Intent(it, IdentifyReferenceActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    it.startActivity(intent)
+                }
+                else -> {
+//                    val intent = Intent(it, IdentifyReferenceActivity::class.java)
+//                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                    it.startActivity(intent)
                 }
             }
         } ?: let {
@@ -70,5 +79,7 @@ class CameraLaunch {
         ALL,
         CAMERA_OCR,
         CAMERA_FACE,
+        CAMERA_VIEW,
+        MY_VIEW,
     }
 }

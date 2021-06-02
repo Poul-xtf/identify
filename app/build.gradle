@@ -1,9 +1,8 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
 }
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
 
 android {
     compileSdkVersion 30
@@ -20,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId "com.wotransfer.identify"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"

@@ -13,9 +13,9 @@ class HttpClient {
     var tempBuffer: StringBuffer? = null
 
     /**
-     * start request of GET
+     * start request
      */
-    fun executeRequest(url: String, method: String = "GET", body: String? = null): String {
+    fun executeRequest(url: String, method: String = "POST", body: String? = null): String {
 
         /// boundary就是request头和上传文件内容的分隔符(可自定义任意一组字符串)
         val BOUNDARY = "******";
@@ -34,12 +34,11 @@ class HttpClient {
             urlConnection.setRequestProperty("Content-Type", "text/xml")
             urlConnection.setRequestProperty("Connection", "keep-alive")
             urlConnection.setRequestProperty("Content-Type",
-                    "multipart/form-data; boundary=$BOUNDARY")
+                "multipart/form-data; boundary=$BOUNDARY")
             urlConnection.connectTimeout = 6000
             urlConnection.connect()
 
             val out: OutputStream = DataOutputStream(urlConnection.outputStream)
-
 
             urlConnection.outputStream.write(body?.toByteArray("utf-8" as Charset))
 

@@ -50,13 +50,29 @@ class MainActivity : Activity() {
      *
      *
      */
-    fun startAll(view: View) {
+    fun startAllRe(view: View) {
         CameraLaunch()
             .startView(CameraLaunch.LaunchType.ALL,
                 et_face.text.toString().isEmpty(),
                 et_ocr.text.toString().isEmpty(),
                 licenseId,
                 licenseFileName)
+    }
+
+    /**
+     * sdk界面
+     */
+    fun startAll(view: View) {
+        CameraLaunch()
+            .startView(CameraLaunch.LaunchType.CAMERA_VIEW)
+    }
+
+    /**
+     * 自定义view
+     */
+    fun startAllView(view: View) {
+        CameraLaunch()
+            .startView(CameraLaunch.LaunchType.MY_VIEW)
     }
 
 }

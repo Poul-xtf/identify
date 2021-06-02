@@ -1,8 +1,6 @@
 package com.wotransfer.identify_ui.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,18 +8,14 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.wotransfer.identify_ui.IdentifyReferenceActivity
 import com.wotransfer.identify_ui.R
-import com.wotransfer.identify_ui.dialog.TipDialogFragment
-import com.wotransfer.identify_ui.enum.ReferenceEnum
+import com.wotransfer.identify_ui.reference.bean.IdConfigForSdkRO
+import com.wotransfer.identify_ui.util.getDrawable
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-@SuppressLint("UseCompatLoadingForDrawables")
 class ReferenceMessAdapter(
     context: Context,
-    mList: ArrayList<IdentifyReferenceActivity.TestData>,
+    mList: List<IdConfigForSdkRO>,
 ) : BaseExpandableListAdapter() {
 
     private var mContext = context
@@ -30,7 +24,7 @@ class ReferenceMessAdapter(
     private var groupViewHolder: GroupViewHolder? = null
     private var itemListener: ItemListener? = null
     override fun getGroupCount(): Int = mListData.size
-    override fun getGroup(p0: Int): Any = mListData[p0]
+    override fun getGroup(p0: Int) = mListData[p0]
     override fun getGroupId(p0: Int): Long = p0.toLong()
 
     override fun getGroupView(p0: Int, p1: Boolean, p2: View?, p3: ViewGroup?): View {
@@ -46,30 +40,24 @@ class ReferenceMessAdapter(
             groupViewHolder?.parentView = myParentView?.findViewById(R.id.parent_view)
             myParentView?.tag = groupViewHolder
         }
-        groupViewHolder?.tvTitle?.text = mListData[p0].type
-        groupViewHolder?.parentView?.background =
-            mContext.resources.getDrawable(R.drawable.shape_item, null)
-
-        groupViewHolder?.ivStatus?.background =
-            mContext.resources.getDrawable(R.mipmap.icon_item_open, null)
-
+        groupViewHolder?.tvTitle?.text = mListData[p0].idName
+        groupViewHolder?.parentView?.getDrawable(mContext, R.drawable.shape_item)
+        groupViewHolder?.ivStatus?.getDrawable(mContext, R.mipmap.icon_item_open)
         return myParentView!!
     }
 
 
     override fun getChildrenCount(p0: Int): Int = 1
 
-    override fun getChild(p0: Int, p1: Int): IdentifyReferenceActivity.TestData.ChildBean? =
-        mListData[p0].dataBean
+    override fun getChild(p0: Int, p1: Int) = mListData[p0].idConfigForSdkROList
 
     override fun getChildId(p0: Int, p1: Int): Long = p1.toLong()
 
 
     override fun getChildView(p0: Int, p1: Int, p2: Boolean, p3: View?, p4: ViewGroup?): View {
-        groupViewHolder?.parentView?.background =
-            mContext.resources.getDrawable(R.drawable.shape_item_top, null)
-        groupViewHolder?.ivStatus?.background =
-            mContext.resources.getDrawable(R.mipmap.icon_item_close, null)
+        groupViewHolder?.parentView?.getDrawable(mContext, R.drawable.shape_item_top)
+        groupViewHolder?.ivStatus?.getDrawable(mContext, R.mipmap.icon_item_close)
+
         var childViewHolder: ChildViewHolder? = null
         var myView = p3
         myView?.let {
@@ -87,46 +75,40 @@ class ReferenceMessAdapter(
             myView?.tag = childViewHolder
         }
         childViewHolder?.rlLabel2?.visibility = View.VISIBLE
-        when (mListData[p0].type) {
-            ReferenceEnum.PASSPORT.value() -> {
-                childViewHolder?.ivCarFront?.background =
-                    mContext.resources.getDrawable(R.mipmap.icon_passport, null)
-                childViewHolder?.ivCarBack?.background =
-                    mContext.resources.getDrawable(R.mipmap.icon_passport, null)
-
-                childViewHolder?.tvCarBack?.text =
-                    mContext.getString(R.string.i_button_passport_back)
-                childViewHolder?.tvCarFront?.text =
-                    mContext.getString(R.string.i_button_passport_front)
-            }
-            ReferenceEnum.DRIVER.value() -> {
-                childViewHolder?.ivCarFront?.background =
-                    mContext.resources.getDrawable(R.mipmap.icon_code, null)
-                childViewHolder?.ivCarBack?.background =
-                    mContext.resources.getDrawable(R.mipmap.icon_camera_take, null)
-                childViewHolder?.tvCarBack?.text =
-                    mContext.getString(R.string.i_button_car_back)
-                childViewHolder?.tvCarFront?.text =
-                    mContext.getString(R.string.i_button_car_front)
-            }
-            ReferenceEnum.IDENTIFY.value() -> {
-                childViewHolder?.ivCarFront?.background =
-                    mContext.resources.getDrawable(R.mipmap.icon_code, null)
-                childViewHolder?.ivCarBack?.background =
-                    mContext.resources.getDrawable(R.mipmap.icon_code, null)
-                childViewHolder?.tvCarBack?.text =
-                    mContext.getString(R.string.i_button_identify_back)
-                childViewHolder?.tvCarFront?.text =
-                    mContext.getString(R.string.i_button_identify_front)
-            }
-            ReferenceEnum.VISA.value() -> {
-                childViewHolder?.ivCarFront?.background =
-                    mContext.resources.getDrawable(R.mipmap.icon_passport, null)
-                childViewHolder?.rlLabel2?.visibility = View.INVISIBLE
-                childViewHolder?.tvCarFront?.text =
-                    mContext.getString(R.string.i_button_visa)
-            }
-        }
+//        when (mListData[p0].type) {
+//            ReferenceEnum.PASSPORT.value() -> {
+//                childViewHolder?.ivCarFront?.getDrawable(mContext, R.mipmap.icon_passport)
+//                childViewHolder?.ivCarBack?.getDrawable(mContext, R.mipmap.icon_passport)
+//                childViewHolder?.tvCarBack?.text =
+//                    mContext.getString(R.string.i_button_passport_back)
+//                childViewHolder?.tvCarFront?.text =
+//                    mContext.getString(R.string.i_button_passport_front)
+//            }
+//            ReferenceEnum.DRIVER.value() -> {
+//                childViewHolder?.ivCarFront?.getDrawable(mContext, R.mipmap.icon_code)
+//                childViewHolder?.ivCarBack?.getDrawable(mContext, R.mipmap.icon_camera_take)
+//
+//                childViewHolder?.tvCarBack?.text =
+//                    mContext.getString(R.string.i_button_car_back)
+//                childViewHolder?.tvCarFront?.text =
+//                    mContext.getString(R.string.i_button_car_front)
+//            }
+//            ReferenceEnum.IDENTIFY.value() -> {
+//                childViewHolder?.ivCarFront?.getDrawable(mContext, R.mipmap.icon_code)
+//                childViewHolder?.ivCarBack?.getDrawable(mContext, R.mipmap.icon_code)
+//                childViewHolder?.tvCarBack?.text =
+//                    mContext.getString(R.string.i_button_identify_back)
+//                childViewHolder?.tvCarFront?.text =
+//                    mContext.getString(R.string.i_button_identify_front)
+//            }
+//            ReferenceEnum.VISA.value() -> {
+//                childViewHolder?.ivCarFront?.getDrawable(mContext, R.mipmap.icon_passport)
+//
+//                childViewHolder?.rlLabel2?.visibility = View.INVISIBLE
+//                childViewHolder?.tvCarFront?.text =
+//                    mContext.getString(R.string.i_button_visa)
+//            }
+//        }
         childViewHolder?.rlLabel1?.setOnClickListener {
             itemListener?.itemBack()
         }

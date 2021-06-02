@@ -1,9 +1,13 @@
 package com.wotransfer.identify.util
 
+import android.content.Context
+import android.content.res.AssetManager
 import android.media.ExifInterface
 import android.os.Environment
+import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
+import java.io.InputStreamReader
 
 /**
  * 读取图片属性：旋转的角度
@@ -14,7 +18,8 @@ fun readPictureDegree(path: String?): Int {
     var degree = 0
     try {
         val exifInterface = ExifInterface(path!!)
-        when (exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+        when (exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL)) {
             ExifInterface.ORIENTATION_ROTATE_90 -> degree = 90
             ExifInterface.ORIENTATION_ROTATE_180 -> degree = 180
             ExifInterface.ORIENTATION_ROTATE_270 -> degree = 270
@@ -61,5 +66,24 @@ fun isFileExist(path: String?): Boolean {
         e.printStackTrace()
         false
     }
+}
+
+fun getJson(fileName: String, context: Context): String? {
+    //将json数据变成字符串
+    val stringBuilder = StringBuilder()
+    try {
+        //获取assets资源管理器
+        val assetManager: AssetManager = context.assets
+        //通过管理器打开文件并读取
+        val bf = BufferedReader(InputStreamReader(
+            assetManager.open(fileName)))
+        var line: String?
+        while (bf.readLine().also { line = it } != null) {
+            stringBuilder.append(line)
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return stringBuilder.toString()
 }
 

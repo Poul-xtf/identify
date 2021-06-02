@@ -71,8 +71,20 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="startAll"
+        android:onClick="startAllRe"
         android:text="@string/app_face_card_btn" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startAll"
+        android:text="@string/app_face_card_sdk_view" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startAllView"
+        android:text="@string/app_face_card_view" />
 
 
 </LinearLayout>

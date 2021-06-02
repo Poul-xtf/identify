@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.google.gson.Gson
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.manager.CameraPreviewManager
 import com.wotransfer.identify.observeInterface.StateObserver
@@ -12,6 +13,7 @@ import com.wotransfer.identify.ui.KycCameraActivity
 import com.wotransfer.identify.util.showToast
 import com.wotransfer.identify.view.util.EnumType
 import com.wotransfer.identify_ui.R
+import com.wotransfer.identify_ui.reference.bean.IdTypeListBean
 import kotlinx.android.synthetic.main.activity_ocr_view.*
 import java.util.*
 
@@ -21,8 +23,8 @@ class OcrReferenceActivity : Activity() {
     private var booleanFace: Boolean = false
     private var booleanCard: Boolean = false
 
-    private var licenseId = ""
-    private var licenseName = ""
+    private var licenseId: String? = null
+    private var licenseName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +58,6 @@ class OcrReferenceActivity : Activity() {
                 //拍摄状态
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
                     Log.d(tag, "观察者2")
-//                    btn_intent.visibility = View.GONE
-//                    btn_intent_repeat.visibility = View.VISIBLE
                 }
             })
             ?.addObserverFaceOrCardChange(object : StateObserver {
@@ -90,6 +90,7 @@ class OcrReferenceActivity : Activity() {
         intent.putExtra(Constants.LICENSE_ID, licenseId)
         intent.putExtra(Constants.LICENSE_FILE_NAME, licenseName)
         startActivity(intent)
+        this@OcrReferenceActivity.finish()
     }
 
     //重新拍摄

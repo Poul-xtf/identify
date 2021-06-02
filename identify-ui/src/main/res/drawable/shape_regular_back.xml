@@ -10,7 +10,7 @@
             <shape android:shape="rectangle">
                 <size
                     android:width="@dimen/dimen_132"
-                    android:height="@dimen/dimen_54" />
+                    android:height="@dimen/dimen_160" />
                 <solid android:color="@color/camera_black_40" />
             </shape>
         </rotate>
@@ -18,7 +18,7 @@
     <item android:id="@+id/shape_id_1">
         <!-- 正三角 -->
         <rotate
-            android:fromDegrees="6"
+            android:fromDegrees="20"
             android:pivotX="0%"
             android:pivotY="100%"
             android:toDegrees="90">

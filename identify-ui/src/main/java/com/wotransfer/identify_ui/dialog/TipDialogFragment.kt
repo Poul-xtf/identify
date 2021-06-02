@@ -27,12 +27,11 @@ class TipDialogFragment/* constructor(*//*private val meeting: MeetingBean?,*//*
     override fun onStart() {
         super.onStart()
         dialog?.window?.run {
-////            hideBottomUIMenu()
-            val myAttributes = attributes.apply {
-                width = 900
-                height = 1120
-            }
-            attributes = myAttributes
+//            val myAttributes = attributes.apply {
+//                width = 900
+//                height = 1120
+//            }
+//            attributes = myAttributes
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
