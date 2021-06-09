@@ -1,17 +1,19 @@
 package com.wotransfer.identify.util
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.hardware.camera2.CameraCharacteristics
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.view.View
 import com.wotransfer.identify.Constants.Companion.FILE_PIC_NAME
 import com.wotransfer.identify.view.Camera2Preview
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -45,12 +47,12 @@ fun getBitmapOption(
     val bottom: Float =
         (view[1].bottom.toFloat()) / mSurfaceViewHeight.toFloat()
     var scaleX = 1
-    if (Camera2Preview.SIGNIN_PIC_WIDTH in 1 until picWidth) {
-        scaleX = picWidth / Camera2Preview.SIGNIN_PIC_WIDTH
+    if (Camera2Preview.SIGNING_PIC_WIDTH in 1 until picWidth) {
+        scaleX = picWidth / Camera2Preview.SIGNING_PIC_WIDTH
     }
     var scaleY = 1
-    if (Camera2Preview.SIGNIN_PIC_HEIGHT in 1 until picHeight) {
-        scaleY = picHeight / Camera2Preview.SIGNIN_PIC_HEIGHT
+    if (Camera2Preview.SIGNING_PIC_HEIGHT in 1 until picHeight) {
+        scaleY = picHeight / Camera2Preview.SIGNING_PIC_HEIGHT
     }
     val inSampleSize = min(scaleX, scaleY)
     if (inSampleSize == 1) {
@@ -102,6 +104,27 @@ fun getBitmapOption(
 }
 
 
+/** 保存方法  */
+fun saveBitmap(bm: Bitmap): File? {
+    val f = File("/sdcard/", "pic.png")
+    if (f.exists()) {
+        f.delete()
+    }
+    try {
+        val out = FileOutputStream(f)
+        bm.compress(Bitmap.CompressFormat.PNG, 90, out)
+        out.flush()
+        out.close()
+        return f
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return null
+}
+
+
 /**
  * @return 拍摄图片裁剪文件
  */
@@ -116,3 +139,54 @@ private fun getCropFile(): File {
         File(resultUrl)
     }
 }
+
+
+/**
+ * 选择相册剪裁
+ */
+fun cropImage(context: Context, uri: Uri): Intent {
+    val intent = Intent("com.android.camera.action.CROP")
+    intent.setDataAndType(uri, "image/*")
+    intent.putExtra("crop", "true")
+    if (Build.MANUFACTURER.contains("HUAWEI")) {
+        //硬件厂商为华为的，默认是圆形裁剪框，这里让它无法成圆形
+        intent.putExtra("aspectX", 9999)
+        intent.putExtra("aspectY", 9998)
+    } else {
+        //其他手机一般默认为方形
+        intent.putExtra("aspectX", 1)
+        intent.putExtra("aspectY", 1)
+    }
+
+    // 设置裁剪区域的形状，默认为矩形，也可设置为圆形，可能无效
+    //intent.putExtra("circleCrop", true);
+    intent.putExtra("scale", true)
+    val cropFile = File("${context.getExternalFilesDir(null)}/crop_image.jpg")
+    try {
+        if (cropFile.exists()) {
+            cropFile.delete()
+        }
+        cropFile.createNewFile()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    val cropImageUri = Uri.fromFile(cropFile)
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, cropImageUri)
+    intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+    intent.putExtra("return-data", false)
+    return intent
+}
+
+fun getCropFile(resultUrl: String): File {
+    return if (TextUtils.isEmpty(resultUrl) || TextUtils.isEmpty(resultUrl?.trim { it <= ' ' })) {
+        if (isExternalStorageExist()) {
+            File(mContext?.getExternalFilesDir(""), FILE_PIC_NAME)
+        } else {
+            File(mContext?.filesDir, FILE_PIC_NAME)
+        }
+    } else {
+        File(resultUrl)
+    }
+}
+
+

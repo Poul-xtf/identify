@@ -10,8 +10,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.wotransfer.identify_ui.R
-import com.wotransfer.identify_ui.reference.bean.IdConfigForSdkRO
-import com.wotransfer.identify_ui.util.getDrawable
+import com.wotransfer.identify.net.bean.IdConfigForSdkRO
+import com.wotransfer.identify.util.getDrawable
 
 class ReferenceMessAdapter(
     context: Context,
@@ -110,7 +110,10 @@ class ReferenceMessAdapter(
 //            }
 //        }
         childViewHolder?.rlLabel1?.setOnClickListener {
-            itemListener?.itemBack()
+            itemListener?.itemBack(p0, 0)
+        }
+        childViewHolder?.rlLabel2?.setOnClickListener {
+            itemListener?.itemBack(p0, 1)
         }
         return myView!!
     }
@@ -137,7 +140,7 @@ class ReferenceMessAdapter(
     }
 
     interface ItemListener {
-        fun itemBack()
+        fun itemBack(position: Int, childPosition: Int)
     }
 
     fun setItemListener(itemListener: ItemListener) {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="style_hw">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="style_hw_match">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+
+    <style name="style_ocr_simple">
+        <item name="android:layout_height">@dimen/dimen_56</item>
+        <item name="android:layout_width">@dimen/dimen_96</item>
+        <item name="android:layout_marginLeft">@dimen/dimen_12</item>
+        <item name="android:background">@drawable/shape_card_simple</item>
+    </style>
+
+
+</resources>

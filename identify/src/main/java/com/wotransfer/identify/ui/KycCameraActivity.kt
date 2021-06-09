@@ -1,37 +1,38 @@
 package com.wotransfer.identify.ui
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import com.baidu.idl.face.platform.FaceEnvironment
 import com.baidu.idl.face.platform.FaceSDKManager
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.baidu.idl.face.platform.listener.IInitCallback
 import com.baidu.idl.face.platform.ui.FaceLivenessActivity
+import com.baidu.idl.face.platform.utils.Base64Utils
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.Constants.Companion.QUALITY_NORMAL
 import com.wotransfer.identify.R
 import com.wotransfer.identify.faceutil.manager.QualityConfigManager
 import com.wotransfer.identify.faceutil.model.QualityConfig
+import com.wotransfer.identify.net.*
+import com.wotransfer.identify.util.saveBitmap
 import com.wotransfer.identify.util.showToast
+import kotlinx.android.synthetic.main.activity_kyc_view.*
+import java.io.File
+import java.lang.NullPointerException
 import java.util.*
 
-class KycCameraActivity : AppCompatActivity() {
-    private val tag = KycCameraActivity::class.java.simpleName
-
+class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     // 活体随机开关
-    var isLivenessRandom = true
+    private var isLiveNessRandom = true
 
     // 语音播报开关
-    var isOpenSound = true
-
-    // 活体检测开关
-    var isActionLive = true
-    private var livenessList: List<LivenessTypeEnum> = ArrayList()
-
-    private var licenseId: String = ""
-    private var licenseFileName: String = ""
+    private var isOpenSound = true
+    private var liveNessList: List<LivenessTypeEnum> = ArrayList()
+    private var country: String = ""
+    private var reference: String = ""
+    private var file: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +42,7 @@ class KycCameraActivity : AppCompatActivity() {
     }
 
     private fun getIntentData() {
-        licenseId = intent.getStringExtra(Constants.LICENSE_ID).toString()
-        licenseFileName = intent.getStringExtra(Constants.LICENSE_FILE_NAME).toString()
+        country = intent.getStringExtra(Constants.COUNTRY_CODE)
     }
 
     private fun init() {
@@ -52,30 +52,87 @@ class KycCameraActivity : AppCompatActivity() {
             return
         }
 
-        FaceSDKManager.getInstance().initialize(this, licenseId, licenseFileName, object : IInitCallback {
-            override fun initSuccess() {
-                runOnUiThread {
-                    Log.e(tag, "初始化成功")
-                    startActivityForResult(Intent(this@KycCameraActivity, FaceLivenessActivity::class.java), 0)
-                    finish()
+        FaceSDKManager.getInstance()
+            .initialize(this, Constants.license_id, Constants.license_name, object : IInitCallback {
+                override fun initSuccess() {
+                    runOnUiThread {
+                        Log.e(Constants.KYC_TAG, "初始化成功")
+                        startActivityForResult(Intent(this@KycCameraActivity,
+                            FaceLivenessActivity::class.java), 0)
+                    }
                 }
-            }
 
-            override fun initFailure(errCode: Int, errMsg: String) {
-                runOnUiThread {
-                    Log.e(tag, "初始化失败 = $errCode $errMsg")
+                override fun initFailure(errCode: Int, errMsg: String) {
+                    runOnUiThread {
+                        Log.e(Constants.KYC_TAG, "初始化失败 = $errCode $errMsg")
+                    }
                 }
-            }
-        })
+            })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
             1 -> {
-
+                val bitmapBase64 = data?.getStringExtra("bitmap")
+                val bytes = Base64Utils.decode(bitmapBase64, Base64Utils.NO_WRAP)
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                iv_tess.setImageBitmap(bitmap)
+                //存在本地获取地址
+                file = saveBitmap(bitmap)
+                //上传图片、并认证
+                uploadImg()
             }
         }
+    }
+
+    /**
+     * upload face image
+     */
+    private fun uploadImg() {
+        if (reference == "") {
+            throw NullPointerException("reference is null")
+        }
+        file?.let {
+            val params = getParams(Constants.APP_NAME,
+                country,
+                0,
+                "",
+                1,
+                reference,
+                it)
+            startHttpRequest(this, upload_identity_path, params)
+        } ?: let {
+            throw NullPointerException("save face is failed,file is null")
+        }
+
+    }
+
+    /**
+     * reference face image
+     */
+    private fun referenceImg() {
+        val params = getReParams(Constants.APP_NAME, reference)
+        startHttpRequest(this, reference_path, params)
+    }
+
+    override fun onSuccess(path: String, content: String) {
+        when (path) {
+            upload_identity_path -> {
+                referenceImg()
+            }
+            reference_path -> {
+                startActivity(Intent(this, ReferenceResultActivity::class.java))
+                finish()
+            }
+
+        }
+    }
+
+    override fun onFiled() {
+    }
+
+    override fun complete() {
     }
 
     /**
@@ -130,9 +187,9 @@ class KycCameraActivity : AppCompatActivity() {
         // 设置活体动作，通过设置list，LivenessTypeEunm.Eye, LivenessTypeEunm.Mouth,
         // LivenessTypeEunm.HeadUp, LivenessTypeEunm.HeadDown, LivenessTypeEunm.HeadLeft,
         // LivenessTypeEunm.HeadRight
-        config.livenessTypeList = livenessList
+        config.livenessTypeList = liveNessList
         // 设置动作活体是否随机
-        config.isLivenessRandom = isLivenessRandom
+        config.isLivenessRandom = isLiveNessRandom
         // 设置开启提示音
         config.isSound = isOpenSound
         // 原图缩放系数
@@ -152,5 +209,6 @@ class KycCameraActivity : AppCompatActivity() {
         FaceSDKManager.getInstance().faceConfig = config
         return true
     }
+
 
 }

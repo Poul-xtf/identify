@@ -78,6 +78,7 @@
     <string name="setting_actionlive_nod_txt">向下低头</string>
     <string name="setting_actionlive_look_up_txt">向上抬头</string>
     <string name="setting_actionlive_open_mouth_txt">张张嘴</string>
-    <string name="collect_bottom_txt">— 百度大脑技术支持 —</string>
+    <!--    <string name="collect_bottom_txt">— 百度大脑技术支持 —</string>-->
+    <string name="collect_bottom_txt">— 杭州我汇网络科技有限公司 —</string>
 
 </resources>

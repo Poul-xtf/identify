@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AnySearchList">
+        <attr name="view_width" format="integer" />
+        <attr name="view_height" format="integer" />
+        <attr name="locationX" format="integer" />
+        <attr name="locationY" format="integer" />
+        <attr name="textColor" format="integer" />
+        <attr name="textSize" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="AnySearchList_view">
+        <attr name="image_src" format="reference" />
+        <attr name="text_" format="string" />
+    </declare-styleable>
+</resources>

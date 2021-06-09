@@ -47,5 +47,12 @@
     <string name="i_button_car_front">扫描驾驶证首页</string>
     <string name="i_button_car_back">拍摄驾驶证副页</string>
 
+    <string name="i_card_front">扫描证件正面</string>
+    <string name="i_card_back">扫描证件反面</string>
+    <string name="i_card_tip">把您的文件置于边框内，进行拍摄</string>
+
+    <string name="i_card_way">第%1$s步，共%2$s步</string>
+    <string name="i_title_country">选择您的文件签发国家</string>
+
 
 </resources>

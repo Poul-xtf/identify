@@ -1,6 +1,7 @@
 package com.wotransfer.identify.net
 
 import com.wotransfer.identify.Constants
+import com.wotransfer.identify.util.SpUtil
 import java.io.File
 
 /*优化点：需要重新命名*/
@@ -12,10 +13,6 @@ const val cancel_reference_path = "web/identify/ocr/recognize/cancel"//取消此
 fun getUrl(): String? {
     return Constants.url
 }
-
-//fun getHeaderToken(): String {
-//    return ""
-//}
 
 //根据国家获取证件列表
 fun getParams(
@@ -33,9 +30,9 @@ fun getParams(
 fun getParams(
     appName: String,
     countryCode: String,
-    face: String,
+    face: Int,
     idType: String,
-    needOcr: String,
+    needOcr: Int,
     reference: String,
     file: File,
 ): Map<String, Any> {
@@ -48,5 +45,16 @@ fun getParams(
         "reference" to reference,
         "source" to Constants.SOURCE,
         "file" to file
+    )
+}
+
+fun getReParams(
+    appName: String,
+    reference: String,
+): Map<String, Any> {
+    return mapOf(
+        "appName" to Constants.APP_NAME,
+        "reference" to reference,
+        "source" to Constants.SOURCE
     )
 }

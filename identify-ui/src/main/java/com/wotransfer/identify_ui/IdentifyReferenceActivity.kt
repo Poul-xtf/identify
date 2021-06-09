@@ -1,31 +1,29 @@
 package com.wotransfer.identify_ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ExpandableListView
 import com.google.gson.Gson
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.net.*
-import com.wotransfer.identify.util.getJson
+import com.wotransfer.identify.net.bean.IdConfigForSdkRO
+import com.wotransfer.identify.net.bean.IdTypeListBean
+import com.wotransfer.identify.ui.BaseKycActivity
+import com.wotransfer.identify.ui.OcrReferenceActivity
+import com.wotransfer.identify.util.htmlFormat
+import com.wotransfer.identify.util.showToast
 import com.wotransfer.identify_ui.adapter.ReferenceMessAdapter
-import com.wotransfer.identify_ui.dialog.TipDialogFragment
-import com.wotransfer.identify_ui.enum.ReferenceEnum
-import com.wotransfer.identify_ui.reference.bean.IdConfigForSdkRO
-import com.wotransfer.identify_ui.reference.bean.IdTypeListBean
-import com.wotransfer.identify_ui.util.htmlFormat
 import kotlinx.android.synthetic.main.activity_identity_view.*
-import org.json.JSONObject
 
-class IdentifyReferenceActivity : AppCompatActivity(), HttpCallBackListener {
-    //    private var mList = arrayListOf<IdConfigForSdkRO>()
-    private var mList: List<IdConfigForSdkRO>? = null
-    private var referenceMessAdapter: ReferenceMessAdapter? = null
+class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
+    private var mList = arrayListOf<IdConfigForSdkRO>()
+    private var countryName = "日本"
 
-    private var countryName = "美国"
+    fun back(view: View) {
+        this@IdentifyReferenceActivity.finish()
+    }
 
-    private var tipDialogFragment: TipDialogFragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_identity_view)
@@ -39,43 +37,54 @@ class IdentifyReferenceActivity : AppCompatActivity(), HttpCallBackListener {
     }
 
     private fun initView() {
+
         val string = getString(R.string.i_text_reference_country, countryName)
         tv_re_country.htmlFormat(string)
     }
 
-    fun back(view: View) {
-        this@IdentifyReferenceActivity.finish()
-    }
 
-    override fun onSuccess(temp: String) {
-//        var mList = mList
-
+    override fun onSuccess(path: String, content: String) {
         val gson = Gson()
-        val strData = getJson("idConfig.json", this)
-        val idTypeListBean = gson.fromJson(strData, IdTypeListBean::class.java)
-//        idTypeListBean.model.idConfigForSdkROList.forEach {
-//            mList!!.add(it)
-//        }
-        mList = idTypeListBean.model.idConfigForSdkROList
-//        referenceMessAdapter?.notifyDataSetChanged() ?: let {
-        val referenceMessAdapter = ReferenceMessAdapter(this, mList!!)
-//        }
-        referenceMessAdapter?.setItemListener(object : ReferenceMessAdapter.ItemListener {
-            override fun itemBack() {
-//                tipDialogFragment = tipDialogFragment ?: TipDialogFragment()
-//                tipDialogFragment?.show(supportFragmentManager, "paizhao")
+//        val strData = getJson("idConfig.json", this)
+        val idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
+        idTypeListBean.model.idConfigForSdkROList.forEach {
+            mList.add(it)
+        }
+        val referenceMessAdapter = ReferenceMessAdapter(this, mList)
+        referenceMessAdapter.setItemListener(object : ReferenceMessAdapter.ItemListener {
+            override fun itemBack(position: Int, childPosition: Int) {
+                val intent =
+                    Intent(this@IdentifyReferenceActivity, OcrReferenceActivity::class.java)
+                intent.putExtra(Constants.MODEL, mList[position])
+                intent.putExtra(Constants.REFERENCE, idTypeListBean.model.reference)
+                startActivity(intent)
             }
         })
         ep_list.setAdapter(referenceMessAdapter)
+        ep_list.setGroupIndicator(null)
         ep_list.setOnGroupCollapseListener {
-            referenceMessAdapter?.notifyDataSetChanged()
+            referenceMessAdapter.notifyDataSetChanged()
         }
+        ep_list.setOnGroupClickListener { _, _, position, _ ->
+            val intent =
+                Intent(this@IdentifyReferenceActivity, OcrReferenceActivity::class.java)
+            intent.putExtra(Constants.MODEL, mList[position])
+            intent.putExtra(Constants.REFERENCE, idTypeListBean.model.reference)
+            startActivity(intent)
+            true
+        }
+
     }
 
 
     override fun onFiled() {
+        showToast(getString(R.string.i_toast_card_failed))
     }
 
     override fun complete() {
+    }
+
+    fun changeCountry(view: View) {
+        startActivity(Intent(this, ChangeCountryActivity::class.java))
     }
 }

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="i_txt_reference">身份认证</string>
+    <string name="international_area_code">选择您的文件签发国家</string>
+    <string name="i_sure">确定</string>
+    <string name="i_cancel">取消</string>
+    <string name="i_toast_card_failed">证件列表获取失败</string>
 </resources>

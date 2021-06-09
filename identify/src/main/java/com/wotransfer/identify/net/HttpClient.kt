@@ -1,60 +1,173 @@
 package com.wotransfer.identify.net
 
-import java.io.BufferedInputStream
-import java.io.DataOutputStream
-import java.io.InputStreamReader
-import java.io.OutputStream
+import android.util.Log
+import com.wotransfer.identify.Constants
+import org.json.JSONObject
+import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
-import java.nio.charset.Charset
 
 class HttpClient {
 
-    var tempBuffer: StringBuffer? = null
+    var file = "/storage/emulated/0/Android/data/com.wotransfer.identify/files/pic.png"
+    var result = ""
 
-    /**
-     * start request
-     */
-    fun executeRequest(url: String, method: String = "POST", body: String? = null): String {
-
-        /// boundary就是request头和上传文件内容的分隔符(可自定义任意一组字符串)
-        val BOUNDARY = "******";
-        // 用来标识payLoad+文件流的起始位置和终止位置(相当于一个协议,告诉你从哪开始,从哪结束)
-        var preFix = ("\r\n--$BOUNDARY--\r\n");
-
-        try {
-            var urlConnection: HttpURLConnection? = null
-            val httpUrl = URL(url)
-            urlConnection = httpUrl.openConnection() as HttpURLConnection
-            urlConnection.doInput = true
-            urlConnection.doOutput = true
-            urlConnection.requestMethod = method
-            urlConnection.setRequestProperty("Pragma:", "no-cache")
-            urlConnection.setRequestProperty("Cache-Control", "no-cache")
-            urlConnection.setRequestProperty("Content-Type", "text/xml")
-            urlConnection.setRequestProperty("Connection", "keep-alive")
-            urlConnection.setRequestProperty("Content-Type",
-                "multipart/form-data; boundary=$BOUNDARY")
-            urlConnection.connectTimeout = 6000
-            urlConnection.connect()
-
-            val out: OutputStream = DataOutputStream(urlConnection.outputStream)
-
-            urlConnection.outputStream.write(body?.toByteArray("utf-8" as Charset))
-
-            tempBuffer = StringBuffer()
-            val inputStream = BufferedInputStream(urlConnection.inputStream)
-            val rd = InputStreamReader(inputStream, "GBK")
-            val c = rd.read()
-            while (c != -1) {
-                tempBuffer!!.append(c.toChar())
+    fun executeRequest(
+        url: String,
+        path: String,
+        method: String = "POST",
+        body: String? = null,
+    ): String {
+        when (path) {
+            upload_identity_path -> {
+                result = executeFileRequest(url, path, method, body)
             }
-            inputStream.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            else -> {
+                try {
+                    val urlConnection: HttpURLConnection?
+                    val httpUrl = URL(url + path)
+                    urlConnection = httpUrl.openConnection() as HttpURLConnection
+                    urlConnection.doInput = true
+                    urlConnection.doOutput = true
+                    urlConnection.requestMethod = method
+                    urlConnection.setRequestProperty("Pragma:", "no-cache")
+                    urlConnection.setRequestProperty("Cache-Control", "no-cache")
+                    urlConnection.setRequestProperty("Content-Type",
+                        "application/json;charset=utf-8")
+                    urlConnection.setRequestProperty("Connection", "keep-alive")
+                    urlConnection.connectTimeout = 6000
+                    urlConnection.connect()
+
+                    val writer =
+                        BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
+                    writer.write(body)
+                    writer.close()
+
+                    val responseCode = urlConnection.responseCode
+                    val responseMessage = urlConnection.responseMessage
+                    Log.e(Constants.KYC_TAG, "$responseCode=$responseMessage")
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        val inReader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+                        var line: String?
+                        while ((inReader.readLine().also { line = it }) != null) {
+                            result += line
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(Constants.KYC_TAG, "Post Request Failed....")
+                    Log.e(Constants.KYC_TAG, "${e.message}")
+                    e.printStackTrace()
+                }
+                return result
+            }
         }
-        return tempBuffer.toString()
+        return result
     }
 
 
+    /**
+     * 上传图片
+     */
+    private fun executeFileRequest(
+        url: String,
+        path: String,
+        method: String = "POST",
+        body: String? = null,
+    ): String {
+        val strParams = HashMap<String, Any>()
+        val json = JSONObject(body!!)
+        val keys = json.keys()
+        while (keys.hasNext()) {
+            val key = keys.next()
+            strParams[key] = json[key]
+        }
+        var file: File? = null
+        var conn: HttpURLConnection? = null
+        try {
+            val httpUrl = URL(url + path)
+            conn = httpUrl.openConnection() as HttpURLConnection
+            conn.requestMethod = method
+            conn.readTimeout = 6000
+            conn.connectTimeout = 6000
+            conn.doOutput = true
+            conn.doInput = true
+            conn.useCaches = false //Post 请求不能使用缓存
+            conn.setRequestProperty("Connection", "Keep-Alive")
+            conn.setRequestProperty("Charset", "UTF-8")
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=$BOUNDARY")
+            val dos = DataOutputStream(conn.outputStream)
+            val strSb = StringBuilder()
+            //其他参数
+            for ((key, value) in strParams) {
+                if ("file" != key) {
+                    strSb.append(PREFIX)
+                        .append(BOUNDARY)
+                        .append(LINE_END)
+                        .append("Content-Disposition: form-data; name=\"$key\"")
+                        .append(LINE_END)
+                        .append(LINE_END)
+                        .append(value)
+                        .append(LINE_END)
+                } else {
+                    file = File(value as String)
+                }
+            }
+            //图片上传
+            strSb.append(PREFIX)
+                .append(BOUNDARY)
+                .append(LINE_END)
+                .append("Content-Disposition: form-data; name=\"file\"; filename=\""
+                        + "pic.png" + "\"" + LINE_END)
+                .append(LINE_END)
+                .append(LINE_END)//很关键
+            val `is`: InputStream = FileInputStream(file)
+            val buffer = ByteArray(1024)
+            var len: Int
+            while (`is`.read(buffer).also { len = it } != -1) {
+                dos.write(buffer, 0, len)
+            }
+            `is`.close()
+//
+//            dos.writeBytes(PREFIX + BOUNDARY + LINE_END)
+//            dos.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\""
+//                    + "pic.png" + "\"")
+//            dos.writeBytes(LINE_END + LINE_END)
+//            val fStream = FileInputStream(file)
+//            val bufferSize = 1024
+//            val buffer = ByteArray(bufferSize)
+//            var length = -1
+//            while (fStream.read(buffer).also { length = it } != -1) {
+//                dos.write(buffer, 0, length)
+//            }
+//            dos.writeBytes(LINE_END)
+//            fStream.close()
+
+            dos.writeBytes(strSb.toString())
+            dos.writeBytes(PREFIX + BOUNDARY + PREFIX + LINE_END)
+            dos.flush()
+            dos.close()
+
+            Log.e(Constants.KYC_TAG, "postResponseCode() = " + conn.responseCode)
+            if (conn.responseCode == 200) {
+                val `in` = conn.inputStream
+                val reader = BufferedReader(InputStreamReader(`in`))
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    result += line
+                }
+                Log.e(Constants.KYC_TAG, "run: $result")
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        } finally {
+            conn?.disconnect()
+        }
+        return result
+    }
+
+    companion object {
+        private const val LINE_END = "\r\n"
+        private const val PREFIX = "--"
+        private const val BOUNDARY: String = "****"
+    }
 }

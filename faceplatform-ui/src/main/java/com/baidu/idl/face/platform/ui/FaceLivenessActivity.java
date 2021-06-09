@@ -46,7 +46,6 @@ import com.baidu.idl.face.platform.model.ImageInfo;
 import com.baidu.idl.face.platform.stat.Ast;
 import com.baidu.idl.face.platform.ui.utils.BrightnessUtils;
 import com.baidu.idl.face.platform.ui.utils.CameraUtils;
-import com.baidu.idl.face.platform.ui.utils.SecRequest;
 import com.baidu.idl.face.platform.ui.utils.VolumeUtils;
 import com.baidu.idl.face.platform.ui.widget.FaceDetectRoundView;
 import com.baidu.idl.face.platform.utils.APIUtils;
@@ -491,15 +490,33 @@ public class FaceLivenessActivity extends Activity implements
             //识别成功
             mIsCompletion = true;
 //            SecRequest.sendMessage(this, "", 0);
-            saveAllImage(base64ImageCropMap, base64ImageSrcMap);
-            //todo 返回人脸图片给业务
+//            saveAllImage(base64ImageCropMap, base64ImageSrcMap);
+            String bitmap = getCropMap(base64ImageCropMap);
             Intent intent = new Intent();
-//            intent.putExtra()
+            intent.putExtra("bitmap", bitmap);
             setResult(1, intent);
-
+            finish();
         }
         // 打点
         Ast.getInstance().faceHit("liveness");
+    }
+
+    //xtf
+    private String getCropMap(HashMap<String, ImageInfo> imageCropMap) {
+        if (imageCropMap != null && imageCropMap.size() > 0) {
+            List<Map.Entry<String, ImageInfo>> list1 = new ArrayList<>(imageCropMap.entrySet());
+            Collections.sort(list1, (o1, o2) -> {
+                String[] key1 = o1.getKey().split("_");
+                String score1 = key1[2];
+                String[] key2 = o2.getKey().split("_");
+                String score2 = key2[2];
+                // 降序排序
+                return Float.valueOf(score2).compareTo(Float.valueOf(score1));
+            });
+            return list1.get(0).getValue().getBase64();
+
+        }
+        return null;
     }
 
     private void onRefreshView(FaceStatusNewEnum status, String message, int currentLivenessCount) {

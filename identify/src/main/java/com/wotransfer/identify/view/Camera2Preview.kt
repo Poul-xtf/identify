@@ -12,7 +12,6 @@ import android.os.*
 import android.os.Looper.getMainLooper
 import android.util.AttributeSet
 import android.util.Log
-import android.util.Size
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.RequiresApi
@@ -21,17 +20,18 @@ import com.wotransfer.identify.Constants
 import com.wotransfer.identify.R
 import com.wotransfer.identify.net.*
 import com.wotransfer.identify.util.CameraUtil
+import com.wotransfer.identify.util.SpUtil
 import com.wotransfer.identify.util.showToast
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 
-open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callback,
-    HttpCallBackListener {
+open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callback/*,
+    HttpCallBackListener*/ {
 
     private var mContext: Context? = null
     private var mSurfaceHolder: SurfaceHolder? = null
-    private var mCameraId = -1
+    private var mCameraId = CameraCharacteristics.LENS_FACING_FRONT
     private var camera: CameraCaptureSession? = null
     private var mImageReader: ImageReader? = null
     private var mCameraDevice: CameraDevice? = null
@@ -49,10 +49,11 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         private const val MSG_START_PREVIEW: Int = 2
         private const val MSG_START_PICTURE: Int = 3
         private const val MSG_UPLOAD_CARD: Int = 4
+        private const val MSG_REFERENCE_CARD: Int = 6
         private const val MSG_LOAD_IMG: Int = 5
-        const val SIGNIN_PIC_WIDTH = 1280
-        const val SIGNIN_PIC_HEIGHT = 720
-        var cameraOutPutSizes: List<Size>? = null
+        const val SIGNING_PIC_WIDTH = 1280
+        const val SIGNING_PIC_HEIGHT = 720
+//        var cameraOutPutSizes: Size? = null
     }
 
     private var permissionList = arrayListOf(
@@ -110,14 +111,14 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         mSurfaceHolder = holder
+        mSurfaceHolder!!.setFixedSize(SIGNING_PIC_WIDTH,
+            SIGNING_PIC_HEIGHT)
+        initCamera(mCameraId)
+    }
 
-        mSurfaceHolder!!.setFixedSize(SIGNIN_PIC_WIDTH,
-            SIGNIN_PIC_HEIGHT)
-
-        if (mCameraId < 0) {
-            initCamera(CameraCharacteristics.LENS_FACING_FRONT)
-        } else {
-            initCamera(mCameraId)
+    fun openCloseTor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mCameraManager?.setTorchMode(mCameraManager!!.cameraIdList[0], true)
         }
     }
 
@@ -126,9 +127,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         val handlerThread = HandlerThread("Camera2")
         handlerThread.start()
         childHandler = Handler(handlerThread.looper, this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mCameraManager = mContext?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-        }
+        mCameraManager = mContext?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         loadImageReader()
         if (!checkPermission()) {
             return
@@ -138,7 +137,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
 
     //检查权限
     private fun checkPermission(): Boolean {
-        var content: String? = null
+        var content: String?
         permissionList.forEachIndexed { index, permission ->
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -171,6 +170,11 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         childHandler?.obtainMessage(MSG_UPLOAD_CARD)?.sendToTarget()
     }
 
+    //图片认证
+    fun referenceImg() {
+        childHandler?.obtainMessage(MSG_REFERENCE_CARD)?.sendToTarget()
+    }
+
     @SuppressLint("MissingPermission")
     private fun startOpenCamera(cameraId: Int) {
         childHandler?.obtainMessage(MSG_OPEN_CAMERA, cameraId)?.sendToTarget()
@@ -188,21 +192,12 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         childHandler?.obtainMessage(MSG_START_PICTURE)?.sendToTarget()
     }
 
-    override fun onSuccess(temp: String) {
-        referenceTypeListener?.onSuccess(temp)
-    }
-
-    override fun onFiled() {}
-
-    override fun complete() {}
-
 
     override fun handleMessage(msg: Message): Boolean {
         when (msg.what) {
             MSG_OPEN_CAMERA -> {
-                val cameraId = if (msg.obj != 0) msg.obj as String else "0"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    openCamera(cameraId)
+                    openCamera(mCameraId.toString())
                 } else {
                     startTakePreView()
                 }
@@ -210,8 +205,6 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
             MSG_START_PREVIEW -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     takePreview()
-                } else {
-//                    takeCameraPreview(mCameraId.toString())
                 }
             }
             MSG_START_PICTURE -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -222,16 +215,20 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
             }
 
             MSG_UPLOAD_CARD -> {//上传图片
-                uploadRequest()
+//                uploadRequest()
+            }
+            MSG_REFERENCE_CARD -> {//图片认证
+//                referenceRequest()
             }
         }
         return false
     }
 
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setImageReader() {
-        mImageReader = ImageReader.newInstance(SIGNIN_PIC_WIDTH,
-            SIGNIN_PIC_HEIGHT,
+        mImageReader = ImageReader.newInstance(SIGNING_PIC_WIDTH,
+            SIGNING_PIC_HEIGHT,
             ImageFormat.JPEG,
             1)
         mImageReader?.setOnImageAvailableListener({ reader ->
@@ -245,12 +242,13 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
             buffer.get(bytes)
             try {
                 resultUrl = "$path/pic.png"
-                val fileOutputStream = FileOutputStream(File(resultUrl))
-                fileOutputStream.write(bytes, 0, bytes.size)
-                fileOutputStream.close()
-                println("success,Please find image in$path ")
-                referenceTypeListener?.onTakeSuccess(resultUrl!!)
-//                            uploadCard()
+                resultUrl?.also {
+                    val fileOutputStream = FileOutputStream(File(it))
+                    fileOutputStream.write(bytes, 0, bytes.size)
+                    fileOutputStream.close()
+                    println("success,Please find image in$path ")
+                    referenceTypeListener?.onTakeSuccess(it)
+                }
             } catch (ex: Exception) {
                 println("Exception:$ex")
                 ex.printStackTrace()
@@ -416,9 +414,45 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         mSurfaceHolder = null
     }
 
-    private fun uploadRequest() {
-        val params = getParams(Constants.APP_NAME, "", "1", "", "1", "", File(""))
-        startHttpRequest(this, upload_identity_path, params)
-    }
+
+//    /**
+//     * upload img
+//     */
+//    private fun uploadRequest() {
+//        val params = getParams(Constants.APP_NAME,
+//            "JPN",
+//            "1",
+//            SpUtil.getString(mContext, Constants.ID_TYPE)!!,
+//            "0",
+//            SpUtil.getString(mContext, Constants.REFERENCE)!!,
+//            File(""))
+//        startHttpRequest(this, upload_identity_path, params)
+//    }
+
+//    /**
+//     * reference image
+//     */
+//    private fun referenceRequest() {
+//        val params = getReParams(Constants.APP_NAME,
+//            SpUtil.getString(mContext, Constants.REFERENCE)!!
+//        )
+//        startHttpRequest(this, reference_path, params)
+//    }
+//
+//    override fun onSuccess(path: String, content: String) {
+//        when (path) {
+//            upload_identity_path -> {
+//                referenceTypeListener?.onSuccess(path, content)
+//            }
+//            reference_path -> {
+//                referenceTypeListener?.onSuccess(path, content)
+//            }
+//        }
+//    }
+//
+//    override fun onFiled() {}
+//
+//    override fun complete() {}
+
 
 }

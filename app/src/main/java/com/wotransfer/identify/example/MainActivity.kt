@@ -1,10 +1,13 @@
 package com.wotransfer.identify.example
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
+import com.wotransfer.identify.ui.ReferenceResultActivity
+import com.wotransfer.identify_ui.IdentifyReferenceActivity
 import com.wotransfer.identify_ui.reference.CameraLaunch
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,6 +25,7 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
+
 
     /**
      * ocr拍照认证
@@ -41,8 +45,9 @@ class MainActivity : Activity() {
     fun startFace(view: View) {
         CameraLaunch()
             .startView(CameraLaunch.LaunchType.CAMERA_FACE,
-                licenseId = licenseId,
-                licenseFileName = licenseFileName)
+             /*   licenseId = licenseId,
+                licenseFileName = licenseFileName,*/
+                country = "JPN")
     }
 
     /**
@@ -54,9 +59,9 @@ class MainActivity : Activity() {
         CameraLaunch()
             .startView(CameraLaunch.LaunchType.ALL,
                 et_face.text.toString().isEmpty(),
-                et_ocr.text.toString().isEmpty(),
+                et_ocr.text.toString().isEmpty()/*,
                 licenseId,
-                licenseFileName)
+                licenseFileName*/)
     }
 
     /**
@@ -64,15 +69,19 @@ class MainActivity : Activity() {
      */
     fun startAll(view: View) {
         CameraLaunch()
-            .startView(CameraLaunch.LaunchType.CAMERA_VIEW)
+            .startView(CameraLaunch.LaunchType.CAMERA_VIEW,
+                et_face.text.toString().isEmpty(),
+                et_ocr.text.toString().isEmpty()/*,
+                licenseId,
+                licenseFileName*/)
     }
 
     /**
      * 自定义view
      */
     fun startAllView(view: View) {
-        CameraLaunch()
-            .startView(CameraLaunch.LaunchType.MY_VIEW)
+        startActivity(Intent(this, MyIdentifyReferenceActivity::class.java))
+//        startActivity(Intent(this, ReferenceResultActivity::class.java))
     }
 
 }

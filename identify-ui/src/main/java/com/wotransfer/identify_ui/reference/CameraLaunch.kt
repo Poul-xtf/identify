@@ -6,8 +6,10 @@ import android.content.Intent
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.R
 import com.wotransfer.identify.ui.KycCameraActivity
+import com.wotransfer.identify.ui.OcrReferenceActivity
 import com.wotransfer.identify.util.showToast
 import com.wotransfer.identify_ui.IdentifyReferenceActivity
+import java.io.Serializable
 import java.lang.NullPointerException
 
 class CameraLaunch {
@@ -15,8 +17,15 @@ class CameraLaunch {
     companion object {
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null
-        fun register(t: Context) {
+        fun register(
+            t: Context, appName: String,
+            licenseId: String? = null,
+            licenseFileName: String? = null,
+        ) {
             context = t
+            Constants.APP_NAME = appName
+            Constants.license_id = licenseId ?: ""
+            Constants.license_name = licenseFileName ?: ""
         }
     }
 
@@ -24,47 +33,62 @@ class CameraLaunch {
         t: T, /*vararg params: Any*/
         face: Boolean? = null,
         card: Boolean? = null,
-        licenseId: String? = "",
-        licenseFileName: String? = "",
+        country: String? = null,
+        reference: String? = null,
+        model: Serializable? = null,
     ) {
         context?.let {
             when (t) {
+                //ocr+人脸
                 LaunchType.ALL -> {
+                    if (model == null) {
+                        throw NullPointerException("model is null")
+                    }
                     val intent = Intent(it, OcrReferenceActivity::class.java)
+                    intent.putExtra(Constants.MODEL, model)
+                    intent.putExtra(Constants.REFERENCE, reference)
                     intent.putExtra(Constants.FACE, face)
                     intent.putExtra(Constants.CARD, card)
-                    intent.putExtra(Constants.LICENSE_ID, licenseId)
-                    intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }
+                //ocr
+                LaunchType.CAMERA_OCR -> {
+                    if (model == null) {
+                        throw NullPointerException("model is null")
+                    }
+                    val intent = Intent(it, OcrReferenceActivity::class.java)
+                    intent.putExtra(Constants.MODEL, model)
+                    intent.putExtra(Constants.REFERENCE, reference)
+                    intent.putExtra(Constants.FACE, face)
+                    intent.putExtra(Constants.CARD, card)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    it.startActivity(intent)
+                }
+                //人脸
                 LaunchType.CAMERA_FACE -> {
-                    if (licenseId == "" || licenseFileName == "") {
+                    if (Constants.license_id == "" || Constants.license_name == "") {
                         it.showToast(it.getString(R.string.i_tip_license_1))
                         return
                     }
                     val intent = Intent(it, KycCameraActivity::class.java)
-                    intent.putExtra(Constants.LICENSE_ID, licenseId)
-                    intent.putExtra(Constants.LICENSE_FILE_NAME, licenseFileName)
+                    intent.putExtra(Constants.COUNTRY_CODE, country)
+                    intent.putExtra(Constants.REFERENCE, reference)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }
-                LaunchType.CAMERA_OCR -> {
-                    val intent = Intent(it, OcrReferenceActivity::class.java)
+
+                LaunchType.CAMERA_VIEW -> {
+                    val intent = Intent(it, IdentifyReferenceActivity::class.java)
                     intent.putExtra(Constants.FACE, face)
                     intent.putExtra(Constants.CARD, card)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }
-                LaunchType.CAMERA_VIEW -> {
+                else -> {
                     val intent = Intent(it, IdentifyReferenceActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
-                }
-                else -> {
-//                    val intent = Intent(it, IdentifyReferenceActivity::class.java)
-//                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                    it.startActivity(intent)
                 }
             }
         } ?: let {

@@ -52,4 +52,5 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.7'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
+    api "androidx.constraintlayout:constraintlayout:2.1.0-beta02"
 }
