@@ -42,8 +42,6 @@ class ScanningView(context: Context?) : View(context) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        Log.d("xxx", "$screenWidth")
-        Log.d("xxx", "$screenHeight")
         setMeasuredDimension(screenWidth, screenHeight)
     }
 
@@ -51,13 +49,14 @@ class ScanningView(context: Context?) : View(context) {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         paint.color = Color.GRAY
+        paint.style = Paint.Style.STROKE
         val rectf = RectF(30f, 0f, screenWidth.toFloat() - 30f, (screenHeight / 4).toFloat())
         canvas?.drawRoundRect(rectf, 10f, 10f, paint)
 
         paint.color = Color.WHITE
         canvas?.drawLine(20f, localY, screenWidth.toFloat() - 20f, localY, paint)
         if (localY < (screenHeight / 4).toFloat())
-            localY += 4
+            localY += 2
         else
             localY = 0f
         invalidate()

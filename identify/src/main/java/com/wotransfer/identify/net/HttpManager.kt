@@ -1,9 +1,6 @@
 package com.wotransfer.identify.net
 
-import android.widget.Toast
 import com.wotransfer.identify.Constants
-import com.wotransfer.identify.util.mContext
-import com.wotransfer.identify.util.showToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -26,28 +26,45 @@
 
             <ImageView
                 android:id="@+id/camera_crop"
-                android:layout_width="331dp"
-                android:layout_height="211dp"
+                android:layout_width="@dimen/dimen_331"
+                android:layout_height="@dimen/dimen_211"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
 
 
-        <ImageView
-            android:id="@+id/iv_crop"
+        <!--        <ImageView-->
+        <!--            android:id="@+id/iv_crop"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+
+        <!--            android:layout_centerHorizontal="true"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:layout_marginTop="220dp"-->
+        <!--            android:visibility="gone"-->
+        <!--            android:background="@mipmap/icon_resident_front" />-->
+        <RelativeLayout
+            android:id="@+id/rl_crop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="220dp"
-            android:background="@mipmap/icon_resident_front" />
+            android:layout_marginTop="220dp">
+
+            <com.wotransfer.identify.view.ScanningView
+                android:id="@+id/iv_crop"
+                android:layout_width="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:layout_below="@+id/iv_crop"
+            android:layout_below="@+id/camera_crop_container"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="30dp"
             android:layout_marginRight="60dp"

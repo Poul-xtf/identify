@@ -20,7 +20,6 @@ import com.wotransfer.identify.util.*
 import com.wotransfer.identify.view.util.EnumStatus
 import com.wotransfer.identify.view.util.EnumType
 import kotlinx.android.synthetic.main.camera_impl_view.view.*
-import java.io.File
 import java.io.IOException
 import kotlin.math.min
 
@@ -42,12 +41,14 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
     fun updateView() {
         camera_p1.visibility = View.VISIBLE
         iv_crop.visibility = View.VISIBLE
+        rl_crop.visibility = View.VISIBLE
         camera_crop.setImageBitmap(null)
     }
 
     fun updateBitmapView(stateObserver: StateObserver? = null, bitmap: Bitmap) {
         camera_p1.visibility = View.GONE
         iv_crop.visibility = View.INVISIBLE
+        rl_crop.visibility = View.INVISIBLE
         camera_crop.setImageBitmap(bitmap)
         observerList[EnumStatus.CAMERA_REPEAT]?.run {
             stateChange(EnumType.CARD, true, "")

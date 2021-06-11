@@ -29,7 +29,8 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
 
     // 语音播报开关
     private var isOpenSound = true
-    private var liveNessList: List<LivenessTypeEnum> = ArrayList()
+
+    private var liveNessList = arrayListOf<LivenessTypeEnum>()
     private var country: String = ""
     private var reference: String = ""
     private var file: File? = null
@@ -38,7 +39,31 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kyc_view)
         getIntentData()
+        getLiveNessList()
         init()
+    }
+
+    private fun getLiveNessList() {
+        when (Random().nextInt(6)) {
+            0 -> {
+                liveNessList.add(LivenessTypeEnum.Eye)
+            }
+            1 -> {
+                liveNessList.add(LivenessTypeEnum.Mouth)
+            }
+            2 -> {
+                liveNessList.add(LivenessTypeEnum.HeadRight)
+            }
+            3 -> {
+                liveNessList.add(LivenessTypeEnum.HeadLeft)
+            }
+            4 -> {
+                liveNessList.add(LivenessTypeEnum.HeadUp)
+            }
+            else -> {
+                liveNessList.add(LivenessTypeEnum.HeadDown)
+            }
+        }
     }
 
     private fun getIntentData() {
@@ -78,9 +103,7 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
                 val bytes = Base64Utils.decode(bitmapBase64, Base64Utils.NO_WRAP)
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                 iv_tess.setImageBitmap(bitmap)
-                //存在本地获取地址
                 file = saveBitmap(bitmap)
-                //上传图片、并认证
                 uploadImg()
             }
         }
