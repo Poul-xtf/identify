@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/faceplatform-ui" />
             <option value="$PROJECT_DIR$/identify" />
             <option value="$PROJECT_DIR$/identify-ui" />
+            <option value="$PROJECT_DIR$/myLib" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
