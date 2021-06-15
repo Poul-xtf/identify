@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.Poul-xtf'
 
 android {
     compileSdkVersion 25
@@ -27,6 +25,7 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar',"*.aar"])
-    api project(path: ':myLib')
+    api fileTree(dir: 'libs', include: ['*.jar','*.aar'])
+//    implementation(name: 'faceplatform-release', ext: 'aar')
+//    api project(path: ':myLib')
 }

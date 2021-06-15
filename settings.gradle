@@ -4,4 +4,3 @@ include ':faceplatform-ui'
 include ':app'
 rootProject.name = "UserIdentify"
 include ':identify-ui'
-include ':myLib'
