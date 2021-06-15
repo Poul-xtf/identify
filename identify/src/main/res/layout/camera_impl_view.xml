@@ -32,31 +32,30 @@
         </RelativeLayout>
 
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/iv_crop"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
+                <ImageView
+                    android:id="@+id/iv_crop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        <!--            android:layout_centerHorizontal="true"-->
-        <!--            android:layout_gravity="center_horizontal"-->
-        <!--            android:layout_marginTop="220dp"-->
-        <!--            android:visibility="gone"-->
-        <!--            android:background="@mipmap/icon_resident_front" />-->
-        <RelativeLayout
-            android:id="@+id/rl_crop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="220dp">
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="220dp"
+                    android:background="@mipmap/icon_resident_front" />
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/rl_crop"-->
+<!--            android:layout_width="@dimen/dimen_331"-->
+<!--            android:layout_height="@dimen/dimen_200"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:layout_marginTop="220dp">-->
 
-            <com.wotransfer.identify.view.ScanningView
-                android:id="@+id/iv_crop"
-                android:layout_width="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_height="wrap_content" />
+<!--            <com.wotransfer.identify.view.ScanningView-->
+<!--                android:id="@+id/iv_crop"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:layout_height="match_parent" />-->
 
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
 
         <ProgressBar

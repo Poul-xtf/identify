@@ -41,14 +41,14 @@ class CameraPreviewImplView(context: Context, attrs: AttributeSet) : FrameLayout
     fun updateView() {
         camera_p1.visibility = View.VISIBLE
         iv_crop.visibility = View.VISIBLE
-        rl_crop.visibility = View.VISIBLE
+//        rl_crop.visibility = View.VISIBLE
         camera_crop.setImageBitmap(null)
     }
 
     fun updateBitmapView(stateObserver: StateObserver? = null, bitmap: Bitmap) {
         camera_p1.visibility = View.GONE
         iv_crop.visibility = View.INVISIBLE
-        rl_crop.visibility = View.INVISIBLE
+//        rl_crop.visibility = View.INVISIBLE
         camera_crop.setImageBitmap(bitmap)
         observerList[EnumStatus.CAMERA_REPEAT]?.run {
             stateChange(EnumType.CARD, true, "")

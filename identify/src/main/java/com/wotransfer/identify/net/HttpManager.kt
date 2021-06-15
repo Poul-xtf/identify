@@ -50,6 +50,9 @@ class HttpManager(httpClient: HttpClient/*, httpCallBackListener: HttpCallBackLi
                         body = if (body?.length() != 0) body?.toString() else null)
                         ?.also { content ->
                             withContext(Dispatchers.Main) {
+                                if (content == "") {
+                                    return@withContext
+                                }
                                 val jsonObject = JSONObject(content)
                                 when (jsonObject.getInt("code")) {
                                     0 -> {
