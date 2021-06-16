@@ -1,10 +1,10 @@
-package com.wotransfer.identify_ui.util
+package com.wotransfer.identify.util
 
 import android.content.Context
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView
-import com.wotransfer.identify_ui.R
+import com.wotransfer.identify.R
 
 fun <T> showOptionsPickerView(
     context: Context,

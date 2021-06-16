@@ -114,7 +114,8 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
      */
     private fun uploadImg() {
         if (reference == "") {
-            throw NullPointerException("reference is null")
+            showToast(getString(R.string.i_toast_reference))
+            return
         }
         file?.let {
             val params = getParams(Constants.APP_NAME,

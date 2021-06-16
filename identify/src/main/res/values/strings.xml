@@ -54,5 +54,13 @@
     <string name="i_card_way">第%1$s步，共%2$s步</string>
     <string name="i_title_country">选择您的文件签发国家</string>
 
+    <string name="i_txt_reference">身份认证</string>
+    <string name="international_area_code">选择您的文件签发国家</string>
+    <string name="i_sure">确定</string>
+    <string name="i_cancel">取消</string>
+    <string name="i_toast_card_failed">证件列表获取失败</string>
+    <string name="i_toast_card">model为空</string>
+    <string name="i_toast_reference">reference为空</string>
+
 
 </resources>

@@ -1,4 +1,4 @@
-package com.wotransfer.identify_ui.util.view
+package com.wotransfer.identify.util.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,15 +7,14 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import com.wotransfer.identify_ui.R
+import com.wotransfer.identify.R
 import kotlin.math.abs
 
-class NySearchView(context: Context) : View(context) {
+class NySearchView : View {
     private var az = arrayListOf(
         "A",
         "B",
@@ -64,7 +63,11 @@ class NySearchView(context: Context) : View(context) {
 
     }
 
-    constructor(context: Context, attr: AttributeSet) : this(context) {
+    constructor(context: Context) : super(context) {
+        this.mContext = context
+    }
+
+    constructor(context: Context, attr: AttributeSet) : super(context, attr) {
         this.mContext = context
         screenWidth = getScreenWidth()
         screenHeight = getScreenWidth()
@@ -96,23 +99,18 @@ class NySearchView(context: Context) : View(context) {
             MotionEvent.ACTION_DOWN -> {
                 rawX = event.rawX
                 rawY = event.rawY
-                Log.d("xtf->", "$rawY")
-                Log.d("xtf->", "$azY")
-
-                val fingerViewY = rawY
-                if (fingerViewY > ((getScreenHeight() - viewHeight!!) / 2) && fingerViewY < getScreenHeight() - ((getScreenHeight() - viewHeight!!) / 2) && rawX > (getScreenWidth() - viewWidth!!)) {
+                val fingerViewY = rawY - getStatusHeight() - (getScreenHeight() - viewHeight!!) / 2
+                if (fingerViewY > 0 && fingerViewY < getScreenHeight() - ((getScreenHeight() - viewHeight!!) / 2) && rawX > (getScreenWidth() - viewWidth!!)) {
                     val temp = arrayListOf<Float>()
                     val temp1 = arrayListOf<Float>()
                     azY.forEach { (key, value) ->
                         temp.add(abs(value - fingerViewY))
                         temp1.add(value)
                     }
-                    Log.d("xtf->", "$temp")
-
                     temp.sort()
-                    Log.d("xtf->", "$temp")
                     azY.forEach { (key, value) ->
                         if (abs(value - fingerViewY) == temp[0]) {
+                            backListener?.invoke(key)
                             Toast.makeText(mContext, key, Toast.LENGTH_SHORT).show()
                             return@forEach
                         }
@@ -129,7 +127,6 @@ class NySearchView(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        Log.d("xxxx", "$screenWidth")
 //        canvas?.drawRect(
 //            0f,
 //            0f,
@@ -137,7 +134,6 @@ class NySearchView(context: Context) : View(context) {
 //            viewHeight!!.toFloat(),
 //            paint
 //        )
-        //可能内存泄漏
         paint1.color = Color.BLACK
         paint1.textSize = 40f
         paint1.textAlign = Paint.Align.CENTER
@@ -174,4 +170,10 @@ class NySearchView(context: Context) : View(context) {
         return mContext?.resources?.getDimensionPixelSize(resourceId)!!
     }
 
+
+    private var backListener: ((String) -> Unit)? = null
+
+    fun setItemListener(backListener: ((String) -> Unit)) {
+        this.backListener = backListener
+    }
 }

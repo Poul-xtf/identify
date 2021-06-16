@@ -26,7 +26,7 @@ fun startHttpRequest2(
  * 提供业务进行调用
  * @param country 国家
  */
-fun startHttpRequestList(
+fun getListOfDocuments(
     context: HttpCallBackListener,
     country: String,
 ) {

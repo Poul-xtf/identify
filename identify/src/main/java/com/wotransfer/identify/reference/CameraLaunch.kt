@@ -1,14 +1,14 @@
-package com.wotransfer.identify_ui.reference
+package com.wotransfer.identify.reference
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.R
+import com.wotransfer.identify.ui.IdentifyReferenceActivity
 import com.wotransfer.identify.ui.KycCameraActivity
 import com.wotransfer.identify.ui.OcrReferenceActivity
 import com.wotransfer.identify.util.showToast
-import com.wotransfer.identify_ui.IdentifyReferenceActivity
 import java.io.Serializable
 import java.lang.NullPointerException
 
@@ -42,7 +42,8 @@ class CameraLaunch {
                 //ocr+人脸
                 LaunchType.ALL -> {
                     if (model == null) {
-                        throw NullPointerException("model is null")
+                        it.showToast(it.getString(R.string.i_toast_card))
+                        return
                     }
                     val intent = Intent(it, OcrReferenceActivity::class.java)
                     intent.putExtra(Constants.MODEL, model)
@@ -55,7 +56,8 @@ class CameraLaunch {
                 //ocr
                 LaunchType.CAMERA_OCR -> {
                     if (model == null) {
-                        throw NullPointerException("model is null")
+                        it.showToast(it.getString(R.string.i_toast_card))
+                        return
                     }
                     val intent = Intent(it, OcrReferenceActivity::class.java)
                     intent.putExtra(Constants.MODEL, model)

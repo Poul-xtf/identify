@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import com.wotransfer.identify.net.HttpCallBackListener
 import com.wotransfer.identify.net.startHttpRequestList
-import com.wotransfer.identify_ui.reference.CameraLaunch
 
 class MyIdentifyReferenceActivity : Activity(), HttpCallBackListener {
 

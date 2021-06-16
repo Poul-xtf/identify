@@ -1,4 +1,4 @@
-package com.wotransfer.identify_ui.adapter
+package com.wotransfer.identify.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.wotransfer.identify_ui.R
+import com.wotransfer.identify.R
 import com.wotransfer.identify.net.bean.IdConfigForSdkRO
 import com.wotransfer.identify.util.getDrawable
 

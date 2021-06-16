@@ -4,4 +4,18 @@
         <attr name="sc_width" format="integer" />
         <attr name="sc_height" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="AnySearchList">
+        <attr name="view_width" format="integer" />
+        <attr name="view_height" format="integer" />
+        <attr name="locationX" format="integer" />
+        <attr name="locationY" format="integer" />
+        <attr name="textColor" format="integer" />
+        <attr name="textSize" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="AnySearchList_view">
+        <attr name="image_src" format="reference" />
+        <attr name="text_" format="string" />
+    </declare-styleable>
 </resources>

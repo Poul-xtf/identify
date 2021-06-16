@@ -1,19 +1,17 @@
-package com.wotransfer.identify_ui
+package com.wotransfer.identify.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ExpandableListView
 import com.google.gson.Gson
 import com.wotransfer.identify.Constants
+import com.wotransfer.identify.R
 import com.wotransfer.identify.net.*
 import com.wotransfer.identify.net.bean.IdConfigForSdkRO
 import com.wotransfer.identify.net.bean.IdTypeListBean
-import com.wotransfer.identify.ui.BaseKycActivity
-import com.wotransfer.identify.ui.OcrReferenceActivity
+import com.wotransfer.identify.ui.adapter.ReferenceMessAdapter
 import com.wotransfer.identify.util.htmlFormat
 import com.wotransfer.identify.util.showToast
-import com.wotransfer.identify_ui.adapter.ReferenceMessAdapter
 import kotlinx.android.synthetic.main.activity_identity_view.*
 
 class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="@dimen/dimen_34"
+        android:layout_height="@dimen/dimen_34"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginLeft="@dimen/dimen_16"
+        android:layout_marginTop="@dimen/dimen_14"
+        android:background="@mipmap/icon_back"
+        android:onClick="back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10"
+        android:text="@string/i_title_country"
+        android:textColor="@color/home_text_color_black"
+        android:textSize="@dimen/sp_20"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_back"
+        app:layout_constraintLeft_toRightOf="@+id/iv_back"
+        app:layout_constraintTop_toTopOf="@+id/iv_back" />
+
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_50"
+        android:layout_marginLeft="@dimen/dimen_20"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_40"
+        android:background="@drawable/shape_et_search"
+        android:hint="输入国家"
+        android:paddingLeft="@dimen/dimen_10"
+        android:textColor="@color/home_text_color_black"
+        android:textColorHint="@color/camera_gray_5f"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_back" />
+
+    <ExpandableListView
+        android:id="@+id/mListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginRight="@dimen/dimen_40"
+        android:layout_below="@+id/et_search"
+        android:layout_marginTop="@dimen/dimen_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_search" />
+
+    <com.wotransfer.identify.util.view.NySearchView
+        android:id="@+id/my_search_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:view_width="100" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

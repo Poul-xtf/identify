@@ -1,7 +1,7 @@
 package com.wotransfer.identify.example
 
 import android.app.Application
-import com.wotransfer.identify_ui.reference.CameraLaunch
+import com.wotransfer.identify.reference.CameraLaunch
 
 class MyApplication : Application() {
     private var licenseId: String = "WotransferIdentify-face-android"

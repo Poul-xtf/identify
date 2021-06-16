@@ -6,9 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
-import com.wotransfer.identify.ui.ReferenceResultActivity
-import com.wotransfer.identify_ui.IdentifyReferenceActivity
-import com.wotransfer.identify_ui.reference.CameraLaunch
+import com.wotransfer.identify.reference.CameraLaunch
 
 import kotlinx.android.synthetic.main.activity_main.*
 
