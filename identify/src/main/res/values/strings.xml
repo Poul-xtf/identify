@@ -59,7 +59,8 @@
     <string name="i_sure">确定</string>
     <string name="i_cancel">取消</string>
     <string name="i_toast_card_failed">证件列表获取失败</string>
-    <string name="i_toast_card">model为空</string>
+    <string name="i_toast_request">请求异常</string>
+    <string name="i_toast_card">证件为空</string>
     <string name="i_toast_reference">reference为空</string>
 
 

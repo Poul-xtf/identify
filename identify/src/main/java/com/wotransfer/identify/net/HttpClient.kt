@@ -148,7 +148,7 @@ class HttpClient {
             dos.close()
 
             Log.e(Constants.KYC_TAG, "postResponseCode() = " + conn.responseCode)
-            if (conn.responseCode == 200) {
+            if (conn.responseCode == HttpURLConnection.HTTP_OK) {
                 val `in` = conn.inputStream
                 val reader = BufferedReader(InputStreamReader(`in`))
                 var line: String?

@@ -1,5 +1,7 @@
 package com.wotransfer.identify.net
 
+import android.content.Context
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.wotransfer.identify.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -51,6 +53,7 @@ class HttpManager(httpClient: HttpClient/*, httpCallBackListener: HttpCallBackLi
                         ?.also { content ->
                             withContext(Dispatchers.Main) {
                                 if (content == "") {
+                                    httpCallBackListener?.complete()
                                     return@withContext
                                 }
                                 val jsonObject = JSONObject(content)

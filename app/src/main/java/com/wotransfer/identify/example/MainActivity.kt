@@ -6,18 +6,21 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
+import com.google.gson.Gson
+import com.wotransfer.identify.net.HttpCallBackListener
+import com.wotransfer.identify.net.bean.IdConfigForSdkRO
+import com.wotransfer.identify.net.bean.IdTypeListBean
+import com.wotransfer.identify.net.getListOfDocuments
 import com.wotransfer.identify.reference.CameraLaunch
+import com.wotransfer.identify.util.showToast
 
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 @RequiresApi(Build.VERSION_CODES.KITKAT)
-class MainActivity : Activity() {
-    private val tag = MainActivity::class.java.simpleName
-
-
-    private var licenseId: String = "WotransferIdentify-face-android"
-    private var licenseFileName: String = "WotransferIdentify-face-android"
+class MainActivity : Activity(), HttpCallBackListener {
+    var model: IdConfigForSdkRO? = null
+    private var reference: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +35,7 @@ class MainActivity : Activity() {
      */
     fun startPhoto(view: View) {
         CameraLaunch()
-            .startView(CameraLaunch.LaunchType.CAMERA_OCR)
+            .startView(CameraLaunch.LaunchType.CAMERA_OCR, reference = reference, model = model)
     }
 
     /**
@@ -43,8 +46,6 @@ class MainActivity : Activity() {
     fun startFace(view: View) {
         CameraLaunch()
             .startView(CameraLaunch.LaunchType.CAMERA_FACE,
-             /*   licenseId = licenseId,
-                licenseFileName = licenseFileName,*/
                 country = "JPN")
     }
 
@@ -57,9 +58,9 @@ class MainActivity : Activity() {
         CameraLaunch()
             .startView(CameraLaunch.LaunchType.ALL,
                 et_face.text.toString().isEmpty(),
-                et_ocr.text.toString().isEmpty()/*,
-                licenseId,
-                licenseFileName*/)
+                et_ocr.text.toString().isEmpty(),
+                reference = reference,
+                model = model)
     }
 
     /**
@@ -69,9 +70,7 @@ class MainActivity : Activity() {
         CameraLaunch()
             .startView(CameraLaunch.LaunchType.CAMERA_VIEW,
                 et_face.text.toString().isEmpty(),
-                et_ocr.text.toString().isEmpty()/*,
-                licenseId,
-                licenseFileName*/)
+                et_ocr.text.toString().isEmpty())
     }
 
     /**
@@ -80,6 +79,28 @@ class MainActivity : Activity() {
     fun startAllView(view: View) {
         startActivity(Intent(this, MyIdentifyReferenceActivity::class.java))
 //        startActivity(Intent(this, ReferenceResultActivity::class.java))
+    }
+
+    /**
+     * 获取证件列表
+     */
+    fun getListDocument(view: View) {
+        getListOfDocuments(this, "JPN")
+    }
+
+    override fun onSuccess(path: String, content: String) {
+        val gson = Gson()
+        val idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
+        model = idTypeListBean.model.idConfigForSdkROList[0]
+        reference = idTypeListBean.model.reference
+    }
+
+    override fun onFiled() {
+        showToast(getString(R.string.i_toast_card_failed))
+    }
+
+    override fun complete() {
+        showToast(getString(R.string.i_toast_request))
     }
 
 }

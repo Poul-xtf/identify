@@ -4,7 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import com.wotransfer.identify.net.HttpCallBackListener
-import com.wotransfer.identify.net.startHttpRequestList
+import com.wotransfer.identify.net.getListOfDocuments
 
 class MyIdentifyReferenceActivity : Activity(), HttpCallBackListener {
 
@@ -14,7 +14,7 @@ class MyIdentifyReferenceActivity : Activity(), HttpCallBackListener {
     }
 
     fun uploadId(view: View) {
-        startHttpRequestList(this, "JPN")
+        getListOfDocuments(this, "JPN")
     }
 
     override fun onSuccess(path: String, content: String) {
