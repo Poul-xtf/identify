@@ -40,6 +40,8 @@
         android:background="@drawable/shape_et_search"
         android:hint="输入国家"
         android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:singleLine="true"
         android:paddingLeft="@dimen/dimen_10"
         android:textColor="@color/home_text_color_black"
         android:textColorHint="@color/camera_gray_5f"

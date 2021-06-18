@@ -3,14 +3,14 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.Poul-xtf'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion rootProject.ext.version.compileSdkVersion
+    buildToolsVersion rootProject.ext.version.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1001
-        versionName "4.1"
+        minSdkVersion rootProject.ext.version.minSdkVersion
+        targetSdkVersion rootProject.ext.version.targetSdkVersion
+        versionCode rootProject.ext.version.versionCode
+        versionName rootProject.ext.version.versionName
     }
     buildTypes {
         release {
@@ -18,15 +18,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    repositories {
-//        flatDir {
-//            dirs 'libs'
-//        }
 
 }
 
 dependencies {
-//    api fileTree(dir: 'libs', include: ['*.jar','*.aar'])
-//    implementation(name: 'faceplatform-release', ext: 'aar')
     api project(path: ':myLib')
 }

@@ -75,7 +75,7 @@ fun getBitmapOption(
         matrix.postScale(-1f, 1f) //前置摄像头镜像翻转
         matrix.postRotate(degree.toFloat()) // 图片旋转90度；camera生成的图片和预览方向都是以手机屏幕右上角为原点向下为X轴正方向，向左为Y轴正方向的坐标系，所以预览方向和生成图片后都需要旋转90度
     } else {
-        matrix.postRotate(degree.toFloat()) // 图片旋转90度；camera生成的图片和预览方向都是以手机屏幕右上角为原点向下为X轴正方向，向左为Y轴正方向的坐标系，所以预览方向和生成图片后都需要旋转90度
+        matrix.postRotate(degree.toFloat())
     }
     cropBitmap = Bitmap.createBitmap(cropBitmap,
         0,
@@ -148,18 +148,17 @@ fun cropImage(context: Context, uri: Uri): Intent {
     val intent = Intent("com.android.camera.action.CROP")
     intent.setDataAndType(uri, "image/*")
     intent.putExtra("crop", "true")
-    if (Build.MANUFACTURER.contains("HUAWEI")) {
-        //硬件厂商为华为的，默认是圆形裁剪框，这里让它无法成圆形
-        intent.putExtra("aspectX", 9999)
-        intent.putExtra("aspectY", 9998)
-    } else {
-        //其他手机一般默认为方形
-        intent.putExtra("aspectX", 1)
-        intent.putExtra("aspectY", 1)
-    }
-
-    // 设置裁剪区域的形状，默认为矩形，也可设置为圆形，可能无效
-    //intent.putExtra("circleCrop", true);
+//    if (Build.MANUFACTURER.contains("HUAWEI")) {
+//        //硬件厂商为华为的，默认是圆形裁剪框，这里让它无法成圆形
+//        intent.putExtra("aspectX", 9999)
+//        intent.putExtra("aspectY", 9998)
+//    } else {
+//        //其他手机一般默认为方形
+//        intent.putExtra("aspectX", 1.5)
+//        intent.putExtra("aspectY", 1)
+//    }
+//   设置裁剪区域的形状，默认为矩形，也可设置为圆形，可能无效
+//    intent.putExtra("circleCrop", true)
     intent.putExtra("scale", true)
     val cropFile = File("${context.getExternalFilesDir(null)}/crop_image.jpg")
     try {
@@ -177,8 +176,9 @@ fun cropImage(context: Context, uri: Uri): Intent {
     return intent
 }
 
-fun getCropFile(resultUrl: String): File {
-    return if (TextUtils.isEmpty(resultUrl) || TextUtils.isEmpty(resultUrl?.trim { it <= ' ' })) {
+fun getCropFile(context: Context, resultUrl: String): File {
+    mContext = context
+    return if (TextUtils.isEmpty(resultUrl) || TextUtils.isEmpty(resultUrl.trim { it <= ' ' })) {
         if (isExternalStorageExist()) {
             File(mContext?.getExternalFilesDir(""), FILE_PIC_NAME)
         } else {

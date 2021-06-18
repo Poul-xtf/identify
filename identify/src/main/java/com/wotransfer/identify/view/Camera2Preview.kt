@@ -16,18 +16,14 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import com.wotransfer.identify.Constants
 import com.wotransfer.identify.R
-import com.wotransfer.identify.net.*
 import com.wotransfer.identify.util.CameraUtil
-import com.wotransfer.identify.util.SpUtil
 import com.wotransfer.identify.util.showToast
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 
-open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callback/*,
-    HttpCallBackListener*/ {
+open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callback {
 
     private var mContext: Context? = null
     private var mSurfaceHolder: SurfaceHolder? = null
@@ -44,7 +40,6 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
     private var resultUrl: String? = null
 
     companion object {
-        private val TAG = Camera2Preview::class.java.name
         private const val MSG_OPEN_CAMERA: Int = 1
         private const val MSG_START_PREVIEW: Int = 2
         private const val MSG_START_PICTURE: Int = 3
@@ -97,7 +92,7 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         val surfaceHolder = holder
         surfaceHolder.addCallback(this)
         surfaceHolder.setKeepScreenOn(true)
-        CameraUtil.init(mContext!!)
+//        CameraUtil.init(mContext!!)
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
@@ -413,46 +408,5 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         }
         mSurfaceHolder = null
     }
-
-
-//    /**
-//     * upload img
-//     */
-//    private fun uploadRequest() {
-//        val params = getParams(Constants.APP_NAME,
-//            "JPN",
-//            "1",
-//            SpUtil.getString(mContext, Constants.ID_TYPE)!!,
-//            "0",
-//            SpUtil.getString(mContext, Constants.REFERENCE)!!,
-//            File(""))
-//        startHttpRequest(this, upload_identity_path, params)
-//    }
-
-//    /**
-//     * reference image
-//     */
-//    private fun referenceRequest() {
-//        val params = getReParams(Constants.APP_NAME,
-//            SpUtil.getString(mContext, Constants.REFERENCE)!!
-//        )
-//        startHttpRequest(this, reference_path, params)
-//    }
-//
-//    override fun onSuccess(path: String, content: String) {
-//        when (path) {
-//            upload_identity_path -> {
-//                referenceTypeListener?.onSuccess(path, content)
-//            }
-//            reference_path -> {
-//                referenceTypeListener?.onSuccess(path, content)
-//            }
-//        }
-//    }
-//
-//    override fun onFiled() {}
-//
-//    override fun complete() {}
-
 
 }

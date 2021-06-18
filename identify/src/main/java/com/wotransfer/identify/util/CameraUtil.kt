@@ -11,19 +11,16 @@ import androidx.annotation.RequiresApi
 
 class CameraUtil {
 
+
     companion object {
-        private val ourInstance = CameraUtil()
-        var mContext: Context? = null
+        private val ourInstance by lazy { CameraUtil() }
+        private var mContext: Context? = null
         var cameraManager: CameraManager? = null
-
         fun init(context: Context) {
-            if (mContext == null) {
-                mContext = context
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    cameraManager =
-                        mContext?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-                }
-
+            mContext = context
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                cameraManager =
+                    mContext?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
             }
         }
 
@@ -47,7 +44,7 @@ class CameraUtil {
         }
         return null
 //        return (get?.getOutputSizes(SurfaceTexture::class.java))!!.toList()
-
     }
+
 
 }

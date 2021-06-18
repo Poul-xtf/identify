@@ -16,33 +16,32 @@ class CameraLaunch {
 
     companion object {
         @SuppressLint("StaticFieldLeak")
-        var context: Context? = null
+        var mContext: Context? = null
         fun register(
-            t: Context, appName: String,
+            context: Context, appName: String,
             licenseId: String? = null,
             licenseFileName: String? = null,
         ) {
-            context = t
+            mContext = context
             Constants.APP_NAME = appName
-            Constants.license_id = licenseId ?: ""
-            Constants.license_name = licenseFileName ?: ""
+            Constants.LICENSE_ID = licenseId ?: ""
+            Constants.LICENSE_NAME = licenseFileName ?: ""
         }
     }
 
-    fun <T> startView(
-        t: T, /*vararg params: Any*/
-        face: Boolean? = null,
-        card: Boolean? = null,
+    fun startView(
+        type: LaunchType,
+        face: Int? = null,
+        card: Int? = null,
         country: String? = null,
         reference: String? = null,
         model: Serializable? = null,
     ) {
-        context?.let {
-            when (t) {
-                //ocr+人脸
+        mContext?.let {
+            when (type) {
                 LaunchType.ALL -> {
                     if (model == null) {
-                        it.showToast(it.getString(R.string.i_toast_card))
+                        it.showToast(it.getString(R.string.i_tip_license_3))
                         return
                     }
                     val intent = Intent(it, OcrReferenceActivity::class.java)
@@ -53,10 +52,9 @@ class CameraLaunch {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }
-                //ocr
                 LaunchType.CAMERA_OCR -> {
                     if (model == null) {
-                        it.showToast(it.getString(R.string.i_toast_card))
+                        it.showToast(it.getString(R.string.i_tip_license_3))
                         return
                     }
                     val intent = Intent(it, OcrReferenceActivity::class.java)
@@ -67,9 +65,8 @@ class CameraLaunch {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     it.startActivity(intent)
                 }
-                //人脸
                 LaunchType.CAMERA_FACE -> {
-                    if (Constants.license_id == "" || Constants.license_name == "") {
+                    if (Constants.LICENSE_ID == "" || Constants.LICENSE_NAME == "") {
                         it.showToast(it.getString(R.string.i_tip_license_1))
                         return
                     }
@@ -96,8 +93,6 @@ class CameraLaunch {
         } ?: let {
             throw NullPointerException("CameraLaunch is register")
         }
-
-
     }
 
 
@@ -106,6 +101,6 @@ class CameraLaunch {
         CAMERA_OCR,
         CAMERA_FACE,
         CAMERA_VIEW,
-        MY_VIEW,
+        MY_VIEW
     }
 }

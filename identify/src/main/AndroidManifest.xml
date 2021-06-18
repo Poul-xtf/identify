@@ -8,8 +8,8 @@
         <activity android:name=".ui.ReferenceResultActivity" />
         <activity android:name=".ui.OcrReferenceActivity" />
 
-        <activity android:name="com.wotransfer.identify.ui.IdentifyReferenceActivity" />
-        <activity android:name="com.wotransfer.identify.ui.ChangeCountryActivity" />
+        <activity android:name=".ui.IdentifyReferenceActivity" />
+        <activity android:name=".ui.ChangeCountryActivity" />
 
         <receiver
             android:name="com.baidu.liantian.LiantianReceiver"

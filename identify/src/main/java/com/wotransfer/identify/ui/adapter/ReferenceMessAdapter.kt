@@ -42,7 +42,7 @@ class ReferenceMessAdapter(
         }
         groupViewHolder?.tvTitle?.text = mListData[p0].idName
         groupViewHolder?.parentView?.getDrawable(mContext, R.drawable.shape_item)
-        groupViewHolder?.ivStatus?.getDrawable(mContext, R.mipmap.icon_item_open)
+//        groupViewHolder?.ivStatus?.getDrawable(mContext, R.mipmap.icon_item_open)
         return myParentView!!
     }
 
@@ -56,7 +56,7 @@ class ReferenceMessAdapter(
 
     override fun getChildView(p0: Int, p1: Int, p2: Boolean, p3: View?, p4: ViewGroup?): View {
         groupViewHolder?.parentView?.getDrawable(mContext, R.drawable.shape_item_top)
-        groupViewHolder?.ivStatus?.getDrawable(mContext, R.mipmap.icon_item_close)
+//        groupViewHolder?.ivStatus?.getDrawable(mContext, R.mipmap.icon_item_close)
 
         var childViewHolder: ChildViewHolder? = null
         var myView = p3

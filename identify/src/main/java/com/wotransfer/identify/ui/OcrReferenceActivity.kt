@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import com.wotransfer.identify.Constants
+import com.wotransfer.identify.Constants.Companion.KYC_TAG
 import com.wotransfer.identify.R
 import com.wotransfer.identify.manager.CameraPreviewManager
 import com.wotransfer.identify.net.bean.IdConfigForSdkRO
@@ -18,27 +19,22 @@ import com.wotransfer.identify.util.cropImage
 import com.wotransfer.identify.util.showToast
 import com.wotransfer.identify.view.util.EnumType
 import kotlinx.android.synthetic.main.activity_ocr_view.*
+import kotlinx.android.synthetic.main.camera_im_view.*
 import java.io.FileNotFoundException
-import java.lang.NullPointerException
 import java.util.*
 
 class OcrReferenceActivity : Activity() {
-    private val tag = OcrReferenceActivity::class.java.simpleName
-
-    private var booleanFace: Boolean = false
-    private var booleanCard: Boolean = false
+    private var booleanFace: Int? = -1
+    private var booleanCard: Int? = -1
     private var content: IdConfigForSdkRO? = null
     private var reference: String? = null
-
-    private var licenseId: String? = null
-    private var licenseName: String? = null
-    private var faceStatus = false
     private var amount = 2
     private var momentLocal = 1
 
     companion object {
         const val REQUEST_CODE_CHOOSE_IMAGE = 1
         const val REQUEST_CODE_CROP_IMAGE = 2
+        const val STATUS_TASK_FALSE = 1
     }
 
     private lateinit var cropImageUri: Uri
@@ -51,58 +47,60 @@ class OcrReferenceActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ocr_view)
-        rl_take.background.alpha = 117
         getIntentData()
     }
 
     private fun getIntentData() {
-        booleanCard = intent.getBooleanExtra(Constants.CARD, true)
-        booleanFace = intent.getBooleanExtra(Constants.FACE, false)
         reference = intent.getStringExtra(Constants.REFERENCE)
         SpUtil.putString(this, Constants.REFERENCE, reference)
-
-        content = intent.getSerializableExtra(Constants.MODEL) as IdConfigForSdkRO
+        content = intent.getSerializableExtra(Constants.MODEL)?.let {
+            it as IdConfigForSdkRO
+        }
         SpUtil.putString(this, Constants.COUNTRY_CODE, content?.countryCode)
-        //若业务没有传Constants.CARD或者Constants.FACE，则默认model列表中的needOcr、needFace
-        SpUtil.putString(this,
-            Constants.NEED_OCR,
-            if (!booleanCard) "1" else content?.needOcr.toString())
-        SpUtil.putString(this,
-            Constants.NEED_FACE,
-            if (!booleanFace) "1" else content?.needFace.toString())
-
+        val card = intent.getIntExtra(Constants.CARD, Constants.DEFAULT_CODE)
+        val face = intent.getIntExtra(Constants.FACE, Constants.DEFAULT_CODE)
+        booleanCard = if (card == Constants.DEFAULT_CODE) {
+            content?.needOcr
+        } else {
+            card
+        }
+        booleanFace = if (face == Constants.DEFAULT_CODE) {
+            content?.needFace
+        } else {
+            face
+        }
+        SpUtil.putString(this, Constants.NEED_OCR, booleanCard.toString())
+        SpUtil.putString(this, Constants.NEED_FACE, booleanFace.toString())
         amount = content?.idConfigForSdkROList?.size ?: 0
-
         setTipWay()
     }
 
     private fun setTipWay() {
+        tv_tip_title.text = content!!.idConfigForSdkROList[momentLocal - 1].idName
         camera_p.updateProgressMax(amount)
         camera_p.updateProgress(momentLocal)
+        camera_p.updateCropBView(content!!.idConfigForSdkROList[momentLocal - 1].borderUrl)
         tv_tip_way.text = String.format(getString(R.string.i_card_way), momentLocal, amount)
     }
 
-
     fun startPhoto(view: View) {
         CameraPreviewManager.getInstance()
-            ?.startReferenceFaceOrCard(booleanFace, cardStatus = booleanCard)
+            ?.startReferenceFaceOrCard(booleanFace == Constants.OPEN_FACE,
+                cardStatus = booleanCard == Constants.OPEN_CARD)
             ?.setCameraPreview(camera_p)
             ?.addObserverCameraChange(object : StateObserver {
                 //拍摄状态
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
-                    Log.d(tag, "观察者2")
+                    Log.d(KYC_TAG, "观察者2")
                     changeView()
                 }
             })
             ?.addObserverFaceOrCardChange(object : StateObserver {
-                //content不为null时，已进行证件认证
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
-                    Log.d(tag, if (type == EnumType.FACE) "开始人脸识别" else "不需要人脸识别")
                     when (type) {
                         EnumType.CARD_UP -> {
-                            //ocr上传图片
                             if (momentLocal == amount) {
-                                if (!booleanFace) {//不需要人脸识别时开始认证
+                                if (booleanFace == Constants.CLOSE_FACE) {
                                     camera_p.referenceImg()
                                 } else {
                                     startFace()
@@ -114,15 +112,10 @@ class OcrReferenceActivity : Activity() {
                             setTipWay()
                         }
                         EnumType.CARD -> {
-                            //证件认证，则调换认证成功或者失败界面
-                            Log.d(Constants.KYC_TAG, "state=$state")
+                            Log.d(KYC_TAG, "state=$state")
                             launchStatusView(state)
                         }
                         else -> {
-//                             EnumType.FACE -> {
-//                            //需要人脸识别认证
-//                            faceStatus = true
-//                        }
                         }
                     }
                 }
@@ -141,13 +134,14 @@ class OcrReferenceActivity : Activity() {
 
     //开始人脸识别
     private fun startFace() {
-        if (Constants.license_id == "" || Constants.license_name == "") {
+        if (Constants.LICENSE_ID == "" || Constants.LICENSE_NAME == "") {
             this.showToast(getString(R.string.i_tip_license_1))
             finish()
             return
         }
         val intent = Intent(this@OcrReferenceActivity, KycCameraActivity::class.java)
         intent.putExtra(Constants.COUNTRY_CODE, content?.countryCode)
+        intent.putExtra(Constants.REFERENCE, reference)
         startActivity(intent)
         this@OcrReferenceActivity.finish()
     }
@@ -198,7 +192,6 @@ class OcrReferenceActivity : Activity() {
         iv_take.visibility = View.VISIBLE
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         if (intent != null) {
@@ -207,9 +200,7 @@ class OcrReferenceActivity : Activity() {
                     val iconUri = intent.data
                     iconUri?.let {
                         startCropImage(it)
-                    } ?: let {
-                        throw NullPointerException("uri is null")
-                    }
+                    } ?: showToast("uri is null")
                 }
                 REQUEST_CODE_CROP_IMAGE -> if (resultCode == RESULT_OK) {
                     chooseImage = true

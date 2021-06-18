@@ -21,7 +21,6 @@ class CameraPreviewManager : BaseManager() {
         }
     }
 
-    //人脸和证件认证
     fun startReferenceFaceOrCard(faceStatus: Boolean? = false, cardStatus: Boolean? = false): CameraPreviewManager? {
         faceStatus?.let {
             statusMap(EnumType.FACE, faceStatus)

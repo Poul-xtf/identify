@@ -1,26 +1,31 @@
 package com.wotransfer.identify.util.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.annotation.Nullable
+import androidx.core.widget.addTextChangedListener
 import com.google.gson.Gson
 import com.wotransfer.identify.R
 import com.wotransfer.identify.util.getJson
+import kotlinx.android.synthetic.main.my_list_view.view.*
 
 class AnySearchList : RelativeLayout {
 
     private var mContext: Context? = context
     private var imageSrc: Int? = 0
-    private var textsss: String? = ""
-    private var ivTest: ImageView? = null
+    private var textName: String? = ""
     private var tvEt: TextView? = null
+    private var viewAdapter: AnyAdapter? = null
     private var mListView: ExpandableListView? = null
     private var mySearchView: NySearchView? = null
     private var thisData: List<Model>? = null
+    private var tempData: List<Model>? = null
     private var indexData = arrayListOf<String>()
 
     constructor(context: Context) : this(context, null) {}
@@ -32,6 +37,7 @@ class AnySearchList : RelativeLayout {
     ) {
     }
 
+    @SuppressLint("CustomViewStyleable")
     constructor(context: Context, @Nullable attributeSet: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attributeSet,
@@ -40,7 +46,7 @@ class AnySearchList : RelativeLayout {
         mContext = context
         val obtain = mContext?.obtainStyledAttributes(attributeSet, R.styleable.AnySearchList_view)
         imageSrc = obtain?.getResourceId(R.styleable.AnySearchList_view_image_src, 0)
-        textsss = obtain?.getString(R.styleable.AnySearchList_view_text_)
+        textName = obtain?.getString(R.styleable.AnySearchList_view_text_)
         obtain?.recycle()
         finView()
     }
@@ -56,19 +62,27 @@ class AnySearchList : RelativeLayout {
                 }
             }
         }
-        tvEt?.text = textsss
-    }
-
-    var size = 0
-    private fun getSize(index: Int): Int {
-        var position = index
-        if (index < 0) {
-            return size
+        tvEt?.text = textName
+        et_search.addTextChangedListener {
+            if (it.toString() == "") {
+                thisData = tempData
+                setData()
+                return@addTextChangedListener
+            }
+            Log.d("xxxtf->", it.toString())
+            val myModel = arrayListOf<Model>()
+            tempData?.forEachIndexed { _, model ->
+                model.data.forEachIndexed { _, data ->
+                    if (it.toString() == data.countryName) {
+                        Log.d("xxxtf->", data.countryName)
+                        myModel.add(model)
+                        thisData = myModel
+                        setData()
+                        return@forEachIndexed
+                    }
+                }
+            }
         }
-        size += thisData!![index].data.size
-        position -= 1
-        getSize(position)
-        return 0
     }
 
     override fun onNestedFling(
@@ -80,33 +94,39 @@ class AnySearchList : RelativeLayout {
         return super.onNestedFling(target, velocityX, velocityY, consumed)
     }
 
-
-//    fun setListData(data: List<String>) {
-//        thisData = data as ArrayList<String>
-//        setViewAdapter()
-//    }
-
-    fun setViewAdapter() {
+    fun setViewAdapter(backListener: (String, String) -> Unit?) {
         val gson = Gson()
         val strData = getJson("Country.json", mContext!!)
         val countryBean = gson.fromJson(strData, CountryBean::class.java)
+        tempData = countryBean.model
         thisData = countryBean.model
-        val viewAdapter = AnyAdapter(mContext, thisData!!)
+        setData()
+
+        mListView?.setOnGroupClickListener { _, _, _, _ ->
+            true
+        }
+
+        mListView?.setOnChildClickListener { _, _, pIndex, cIndex, _ ->
+            val country = thisData?.get(pIndex)?.data?.get(cIndex)?.countryCode
+            val countryName = thisData?.get(pIndex)?.data?.get(cIndex)?.countryName
+            backListener.invoke(country!!, countryName!!)
+            false
+        }
+        thisData?.forEachIndexed { _, model ->
+            indexData.add(model.index)
+            model.data.forEach {
+                indexData.add(it.countryName)
+            }
+        }
+    }
+
+    private fun setData() {
+        viewAdapter = AnyAdapter(mContext, thisData!!)
         mListView?.setGroupIndicator(null)
         mListView?.setAdapter(viewAdapter)
         val count = mListView?.count!!
         for (i in 0 until count) {
             mListView?.expandGroup(i)
         }
-        mListView?.setOnGroupClickListener { _, _, _, _ ->
-            true
-        }
-        thisData?.forEachIndexed { index, model ->
-            indexData.add(model.index)
-            model.data.forEach {
-                indexData.add(it.CountryName)
-            }
-        }
-        Log.d("xtf--->", indexData.toString())
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/camera_black_40"
@@ -8,14 +9,16 @@
 
     <com.wotransfer.identify.view.CameraPreviewImplView
         android:id="@+id/camera_p"
-        style="@style/style_hw_match" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <ImageView
         android:layout_width="@dimen/dimen_17"
         android:layout_height="@dimen/dimen_17"
-        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginStart="@dimen/dimen_14"
         android:layout_marginTop="@dimen/dimen_14"
         android:background="@mipmap/icon_re_failed"
+        android:contentDescription="@string/close_photo"
         android:onClick="finishBack" />
 
     <LinearLayout
@@ -31,7 +34,7 @@
             android:gravity="center"
             android:text="@string/i_card_front"
             android:textColor="@color/home_text_color_white"
-            android:textSize="@dimen/dimen_18" />
+            android:textSize="@dimen/sp_18" />
 
         <TextView
             android:id="@+id/tv_tip_way"
@@ -41,7 +44,7 @@
             android:gravity="center"
             android:text="@string/i_card_way"
             android:textColor="@color/camera_gray_a7"
-            android:textSize="@dimen/dimen_13" />
+            android:textSize="@dimen/sp_14" />
 
         <TextView
             android:id="@+id/tv_tip_text"
@@ -51,7 +54,7 @@
             android:gravity="center"
             android:text="@string/i_card_tip"
             android:textColor="@color/home_text_color_white"
-            android:textSize="@dimen/dimen_14" />
+            android:textSize="@dimen/sp_16" />
     </LinearLayout>
 
     <RelativeLayout
@@ -61,10 +64,10 @@
 
         <RelativeLayout
             android:id="@+id/rl_sd_photo"
-            android:layout_width="@dimen/dimen_54"
-            android:layout_height="@dimen/dimen_54"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_26"
+            android:layout_marginStart="@dimen/dimen_26"
             android:background="@drawable/shape_camera_take"
             android:onClick="changeTor">
 
@@ -80,9 +83,9 @@
             android:id="@+id/rl_get_photo"
             android:layout_width="@dimen/dimen_54"
             android:layout_height="@dimen/dimen_54"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dimen_26"
+            android:layout_marginEnd="@dimen/dimen_26"
             android:background="@drawable/shape_camera_back"
             android:onClick="getPhoto"
             android:visibility="gone">
@@ -105,11 +108,11 @@
 
         <ImageView
             android:id="@+id/iv_album"
-            android:layout_width="@dimen/dimen_54"
-            android:layout_height="@dimen/dimen_54"
-            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dimen_26"
+            android:layout_marginEnd="@dimen/dimen_26"
             android:background="@mipmap/icon_ablumn"
             android:onClick="startAlbum" />
 
@@ -118,7 +121,7 @@
             android:layout_width="@dimen/dimen_54"
             android:layout_height="@dimen/dimen_54"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dimen_26"
+            android:layout_marginStart="@dimen/dimen_26"
             android:background="@drawable/shape_camera_back"
             android:onClick="repeatPhoto"
             android:visibility="gone">
@@ -143,7 +146,7 @@
 
         <TextView
             style="@style/style_hw"
-            android:layout_marginLeft="@dimen/dimen_12"
+            android:layout_marginStart="@dimen/dimen_12"
             android:layout_marginTop="@dimen/dimen_16"
             android:text="@string/i_text_simple"
             android:textColor="@color/home_text_color_black"
@@ -152,48 +155,49 @@
         <ImageView
             android:id="@+id/iv_card_simple"
             style="@style/style_hw"
-            android:layout_marginLeft="@dimen/dimen_12"
+            android:layout_marginStart="@dimen/dimen_12"
             android:layout_marginTop="@dimen/dimen_64"
             android:src="@drawable/shape_card_simple" />
 
         <TextView
             style="@style/style_hw"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/dimen_65"
-            android:layout_marginRight="@dimen/dimen_13"
-            android:drawableLeft="@drawable/shape_circle_min"
+            android:layout_marginEnd="@dimen/dimen_13"
             android:drawablePadding="@dimen/dimen_5"
             android:text="@string/i_text_perfect"
             android:textColor="@color/camera_gray_34"
-            android:textSize="@dimen/dimen_16" />
+            android:textSize="@dimen/sp_16"
+            app:drawableStartCompat="@drawable/shape_circle_min" />
 
         <TextView
             style="@style/style_hw"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/dimen_124"
-            android:layout_marginRight="@dimen/dimen_13"
-            android:drawableLeft="@drawable/shape_circle_min"
+            android:layout_marginEnd="@dimen/dimen_13"
             android:drawablePadding="@dimen/dimen_5"
             android:text="@string/i_text_evenly"
             android:textColor="@color/camera_gray_34"
-            android:textSize="@dimen/dimen_16" />
+            android:textSize="@dimen/sp_16"
+            app:drawableStartCompat="@drawable/shape_circle_min" />
 
         <TextView
             style="@style/style_hw"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/dimen_186"
-            android:layout_marginRight="@dimen/dimen_13"
-            android:drawableLeft="@drawable/shape_circle_min"
+            android:layout_marginEnd="@dimen/dimen_13"
             android:drawablePadding="@dimen/dimen_5"
             android:text="@string/i_text_clear"
             android:textColor="@color/camera_gray_34"
-            android:textSize="@dimen/dimen_16" />
+            android:textSize="@dimen/sp_16"
+            app:drawableLeftCompat="@drawable/shape_circle_min" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_card_simple"
             android:layout_marginTop="@dimen/dimen_25"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -207,7 +211,7 @@
                     android:layout_width="@dimen/dimen_17"
                     android:layout_height="@dimen/dimen_17"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:layout_marginStart="@dimen/dimen_12"
                     android:layout_marginTop="@dimen/dimen_46"
                     android:background="@mipmap/icon_error" />
 
@@ -218,7 +222,7 @@
                     android:layout_marginTop="@dimen/dimen_65"
                     android:text="@string/i_text_miss"
                     android:textColor="@color/camera_gray_3c"
-                    android:textSize="@dimen/dimen_14" />
+                    android:textSize="@dimen/sp_14" />
 
 
             </RelativeLayout>
@@ -234,7 +238,7 @@
                     android:layout_width="@dimen/dimen_17"
                     android:layout_height="@dimen/dimen_17"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:layout_marginStart="@dimen/dimen_12"
                     android:layout_marginTop="@dimen/dimen_46"
                     android:background="@mipmap/icon_error" />
 
@@ -244,7 +248,7 @@
                     android:layout_marginTop="@dimen/dimen_65"
                     android:text="@string/i_text_blurry"
                     android:textColor="@color/camera_gray_3c"
-                    android:textSize="@dimen/dimen_14" />
+                    android:textSize="@dimen/sp_14" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -258,7 +262,7 @@
                     android:layout_width="@dimen/dimen_17"
                     android:layout_height="@dimen/dimen_17"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="@dimen/dimen_12"
+                    android:layout_marginStart="@dimen/dimen_12"
                     android:layout_marginTop="@dimen/dimen_46"
                     android:background="@mipmap/icon_error" />
 
@@ -268,7 +272,7 @@
                     android:layout_marginTop="@dimen/dimen_65"
                     android:text="@string/i_text_flash"
                     android:textColor="@color/camera_gray_3c"
-                    android:textSize="@dimen/dimen_14" />
+                    android:textSize="@dimen/sp_14" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -286,7 +290,7 @@
                 android:id="@+id/rl_sd"
                 style="@style/style_hw"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginStart="@dimen/dimen_14"
                 android:background="@drawable/shape_camera_flash">
 
                 <ImageView
@@ -301,7 +305,7 @@
                 android:id="@+id/rl_true"
                 style="@style/style_hw"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dimen_14"
+                android:layout_marginStart="@dimen/dimen_14"
                 android:background="@drawable/shape_camera_flash"
                 android:onClick="getPhoto"
                 android:visibility="gone">
@@ -331,9 +335,9 @@
 
             <RelativeLayout
                 style="@style/style_hw"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dimen_14"
+                android:layout_marginEnd="@dimen/dimen_14"
                 android:background="@drawable/shape_camera_back"
                 android:onClick="repeatPhoto">
 

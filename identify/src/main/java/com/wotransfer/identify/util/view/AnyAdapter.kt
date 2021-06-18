@@ -7,20 +7,12 @@ import android.view.ViewGroup
 import android.widget.*
 import com.wotransfer.identify.R
 
-class AnyAdapter : BaseExpandableListAdapter {
+class AnyAdapter(private var mContext: Context?, list: List<Model>) : BaseExpandableListAdapter() {
 
-    private var mContext: Context? = null
-    private var mListData: List<Model>? = null
+    private var mListData: List<Model>? = list
     private var inflater: LayoutInflater? = null
 
-    constructor(mContext: Context?, list: List<Model>) {
-        this.mContext = mContext
-        mListData = list
-        inflater = LayoutInflater.from(mContext)
-    }
-
     private var groupViewHolder: GroupViewHolder? = null
-    private var itemListener: ItemListener? = null
     override fun getGroupCount(): Int = mListData!!.size
     override fun getGroup(p0: Int) = mListData?.get(p0)
     override fun getGroupId(p0: Int): Long = p0.toLong()
@@ -66,10 +58,7 @@ class AnyAdapter : BaseExpandableListAdapter {
         }
         childViewHolder?.catalog?.visibility = View.GONE
         childViewHolder?.name?.visibility = View.VISIBLE
-        childViewHolder?.name?.text = mListData!![p0].data[p1].CountryName
-        childViewHolder?.name?.setOnClickListener {
-            itemListener?.itemBack(p0, 0)
-        }
+        childViewHolder?.name?.text = mListData!![p0].data[p1].countryName
         return myView!!
     }
 
@@ -89,12 +78,8 @@ class AnyAdapter : BaseExpandableListAdapter {
         var catalog: TextView? = null
     }
 
-    interface ItemListener {
-        fun itemBack(position: Int, childPosition: Int)
-    }
-
-    fun setItemListener(itemListener: ItemListener) {
-        this.itemListener = itemListener
+    init {
+        inflater = LayoutInflater.from(mContext)
     }
 
 }

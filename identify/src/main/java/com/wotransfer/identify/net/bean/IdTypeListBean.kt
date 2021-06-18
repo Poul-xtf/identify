@@ -48,4 +48,5 @@ data class IdConfigForSdkROX(
     val side: Int,
     val sort: Int,
     val subtitle: String,
+    val borderUrl: String,
 ):Serializable

@@ -8,7 +8,6 @@ open class BaseManager {
         var statusMap = HashMap<EnumType, Boolean>()
     }
     init {
-        //默认只做证件认证
         statusMap(EnumType.CARD, false)
         statusMap(EnumType.FACE, false)
     }

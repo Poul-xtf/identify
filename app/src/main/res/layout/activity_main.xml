@@ -3,43 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
         android:onClick="getListDocument"
         android:text="获取证件" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="---------------单独测试------------------"
+        android:gravity="center"
+        android:text="-------------------------------------------------------------------------------"
         android:textColor="@color/black" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
         android:onClick="startPhoto"
         android:text="@string/app_ocr_btn" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
         android:onClick="startFace"
         android:text="@string/app_face_btn" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="-----------------汇总测试------------------"
+        android:gravity="center"
+        android:text="-------------------------------------------------------------------------------"
         android:textColor="@color/black" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,7 +68,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -75,20 +86,26 @@
     </LinearLayout>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
         android:onClick="startAllRe"
         android:text="@string/app_face_card_btn" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
         android:onClick="startAll"
         android:text="@string/app_face_card_sdk_view" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
         android:onClick="startAllView"
         android:text="@string/app_face_card_view" />
 

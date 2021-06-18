@@ -12,5 +12,7 @@ data class Model(
 )
 
 data class Data(
-    val CountryName: String
+    val countryName: String,
+    val countryEnName: String,
+    val countryCode: String
 )

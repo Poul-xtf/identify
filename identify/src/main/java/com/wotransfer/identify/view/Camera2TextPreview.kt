@@ -6,7 +6,7 @@ import android.os.Message
 import android.view.TextureView
 import com.wotransfer.identify.net.HttpCallBackListener
 
-class Camera2TextPreview(context: Context?) : TextureView(context), Handler.Callback,
+class Camera2TextPreview(context: Context) : TextureView(context), Handler.Callback,
     HttpCallBackListener {
     private var mContext: Context? = context
 

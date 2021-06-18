@@ -13,10 +13,12 @@ import com.wotransfer.identify.ui.adapter.ReferenceMessAdapter
 import com.wotransfer.identify.util.htmlFormat
 import com.wotransfer.identify.util.showToast
 import kotlinx.android.synthetic.main.activity_identity_view.*
+import kotlinx.android.synthetic.main.activity_kyc_view.*
 
 class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
+    private var booleanFace: String? = null
+    private var booleanCard: String? = null
     private var mList = arrayListOf<IdConfigForSdkRO>()
-    private var countryName = "日本"
 
     fun back(view: View) {
         this@IdentifyReferenceActivity.finish()
@@ -30,20 +32,25 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
     }
 
     private fun getNetData() {
-        val params = getParams(Constants.APP_NAME, "JPN")
+        mList.clear()
+        val params = getParams(Constants.CHOOSE_COUNTRY)
         startHttpRequest(this, identity_list_path, params)
     }
 
     private fun initView() {
+        booleanCard = intent.getStringExtra(Constants.CARD)
+        booleanFace = intent.getStringExtra(Constants.FACE)
+        setText()
+    }
 
-        val string = getString(R.string.i_text_reference_country, countryName)
+    private fun setText() {
+        val string = getString(R.string.i_text_reference_country, Constants.CHOOSE_COUNTRY_NAME)
         tv_re_country.htmlFormat(string)
     }
 
-
     override fun onSuccess(path: String, content: String) {
         val gson = Gson()
-//        val strData = getJson("idConfig.json", this)
+//        val content = getJson("idConfig.json", this)
         val idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
         idTypeListBean.model.idConfigForSdkROList.forEach {
             mList.add(it)
@@ -55,6 +62,8 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
                     Intent(this@IdentifyReferenceActivity, OcrReferenceActivity::class.java)
                 intent.putExtra(Constants.MODEL, mList[position])
                 intent.putExtra(Constants.REFERENCE, idTypeListBean.model.reference)
+                intent.putExtra(Constants.FACE, booleanFace)
+                intent.putExtra(Constants.CARD, booleanCard)
                 startActivity(intent)
             }
         })
@@ -68,6 +77,8 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
                 Intent(this@IdentifyReferenceActivity, OcrReferenceActivity::class.java)
             intent.putExtra(Constants.MODEL, mList[position])
             intent.putExtra(Constants.REFERENCE, idTypeListBean.model.reference)
+            intent.putExtra(Constants.FACE, booleanFace)
+            intent.putExtra(Constants.CARD, booleanCard)
             startActivity(intent)
             true
         }
@@ -83,6 +94,20 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
     }
 
     fun changeCountry(view: View) {
-        startActivity(Intent(this, ChangeCountryActivity::class.java))
+        startActivityForResult(Intent(this, ChangeCountryActivity::class.java), requestCode)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (resultCode) {
+            resultBackCode -> {
+                Constants.CHOOSE_COUNTRY =
+                    data?.getStringExtra(Constants.COUNTRY_CODE) ?: Constants.CHOOSE_COUNTRY
+                Constants.CHOOSE_COUNTRY_NAME =
+                    data?.getStringExtra(Constants.COUNTRY_NAME) ?: Constants.CHOOSE_COUNTRY_NAME
+                setText()
+                getNetData()
+            }
+        }
     }
 }

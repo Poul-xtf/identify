@@ -9,6 +9,9 @@ import android.view.Window
 import android.view.WindowManager
 
 open class BaseKycActivity : Activity() {
+
+    var resultBackCode = 1
+    var requestCode = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //沉浸式状态栏

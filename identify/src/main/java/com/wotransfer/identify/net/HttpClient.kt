@@ -10,60 +10,71 @@ import java.net.URL
 class HttpClient {
 
     var file = "/storage/emulated/0/Android/data/com.wotransfer.identify/files/pic.png"
-    var result = ""
 
-    fun executeRequest(
+    fun dispatchRequest(
         url: String,
         path: String,
         method: String = "POST",
         body: String? = null,
     ): String {
-        when (path) {
+        return when (path) {
             upload_identity_path -> {
-                result = executeFileRequest(url, path, method, body)
+                executeFileRequest(url, path, method, body)
             }
             else -> {
-                try {
-                    val urlConnection: HttpURLConnection?
-                    val httpUrl = URL(url + path)
-                    urlConnection = httpUrl.openConnection() as HttpURLConnection
-                    urlConnection.doInput = true
-                    urlConnection.doOutput = true
-                    urlConnection.requestMethod = method
-                    urlConnection.setRequestProperty("Pragma:", "no-cache")
-                    urlConnection.setRequestProperty("Cache-Control", "no-cache")
-                    urlConnection.setRequestProperty("Content-Type",
-                        "application/json;charset=utf-8")
-                    urlConnection.setRequestProperty("Connection", "keep-alive")
-                    urlConnection.connectTimeout = 6000
-                    urlConnection.connect()
-
-                    val writer =
-                        BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
-                    writer.write(body)
-                    writer.close()
-
-                    val responseCode = urlConnection.responseCode
-                    val responseMessage = urlConnection.responseMessage
-                    Log.e(Constants.KYC_TAG, "$responseCode=$responseMessage")
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        val inReader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-                        var line: String?
-                        while ((inReader.readLine().also { line = it }) != null) {
-                            result += line
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e(Constants.KYC_TAG, "Post Request Failed....")
-                    Log.e(Constants.KYC_TAG, "${e.message}")
-                    e.printStackTrace()
-                }
-                return result
+                executeRequest(url, path, method, body)
             }
+        }
+    }
+
+
+    private fun executeRequest(
+        url: String,
+        path: String,
+        method: String = "POST",
+        body: String? = null,
+    ): String {
+        var result = ""
+        try {
+            Log.e(Constants.KYC_TAG, "url: ${url + path}")
+            Log.e(Constants.KYC_TAG, "body: $body")
+            val urlConnection: HttpURLConnection?
+            val httpUrl = URL(url + path)
+            urlConnection = httpUrl.openConnection() as HttpURLConnection
+            urlConnection.doInput = true
+            urlConnection.doOutput = true
+            urlConnection.requestMethod = method
+            urlConnection.setRequestProperty("Pragma:", "no-cache")
+            urlConnection.setRequestProperty("Cache-Control", "no-cache")
+            urlConnection.setRequestProperty("Content-Type",
+                "application/json;charset=utf-8")
+            urlConnection.setRequestProperty("Connection", "keep-alive")
+            urlConnection.connectTimeout = 6000
+            urlConnection.connect()
+
+            val writer =
+                BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
+            writer.write(body)
+            writer.close()
+
+            val responseCode = urlConnection.responseCode
+            val responseMessage = urlConnection.responseMessage
+            Log.e(Constants.KYC_TAG, "$responseCode=$responseMessage")
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val inReader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+                var line: String?
+                while ((inReader.readLine().also { line = it }) != null) {
+                    result += line
+                }
+                Log.e(Constants.KYC_TAG, "run: $result")
+            }
+        } catch (e: Exception) {
+            Log.e(Constants.KYC_TAG, "Post Request Failed....")
+            Log.e(Constants.KYC_TAG, "${e.message}")
+            e.printStackTrace()
         }
         return result
     }
-
 
     /**
      * 上传图片
@@ -74,6 +85,7 @@ class HttpClient {
         method: String = "POST",
         body: String? = null,
     ): String {
+        var result = ""
         val strParams = HashMap<String, Any>()
         val json = JSONObject(body!!)
         val keys = json.keys()

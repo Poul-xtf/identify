@@ -1,16 +1,13 @@
 package com.wotransfer.identify.net
 
-import android.content.Context
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.wotransfer.identify.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.lang.NullPointerException
 
-class HttpManager(httpClient: HttpClient/*, httpCallBackListener: HttpCallBackListener*/) :
+class HttpManager(httpClient: HttpClient) :
     HttpListener {
 
     private var httpClient: HttpClient? = httpClient
@@ -24,7 +21,7 @@ class HttpManager(httpClient: HttpClient/*, httpCallBackListener: HttpCallBackLi
         ): HttpManager? {
             synchronized(HttpManager::class) {
                 if (instance == null) {
-                    instance = HttpManager(httpClient/*, httpCallBackListener*/)
+                    instance = HttpManager(httpClient)
                 }
                 this.httpCallBackListener = httpCallBackListener
             }
@@ -41,36 +38,30 @@ class HttpManager(httpClient: HttpClient/*, httpCallBackListener: HttpCallBackLi
         return instance
     }
 
-    override fun request(path: String?, params: Map<String, Any>?) {
+    override fun request(path: String, params: Map<String, Any>?) {
         params?.let {
             setParams(it)
         }
-        path?.let {
-            GlobalScope.launch(Dispatchers.Main) {
-                withContext(Dispatchers.IO) {
-                    httpClient?.executeRequest(Constants.url, path,
-                        body = if (body?.length() != 0) body?.toString() else null)
-                        ?.also { content ->
-                            withContext(Dispatchers.Main) {
-                                if (content == "") {
-                                    httpCallBackListener?.complete()
-                                    return@withContext
-                                }
-                                val jsonObject = JSONObject(content)
-                                when (jsonObject.getInt("code")) {
-                                    0 -> {
-                                        httpCallBackListener?.onSuccess(path, content)
-                                    }
-                                    else -> {
-                                        httpCallBackListener?.onFiled()
-                                    }
-                                }
+        GlobalScope.launch(Dispatchers.IO) {
+            httpClient?.dispatchRequest(Constants.url, path,
+                body = if (body?.length() != 0) body?.toString() else null)
+                ?.also { content ->
+                    withContext(Dispatchers.Main) {
+                        if (content == "") {
+                            httpCallBackListener?.complete()
+                            return@withContext
+                        }
+                        val jsonObject = JSONObject(content)
+                        when (jsonObject.getInt("code")) {
+                            0 -> {
+                                httpCallBackListener?.onSuccess(path, content)
+                            }
+                            else -> {
+                                httpCallBackListener?.onFiled()
                             }
                         }
+                    }
                 }
-            }
-        } ?: let {
-            throw NullPointerException("url path is null")
         }
     }
 }

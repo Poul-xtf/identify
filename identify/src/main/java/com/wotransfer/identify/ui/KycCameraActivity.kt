@@ -20,19 +20,15 @@ import com.wotransfer.identify.util.saveBitmap
 import com.wotransfer.identify.util.showToast
 import kotlinx.android.synthetic.main.activity_kyc_view.*
 import java.io.File
-import java.lang.NullPointerException
 import java.util.*
 
 class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
-    // 活体随机开关
     private var isLiveNessRandom = true
-
-    // 语音播报开关
     private var isOpenSound = true
 
     private var liveNessList = arrayListOf<LivenessTypeEnum>()
     private var country: String = ""
-    private var reference: String = ""
+    private var reference: String? = null
     private var file: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +63,8 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     }
 
     private fun getIntentData() {
-        country = intent.getStringExtra(Constants.COUNTRY_CODE)
+        country = intent.getStringExtra(Constants.COUNTRY_CODE)!!
+        reference = intent.getStringExtra(Constants.REFERENCE)
     }
 
     private fun init() {
@@ -78,12 +75,12 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
         }
 
         FaceSDKManager.getInstance()
-            .initialize(this, Constants.license_id, Constants.license_name, object : IInitCallback {
+            .initialize(this, Constants.LICENSE_ID, Constants.LICENSE_NAME, object : IInitCallback {
                 override fun initSuccess() {
                     runOnUiThread {
                         Log.e(Constants.KYC_TAG, "初始化成功")
                         startActivityForResult(Intent(this@KycCameraActivity,
-                            FaceLivenessActivity::class.java), 0)
+                            FaceLivenessActivity::class.java), requestCode)
                     }
                 }
 
@@ -98,7 +95,7 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
-            1 -> {
+            resultBackCode -> {
                 val bitmapBase64 = data?.getStringExtra("bitmap")
                 val bytes = Base64Utils.decode(bitmapBase64, Base64Utils.NO_WRAP)
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
@@ -113,30 +110,27 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
      * upload face image
      */
     private fun uploadImg() {
-        if (reference == "") {
-            showToast(getString(R.string.i_toast_reference))
+        if (reference == null || reference == "") {
+            showToast(getString(R.string.i_tip_license_4))
             return
         }
         file?.let {
-            val params = getParams(Constants.APP_NAME,
+            val params = getParams(
                 country,
-                0,
+                Constants.OPEN_FACE,
                 "",
-                1,
-                reference,
+                Constants.CLOSE_CARD,
+                reference!!,
                 it)
             startHttpRequest(this, upload_identity_path, params)
-        } ?: let {
-            throw NullPointerException("save face is failed,file is null")
-        }
-
+        } ?: showToast("save face is failed,file is null")
     }
 
     /**
      * reference face image
      */
     private fun referenceImg() {
-        val params = getReParams(Constants.APP_NAME, reference)
+        val params = getReParams(reference!!)
         startHttpRequest(this, reference_path, params)
     }
 

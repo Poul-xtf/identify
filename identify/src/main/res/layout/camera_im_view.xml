@@ -26,47 +26,31 @@
 
             <ImageView
                 android:id="@+id/camera_crop"
-                android:layout_width="@dimen/dimen_331"
+                android:layout_width="@dimen/dimen_300"
                 android:layout_height="@dimen/dimen_211"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
 
 
-                <ImageView
-                    android:id="@+id/iv_crop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="220dp"
-                    android:background="@mipmap/icon_resident_front" />
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/rl_crop"-->
-<!--            android:layout_width="@dimen/dimen_331"-->
-<!--            android:layout_height="@dimen/dimen_200"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:layout_marginTop="220dp">-->
-
-<!--            <com.wotransfer.identify.view.ScanningView-->
-<!--                android:id="@+id/iv_crop"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_height="match_parent" />-->
-
-<!--        </RelativeLayout>-->
+        <ImageView
+            android:id="@+id/iv_crop"
+            android:layout_width="@dimen/dimen_300"
+            android:layout_height="@dimen/dimen_211"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="220dp"
+            android:background="@mipmap/icon_resident_front" />
 
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="@dimen/dimen_5"
             android:layout_below="@+id/camera_crop_container"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="60dp"
+            android:layout_marginLeft="@dimen/dimen_60"
+            android:layout_marginTop="@dimen/dimen_30"
+            android:layout_marginRight="@dimen/dimen_60"
             android:max="3"
             android:progress="1"
             android:progressDrawable="@drawable/shape_progress" />

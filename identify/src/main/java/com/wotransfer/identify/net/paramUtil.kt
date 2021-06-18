@@ -1,7 +1,6 @@
 package com.wotransfer.identify.net
 
 import com.wotransfer.identify.Constants
-import com.wotransfer.identify.util.SpUtil
 import java.io.File
 
 /*优化点：需要重新命名*/
@@ -10,13 +9,12 @@ const val upload_identity_path = "web/identify/ocr/upload/identity"//上传证�
 const val reference_path = "web/identify/ocr/recognize/identity"//认证图片
 const val cancel_reference_path = "web/identify/ocr/recognize/cancel"//取消此次认证
 
-fun getUrl(): String? {
+fun getUrl(): String {
     return Constants.url
 }
 
 //根据国家获取证件列表
 fun getParams(
-    appName: String,
     country: String,
 ): Map<String, Any> {
     return mapOf(
@@ -28,7 +26,6 @@ fun getParams(
 
 //上传证件图片
 fun getParams(
-    appName: String,
     countryCode: String,
     face: Int,
     idType: String,
@@ -49,7 +46,6 @@ fun getParams(
 }
 
 fun getReParams(
-    appName: String,
     reference: String,
 ): Map<String, Any> {
     return mapOf(
