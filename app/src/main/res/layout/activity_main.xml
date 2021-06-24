@@ -98,6 +98,14 @@
         android:layout_height="@dimen/dimen_60"
         android:layout_marginLeft="@dimen/dimen_40"
         android:layout_marginRight="@dimen/dimen_40"
+        android:onClick="startNoAllRe"
+        android:text="@string/app_face_card_no" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
         android:onClick="startAll"
         android:text="@string/app_face_card_sdk_view" />
 

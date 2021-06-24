@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.wotransfer.identify.net.HttpCallBackListener
 import com.wotransfer.identify.net.getListOfDocuments
+import com.wotransfer.identify.util.showToast
 
 class MyIdentifyReferenceActivity : Activity(), HttpCallBackListener {
 
@@ -21,7 +22,8 @@ class MyIdentifyReferenceActivity : Activity(), HttpCallBackListener {
 
     }
 
-    override fun onFiled() {
+    override fun onFiled(error: String, string: String) {
+        showToast(error)
     }
 
     override fun complete() {

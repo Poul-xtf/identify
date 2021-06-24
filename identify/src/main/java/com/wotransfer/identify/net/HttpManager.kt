@@ -57,7 +57,7 @@ class HttpManager(httpClient: HttpClient) :
                                 httpCallBackListener?.onSuccess(path, content)
                             }
                             else -> {
-                                httpCallBackListener?.onFiled()
+                                httpCallBackListener?.onFiled(path,jsonObject.getString("msg"))
                             }
                         }
                     }

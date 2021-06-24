@@ -4,7 +4,8 @@
     <string name="app_ocr_btn">Ocr认证</string>
     <string name="app_face_btn">人脸识别</string>
 
-    <string name="app_face_card_btn">Ocr认证+人脸</string>
+    <string name="app_face_card_btn">Ocr认证(true)+人脸(false)</string>
+    <string name="app_face_card_no">Ocr认证+人脸(业务未设置)</string>
     <string name="app_face_card_sdk_view">SDK界面</string>
     <string name="app_face_card_view">自定义view</string>
 

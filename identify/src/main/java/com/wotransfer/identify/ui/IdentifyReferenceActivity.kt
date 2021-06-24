@@ -33,7 +33,7 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
 
     private fun getNetData() {
         mList.clear()
-        val params = getParams(Constants.CHOOSE_COUNTRY)
+        val params = getParams(Constants.CHOOSE_COUNTRY,"")
         startHttpRequest(this, identity_list_path, params)
     }
 
@@ -86,8 +86,9 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
     }
 
 
-    override fun onFiled() {
-        showToast(getString(R.string.i_toast_card_failed))
+    override fun onFiled(path: String, error: String) {
+        showToast(error)
+//        showToast(getString(R.string.i_toast_card_failed))
     }
 
     override fun complete() {

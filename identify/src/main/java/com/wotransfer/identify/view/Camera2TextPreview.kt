@@ -17,7 +17,7 @@ class Camera2TextPreview(context: Context) : TextureView(context), Handler.Callb
     override fun onSuccess(temp: String, content: String) {
     }
 
-    override fun onFiled() {
+    override fun onFiled(path: String, error: String) {
     }
 
     override fun complete() {

@@ -197,8 +197,9 @@ class CameraPreviewImplView : FrameLayout,
         }
     }
 
-    override fun onFiled() {
+    override fun onFiled(path: String, error: String) {
         observerStatus()
+        mContext?.showToast(error)
         observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD, false, ocrData)
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.baidu.idl.face.platform.FaceEnvironment
 import com.baidu.idl.face.platform.FaceSDKManager
 import com.baidu.idl.face.platform.LivenessTypeEnum
@@ -16,9 +17,16 @@ import com.wotransfer.identify.R
 import com.wotransfer.identify.faceutil.manager.QualityConfigManager
 import com.wotransfer.identify.faceutil.model.QualityConfig
 import com.wotransfer.identify.net.*
+import com.wotransfer.identify.util.getDrawable
 import com.wotransfer.identify.util.saveBitmap
 import com.wotransfer.identify.util.showToast
 import kotlinx.android.synthetic.main.activity_kyc_view.*
+import kotlinx.android.synthetic.main.activity_kyc_view.iv_back_success
+import kotlinx.android.synthetic.main.activity_kyc_view.iv_re_status
+import kotlinx.android.synthetic.main.activity_kyc_view.iv_re_status_2
+import kotlinx.android.synthetic.main.activity_kyc_view.tv_re_tip
+import kotlinx.android.synthetic.main.activity_kyc_view.tv_re_tip2
+import kotlinx.android.synthetic.main.activity_result_view.*
 import java.io.File
 import java.util.*
 
@@ -62,6 +70,11 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
         }
     }
 
+
+    fun finishBack(view: View) {
+        this@KycCameraActivity.finish()
+    }
+
     private fun getIntentData() {
         country = intent.getStringExtra(Constants.COUNTRY_CODE)!!
         reference = intent.getStringExtra(Constants.REFERENCE)
@@ -99,10 +112,12 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
                 val bitmapBase64 = data?.getStringExtra("bitmap")
                 val bytes = Base64Utils.decode(bitmapBase64, Base64Utils.NO_WRAP)
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                iv_tess.setImageBitmap(bitmap)
+//                iv_tess.setImageBitmap(bitmap)
                 file = saveBitmap(bitmap)
                 uploadImg()
             }
+            else ->
+                finish()
         }
     }
 
@@ -140,17 +155,32 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
                 referenceImg()
             }
             reference_path -> {
-                startActivity(Intent(this, ReferenceResultActivity::class.java))
-                finish()
+                startAc(true)
             }
-
         }
     }
 
-    override fun onFiled() {
+    override fun onFiled(path: String, error: String) {
+        showToast(error)
+        when (path) {
+            reference_path -> {
+                startAc(false)
+            }
+        }
     }
 
     override fun complete() {
+    }
+
+    private fun startAc(state: Boolean) {
+        con_status.visibility = View.VISIBLE
+        if (!state) {
+            iv_back_success.getDrawable(this, R.drawable.shape_re_failed)
+            iv_re_status_2.visibility = View.VISIBLE
+            iv_re_status.visibility = View.GONE
+            tv_re_tip.text = getString(R.string.i_text_identify_failed)
+            tv_re_tip2.text = getString(R.string.i_text_identify_finish_failed)
+        }
     }
 
     /**

@@ -22,5 +22,5 @@ fun <T : View> T.getDrawable(context: Context, view: Int) {
 }
 
 fun getLoadOfGlide(context: Context, url: String?, imageView: ImageView) {
-    Glide.with(context).load(url)/*.error(R.mipmap.icon_resident_front)*/.into(imageView)
+    Glide.with(context).load(url).error(R.drawable.shape_ocr_photo).into(imageView)
 }

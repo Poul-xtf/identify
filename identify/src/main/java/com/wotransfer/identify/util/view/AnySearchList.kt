@@ -69,13 +69,14 @@ class AnySearchList : RelativeLayout {
                 setData()
                 return@addTextChangedListener
             }
-            Log.d("xxxtf->", it.toString())
             val myModel = arrayListOf<Model>()
+            val listData = arrayListOf<Data>()
             tempData?.forEachIndexed { _, model ->
                 model.data.forEachIndexed { _, data ->
                     if (it.toString() == data.countryName) {
-                        Log.d("xxxtf->", data.countryName)
-                        myModel.add(model)
+//                        myModel.add(model)
+                        listData.add(data)
+                        myModel.add(Model(listData, model.index))
                         thisData = myModel
                         setData()
                         return@forEachIndexed

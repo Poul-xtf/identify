@@ -43,7 +43,8 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
     fun startPhoto(view: View) {
         if (checkPermission())
             CameraLaunch()
-                .startView(LaunchType.CAMERA_OCR, reference = reference, model = model)
+                .startView(LaunchType.CAMERA_OCR, Constants.CLOSE_FACE,
+                    Constants.OPEN_CARD, reference = reference, model = model)
     }
 
     /**
@@ -66,11 +67,20 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
         if (checkPermission())
             CameraLaunch()
                 .startView(LaunchType.ALL,
-                    Constants.OPEN_FACE,
+                    Constants.CLOSE_FACE,
                     Constants.OPEN_CARD,
                     reference = reference,
                     model = model)
     }
+
+    fun startNoAllRe(view: View) {
+        if (checkPermission())
+            CameraLaunch()
+                .startView(LaunchType.ALL,
+                    reference = reference,
+                    model = model)
+    }
+
 
     /**
      * sdk界面
@@ -106,7 +116,7 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
         reference = idTypeListBean.model.reference
     }
 
-    override fun onFiled() {
+    override fun onFiled(path: String, error: String) {
         showToast(getString(R.string.i_toast_card_failed))
     }
 

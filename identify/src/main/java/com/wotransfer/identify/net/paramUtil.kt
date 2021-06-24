@@ -4,10 +4,10 @@ import com.wotransfer.identify.Constants
 import java.io.File
 
 /*优化点：需要重新命名*/
-const val identity_list_path = "web/identify/idConfig/query/sdk"//根据国家获取证件列表
-const val upload_identity_path = "web/identify/ocr/upload/identity"//上传证件图片
-const val reference_path = "web/identify/ocr/recognize/identity"//认证图片
-const val cancel_reference_path = "web/identify/ocr/recognize/cancel"//取消此次认证
+const val identity_list_path = "wtocr/identify/idConfig/query/sdk"//根据国家获取证件列表
+const val upload_identity_path = "wtocr/identify/ocr/upload/identity"//上传证件图片
+const val reference_path = "wtocr/identify/ocr/recognize/identity"//认证图片
+const val cancel_reference_path = "wtocr/identify/ocr/recognize/cancel"//取消此次认证
 
 fun getUrl(): String {
     return Constants.url
@@ -16,10 +16,12 @@ fun getUrl(): String {
 //根据国家获取证件列表
 fun getParams(
     country: String,
+    extend: String,
 ): Map<String, Any> {
     return mapOf(
         "appName" to Constants.APP_NAME,
         "country" to country,
+        "extend" to extend,
         "source" to Constants.SOURCE
     )
 }
