@@ -5,6 +5,23 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            credentials {
+                username '5f1d382b4c4e70fdbf98bea9'
+                password '-GDm9X)m_aDu'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2019369-release-mgc4gx/'
+        }
+        maven {
+            credentials {
+                username '5f1d382b4c4e70fdbf98bea9'
+                password '-GDm9X)m_aDu'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2019369-snapshot-3vETqq/'
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.2.1"
