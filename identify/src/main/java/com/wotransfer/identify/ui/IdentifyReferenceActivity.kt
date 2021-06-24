@@ -14,11 +14,13 @@ import com.wotransfer.identify.util.htmlFormat
 import com.wotransfer.identify.util.showToast
 import kotlinx.android.synthetic.main.activity_identity_view.*
 import kotlinx.android.synthetic.main.activity_kyc_view.*
+import org.json.JSONObject
 
 class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
     private var booleanFace: String? = null
     private var booleanCard: String? = null
     private var mList = arrayListOf<IdConfigForSdkRO>()
+    private var idTypeListBean: IdTypeListBean? = null
 
     fun back(view: View) {
         this@IdentifyReferenceActivity.finish()
@@ -33,7 +35,10 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
 
     private fun getNetData() {
         mList.clear()
-        val params = getParams(Constants.CHOOSE_COUNTRY,"")
+        val json = JSONObject()
+        json.put(Constants.NATIONALITY, "")
+        json.put(Constants.TARGET_COUNTRY, "")
+        val params = getParams(Constants.CHOOSE_COUNTRY, json.toString())
         startHttpRequest(this, identity_list_path, params)
     }
 
@@ -51,20 +56,14 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
     override fun onSuccess(path: String, content: String) {
         val gson = Gson()
 //        val content = getJson("idConfig.json", this)
-        val idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
-        idTypeListBean.model.idConfigForSdkROList.forEach {
+        idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
+        idTypeListBean?.model?.idConfigForSdkROList?.forEach {
             mList.add(it)
         }
         val referenceMessAdapter = ReferenceMessAdapter(this, mList)
         referenceMessAdapter.setItemListener(object : ReferenceMessAdapter.ItemListener {
             override fun itemBack(position: Int, childPosition: Int) {
-                val intent =
-                    Intent(this@IdentifyReferenceActivity, OcrReferenceActivity::class.java)
-                intent.putExtra(Constants.MODEL, mList[position])
-                intent.putExtra(Constants.REFERENCE, idTypeListBean.model.reference)
-                intent.putExtra(Constants.FACE, booleanFace)
-                intent.putExtra(Constants.CARD, booleanCard)
-                startActivity(intent)
+                startViewUi(position)
             }
         })
         ep_list.setAdapter(referenceMessAdapter)
@@ -73,13 +72,7 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
             referenceMessAdapter.notifyDataSetChanged()
         }
         ep_list.setOnGroupClickListener { _, _, position, _ ->
-            val intent =
-                Intent(this@IdentifyReferenceActivity, OcrReferenceActivity::class.java)
-            intent.putExtra(Constants.MODEL, mList[position])
-            intent.putExtra(Constants.REFERENCE, idTypeListBean.model.reference)
-            intent.putExtra(Constants.FACE, booleanFace)
-            intent.putExtra(Constants.CARD, booleanCard)
-            startActivity(intent)
+            startViewUi(position)
             true
         }
 
@@ -88,7 +81,6 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
 
     override fun onFiled(path: String, error: String) {
         showToast(error)
-//        showToast(getString(R.string.i_toast_card_failed))
     }
 
     override fun complete() {
@@ -110,5 +102,22 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
                 getNetData()
             }
         }
+    }
+
+    private fun startViewUi(position: Int) {
+        val intent =
+            Intent(this@IdentifyReferenceActivity, OcrReferenceActivity::class.java)
+        intent.putExtra(Constants.MODEL, mList[position])
+        intent.putExtra(Constants.REFERENCE, idTypeListBean?.model?.reference)
+        intent.putExtra(Constants.FACE, booleanFace)
+        intent.putExtra(Constants.CARD, booleanCard)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //取消认证
+        val params = getParams(Constants.CHOOSE_COUNTRY)
+        startHttpRequest(this, cancel_reference_path, params)
     }
 }

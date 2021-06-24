@@ -1,2 +1,24 @@
 configurations.maybeCreate("default")
-artifacts.add("default",file("faceplatform-release.aar"))
+artifacts.add("default", file("faceplatform-release.aar"))
+//apply plugin: 'maven'
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: 'https://packages.aliyun.com/maven/repository/2019369-release-mgc4gx/') {
+//                authentication(
+//                        userName: '5f1d382b4c4e70fdbf98bea9',
+//                        password: '-GDm9X)m_aDu'
+//                )
+//            }
+//            snapshotRepository(url: 'https://packages.aliyun.com/maven/repository/2019369-snapshot-3vETqq/') {
+//                authentication(
+//                        userName: '5f1d382b4c4e70fdbf98bea9',
+//                        password: '-GDm9X)m_aDu'
+//                )
+//            }
+//            pom.version = '1.0.3-SNAPSHOT'
+//            pom.artifactId = 'identify-android-face-lib'
+//            pom.groupId = 'com.wotransfer'
+//        }
+//    }
+//}

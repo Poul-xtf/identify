@@ -16,7 +16,7 @@ fun getUrl(): String {
 //根据国家获取证件列表
 fun getParams(
     country: String,
-    extend: String,
+    extend: String = "",
 ): Map<String, Any> {
     return mapOf(
         "appName" to Constants.APP_NAME,

@@ -41,7 +41,7 @@ class OcrReferenceActivity : Activity() {
     private var chooseImage: Boolean = false
 
     fun finishBack(view: View) {
-        this@OcrReferenceActivity.finish()
+        finished()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,11 +52,9 @@ class OcrReferenceActivity : Activity() {
 
     private fun getIntentData() {
         reference = intent.getStringExtra(Constants.REFERENCE)
-        SpUtil.putString(this, Constants.REFERENCE, reference)
         content = intent.getSerializableExtra(Constants.MODEL)?.let {
             it as IdConfigForSdkRO
         }
-        SpUtil.putString(this, Constants.COUNTRY_CODE, content?.countryCode)
         val card = intent.getIntExtra(Constants.CARD, Constants.DEFAULT_CODE)
         val face = intent.getIntExtra(Constants.FACE, Constants.DEFAULT_CODE)
         booleanCard = if (card == Constants.DEFAULT_CODE) {
@@ -69,9 +67,11 @@ class OcrReferenceActivity : Activity() {
         } else {
             face
         }
+        amount = content?.idConfigForSdkROList?.size ?: 0
+        SpUtil.putString(this, Constants.REFERENCE, reference)
+        SpUtil.putString(this, Constants.COUNTRY_CODE, content?.countryCode)
         SpUtil.putString(this, Constants.NEED_OCR, booleanCard.toString())
         SpUtil.putString(this, Constants.NEED_FACE, booleanFace.toString())
-        amount = content?.idConfigForSdkROList?.size ?: 0
         setTipWay()
     }
 
@@ -129,21 +129,21 @@ class OcrReferenceActivity : Activity() {
         val intent = Intent(this@OcrReferenceActivity, ReferenceResultActivity::class.java)
         intent.putExtra(Constants.RE_STATUS, state)
         startActivity(intent)
-        finish()
+        finished()
     }
 
     //开始人脸识别
     private fun startFace() {
         if (Constants.LICENSE_ID == "" || Constants.LICENSE_NAME == "") {
             this.showToast(getString(R.string.i_tip_license_1))
-            finish()
+            finished()
             return
         }
         val intent = Intent(this@OcrReferenceActivity, KycCameraActivity::class.java)
         intent.putExtra(Constants.COUNTRY_CODE, content?.countryCode)
         intent.putExtra(Constants.REFERENCE, reference)
         startActivity(intent)
-        this@OcrReferenceActivity.finish()
+        finished()
     }
 
     //重新拍摄
@@ -236,6 +236,10 @@ class OcrReferenceActivity : Activity() {
     //开关灯光
     fun changeTor(view: View) {
         camera_p.updateTor()
+    }
+
+    private fun finished() {
+        this@OcrReferenceActivity.finish()
     }
 
 }

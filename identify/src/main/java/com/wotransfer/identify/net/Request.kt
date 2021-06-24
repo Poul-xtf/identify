@@ -26,8 +26,9 @@ fun startHttpRequest(
 fun getListOfDocuments(
     context: HttpCallBackListener,
     country: String,
+    extend: String,
 ) {
-    val params = getParams(country)
+    val params = getParams(country, extend)
     HttpManager.getInstance(HttpClient(), context)
         ?.setParams(params)
         ?.request(identity_list_path)

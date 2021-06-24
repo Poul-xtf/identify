@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.Poul-xtf'
+//apply plugin: 'maven'
 
 android {
     compileSdkVersion rootProject.ext.version.compileSdkVersion
@@ -18,9 +17,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: 'https://packages.aliyun.com/maven/repository/2019369-release-mgc4gx/') {
+//                authentication(
+//                        userName: '5f1d382b4c4e70fdbf98bea9',
+//                        password: '-GDm9X)m_aDu'
+//                )
+//            }
+//            snapshotRepository(url: 'https://packages.aliyun.com/maven/repository/2019369-snapshot-3vETqq/') {
+//                authentication(
+//                        userName: '5f1d382b4c4e70fdbf98bea9',
+//                        password: '-GDm9X)m_aDu'
+//                )
+//            }
+//            pom.version = '1.0.3-SNAPSHOT'
+//            pom.artifactId = 'identify-android-face-ui'
+//            pom.groupId = 'com.wotransfer'
+//        }
+//    }
+//}
 
 dependencies {
-    api project(path: ':myLib')
+//    api project(path: ':myLib')
+    api 'com.wotransfer:identify-android-face-lib:1.0.2-SNAPSHOT'
 }

@@ -14,6 +14,7 @@ import com.wotransfer.identify.reference.CameraLaunch
 import com.wotransfer.identify.reference.CameraLaunch.LaunchType
 import com.wotransfer.identify.ui.BaseKycActivity
 import com.wotransfer.identify.util.showToast
+import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : BaseKycActivity(), HttpCallBackListener {
@@ -103,7 +104,10 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
      * 获取证件列表
      */
     fun getListDocument(view: View) {
-        getListOfDocuments(this, Constants.CHOOSE_COUNTRY)
+        val json = JSONObject()
+        json.put(Constants.NATIONALITY, "")
+        json.put(Constants.TARGET_COUNTRY, "")
+        getListOfDocuments(this, Constants.CHOOSE_COUNTRY, json.toString())
     }
 
     override fun onSuccess(path: String, content: String) {

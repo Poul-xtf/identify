@@ -15,7 +15,7 @@ class MyIdentifyReferenceActivity : Activity(), HttpCallBackListener {
     }
 
     fun uploadId(view: View) {
-        getListOfDocuments(this, "JPN")
+        getListOfDocuments(this, "JPN","")
     }
 
     override fun onSuccess(path: String, content: String) {
