@@ -52,12 +52,13 @@ class HttpManager(httpClient: HttpClient) :
                             return@withContext
                         }
                         val jsonObject = JSONObject(content)
-                        when (jsonObject.getInt("code")) {
-                            0 -> {
+                        when (jsonObject.getInt(Constants.HTTP_CODE)) {
+                            Constants.HTTP_SUCCESS_CODE -> {
                                 httpCallBackListener?.onSuccess(path, content)
                             }
                             else -> {
-                                httpCallBackListener?.onFiled(path, jsonObject.getString("msg"))
+                                httpCallBackListener?.onFiled(path,
+                                    jsonObject.getString(Constants.HTTP_MSG))
                             }
                         }
                     }

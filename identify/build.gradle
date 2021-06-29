@@ -53,7 +53,7 @@ uploadArchives {
                         password: '-GDm9X)m_aDu'
                 )
             }
-            pom.version = '1.0.4-SNAPSHOT'
+            pom.version = '1.0.6-SNAPSHOT'
             pom.artifactId = 'identify-android'
             pom.groupId = 'com.wotransfer'
         }

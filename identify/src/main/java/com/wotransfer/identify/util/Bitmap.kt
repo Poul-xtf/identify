@@ -1,5 +1,6 @@
 package com.wotransfer.identify.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -7,20 +8,18 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.hardware.camera2.CameraCharacteristics
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import com.wotransfer.identify.Constants.Companion.FILE_PIC_NAME
+import com.wotransfer.identify.Constants.Companion.KYC_TAG
 import com.wotransfer.identify.view.Camera2Preview
 import java.io.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-
-var mContext: Context? = null
-var resultUrl: String? = null
 
 fun getBitmapOption(
     context: Context,
@@ -31,8 +30,6 @@ fun getBitmapOption(
     url: String?,
     vararg view: View,
 ) {
-    mContext = context
-    resultUrl = url
     val degree: Int = readPictureDegree(imgPath)
     val options = BitmapFactory.Options()
     options.inJustDecodeBounds = true
@@ -92,7 +89,7 @@ fun getBitmapOption(
             width,
             height)
     }
-    val cropFile: File = getCropFile()
+    val cropFile: File = getCropFile(context, url)
     val bos = BufferedOutputStream(FileOutputStream(cropFile))
     cropBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
     bos.flush()
@@ -105,8 +102,9 @@ fun getBitmapOption(
 
 
 /** 保存方法  */
-fun saveBitmap(bm: Bitmap): File? {
-    val f = File("/sdcard/", "pic.png")
+@SuppressLint("SdCardPath")
+fun saveBitmap(mContext: Context, bm: Bitmap): File? {
+    val f = File(mContext.getExternalFilesDir(""), "pic.png")
     if (f.exists()) {
         f.delete()
     }
@@ -116,9 +114,9 @@ fun saveBitmap(bm: Bitmap): File? {
         out.flush()
         out.close()
         return f
-    } catch (e: FileNotFoundException) {
-        e.printStackTrace()
-    } catch (e: IOException) {
+    } catch (e: Exception) {
+        Log.d(KYC_TAG, e.toString())
+        Log.d(KYC_TAG, e.message.toString())
         e.printStackTrace()
     }
     return null
@@ -128,15 +126,15 @@ fun saveBitmap(bm: Bitmap): File? {
 /**
  * @return 拍摄图片裁剪文件
  */
-private fun getCropFile(): File {
+private fun getCropFile(mContext: Context, resultUrl: String?): File {
     return if (TextUtils.isEmpty(resultUrl) || TextUtils.isEmpty(resultUrl?.trim { it <= ' ' })) {
         if (isExternalStorageExist()) {
-            File(mContext?.getExternalFilesDir(""), FILE_PIC_NAME)
+            File(mContext.getExternalFilesDir(""), FILE_PIC_NAME)
         } else {
-            File(mContext?.filesDir, FILE_PIC_NAME)
+            File(mContext.filesDir, FILE_PIC_NAME)
         }
     } else {
-        File(resultUrl)
+        File(resultUrl!!)
     }
 }
 
@@ -148,19 +146,8 @@ fun cropImage(context: Context, uri: Uri): Intent {
     val intent = Intent("com.android.camera.action.CROP")
     intent.setDataAndType(uri, "image/*")
     intent.putExtra("crop", "true")
-//    if (Build.MANUFACTURER.contains("HUAWEI")) {
-//        //硬件厂商为华为的，默认是圆形裁剪框，这里让它无法成圆形
-//        intent.putExtra("aspectX", 9999)
-//        intent.putExtra("aspectY", 9998)
-//    } else {
-//        //其他手机一般默认为方形
-//        intent.putExtra("aspectX", 1.5)
-//        intent.putExtra("aspectY", 1)
-//    }
-//   设置裁剪区域的形状，默认为矩形，也可设置为圆形，可能无效
-//    intent.putExtra("circleCrop", true)
     intent.putExtra("scale", true)
-    val cropFile = File("${context.getExternalFilesDir(null)}/crop_image.jpg")
+    val cropFile = File("${context.getExternalFilesDir(null)?.absolutePath}/pic.png")
     try {
         if (cropFile.exists()) {
             cropFile.delete()
@@ -171,18 +158,17 @@ fun cropImage(context: Context, uri: Uri): Intent {
     }
     val cropImageUri = Uri.fromFile(cropFile)
     intent.putExtra(MediaStore.EXTRA_OUTPUT, cropImageUri)
-    intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+    intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString())
     intent.putExtra("return-data", false)
     return intent
 }
 
-fun getCropFile(context: Context, resultUrl: String): File {
-    mContext = context
+fun getCropFile2(context: Context, resultUrl: String): File {
     return if (TextUtils.isEmpty(resultUrl) || TextUtils.isEmpty(resultUrl.trim { it <= ' ' })) {
         if (isExternalStorageExist()) {
-            File(mContext?.getExternalFilesDir(""), FILE_PIC_NAME)
+            File(context.getExternalFilesDir(""), FILE_PIC_NAME)
         } else {
-            File(mContext?.filesDir, FILE_PIC_NAME)
+            File(context.filesDir, FILE_PIC_NAME)
         }
     } else {
         File(resultUrl)

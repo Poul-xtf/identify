@@ -68,7 +68,7 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
         if (checkPermission())
             CameraLaunch()
                 .startView(LaunchType.ALL,
-                    Constants.CLOSE_FACE,
+                    Constants.OPEN_FACE,
                     Constants.OPEN_CARD,
                     reference = reference,
                     model = model)

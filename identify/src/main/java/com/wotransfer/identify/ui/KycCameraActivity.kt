@@ -38,6 +38,13 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     private var country: String = ""
     private var reference: String? = null
     private var file: File? = null
+    private var nessType =
+        arrayListOf(LivenessTypeEnum.Eye,
+            LivenessTypeEnum.Mouth,
+            LivenessTypeEnum.HeadRight,
+            LivenessTypeEnum.HeadLeft,
+            LivenessTypeEnum.HeadUp,
+            LivenessTypeEnum.HeadDown)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,26 +55,7 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     }
 
     private fun getLiveNessList() {
-        when (Random().nextInt(6)) {
-            0 -> {
-                liveNessList.add(LivenessTypeEnum.Eye)
-            }
-            1 -> {
-                liveNessList.add(LivenessTypeEnum.Mouth)
-            }
-            2 -> {
-                liveNessList.add(LivenessTypeEnum.HeadRight)
-            }
-            3 -> {
-                liveNessList.add(LivenessTypeEnum.HeadLeft)
-            }
-            4 -> {
-                liveNessList.add(LivenessTypeEnum.HeadUp)
-            }
-            else -> {
-                liveNessList.add(LivenessTypeEnum.HeadDown)
-            }
-        }
+        liveNessList.add(nessType[Random().nextInt(6)])
     }
 
 
@@ -113,7 +101,7 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
                 val bytes = Base64Utils.decode(bitmapBase64, Base64Utils.NO_WRAP)
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 //                iv_tess.setImageBitmap(bitmap)
-                file = saveBitmap(bitmap)
+                file = saveBitmap(this, bitmap)
                 uploadImg()
             }
             else ->
@@ -138,7 +126,7 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
                 reference!!,
                 it)
             startHttpRequest(this, upload_identity_path, params)
-        } ?: showToast("save face is failed,file is null")
+        } ?: showToast(getString(R.string.i_toast_file))
     }
 
     /**

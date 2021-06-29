@@ -30,6 +30,7 @@ class OcrReferenceActivity : Activity() {
     private var reference: String? = null
     private var amount = 2
     private var momentLocal = 1
+    private var cameraPreview: CameraPreviewManager? = null
 
     companion object {
         const val REQUEST_CODE_CHOOSE_IMAGE = 1
@@ -73,29 +74,19 @@ class OcrReferenceActivity : Activity() {
         SpUtil.putString(this, Constants.NEED_OCR, booleanCard.toString())
         SpUtil.putString(this, Constants.NEED_FACE, booleanFace.toString())
         setTipWay()
+        initData()
     }
 
-    private fun setTipWay() {
-        tv_tip_title.text = content!!.idConfigForSdkROList[momentLocal - 1].idName
-        camera_p.updateProgressMax(amount)
-        camera_p.updateProgress(momentLocal)
-        camera_p.updateCropBView(content!!.idConfigForSdkROList[momentLocal - 1].borderUrl)
-        tv_tip_way.text = String.format(getString(R.string.i_card_way), momentLocal, amount)
-    }
-
-    fun startPhoto(view: View) {
-        CameraPreviewManager.getInstance()
+    private fun initData() {
+        cameraPreview = CameraPreviewManager.getInstance()
             ?.startReferenceFaceOrCard(booleanFace == Constants.OPEN_FACE,
                 cardStatus = booleanCard == Constants.OPEN_CARD)
             ?.setCameraPreview(camera_p)
             ?.addObserverCameraChange(object : StateObserver {
-                //拍摄状态
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
-                    Log.d(KYC_TAG, "观察者2")
                     changeView()
                 }
-            })
-            ?.addObserverFaceOrCardChange(object : StateObserver {
+            })?.addObserverFaceOrCardChange(object : StateObserver {
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
                     when (type) {
                         EnumType.CARD_UP -> {
@@ -120,8 +111,21 @@ class OcrReferenceActivity : Activity() {
                     }
                 }
             })
+    }
 
-            ?.startTakePhoto()
+    private fun setTipWay() {
+        content?.idConfigForSdkROList?.let {
+            tv_tip_title.text = it[momentLocal - 1].idName
+            camera_p.updateCropBView(it[momentLocal - 1].borderUrl)
+        }
+        camera_p.updateProgressMax(amount)
+        camera_p.updateProgress(momentLocal)
+        tv_tip_way.text = String.format(getString(R.string.i_card_way), momentLocal, amount)
+    }
+
+    //拍照
+    fun startPhoto(view: View) {
+        cameraPreview?.startTakePhoto()
     }
 
     //认证结果
@@ -161,14 +165,49 @@ class OcrReferenceActivity : Activity() {
     //确认照片
     fun getPhoto(view: View) {
         setResultUri()
-        camera_p.uploadImg(content!!.idConfigForSdkROList[momentLocal - 1].idType)
+        content?.idConfigForSdkROList?.let {
+            camera_p.uploadImg(it[momentLocal - 1].idType)
+        } ?: showToast(getString(R.string.i_toast_idType))
     }
 
     private fun setResultUri() {
         if (!chooseImage) {
             return
         }
-        camera_p.setResultUrl(cropImageUri.toString())
+        camera_p.setResultUrl(cropImageUri)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
+        if (intent != null) {
+            when (requestCode) {
+                REQUEST_CODE_CHOOSE_IMAGE -> if (intent.data != null) {
+                    val iconUri = intent.data
+                    iconUri?.let {
+                        startCropImage(it)
+                    }
+                }
+                REQUEST_CODE_CROP_IMAGE -> if (resultCode == RESULT_OK) {
+                    chooseImage = true
+                    try {
+                        val bitmap = BitmapFactory.decodeStream(
+                            contentResolver
+                                .openInputStream(cropImageUri))
+                        cameraPreview?.updateBitmapView(bitmap)
+                    } catch (e: FileNotFoundException) {
+                        e.printStackTrace()
+                    }
+                }
+                else -> {
+                }
+            }
+        }
+    }
+
+    private fun startCropImage(uri: Uri) {
+        val intent = cropImage(this, uri)
+        cropImageUri = intent.extras!![MediaStore.EXTRA_OUTPUT] as Uri
+        startActivityForResult(intent, REQUEST_CODE_CROP_IMAGE)
     }
 
     private fun update() {
@@ -190,47 +229,6 @@ class OcrReferenceActivity : Activity() {
         rl_sd_photo.visibility = View.VISIBLE
         iv_album.visibility = View.VISIBLE
         iv_take.visibility = View.VISIBLE
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
-        if (intent != null) {
-            when (requestCode) {
-                REQUEST_CODE_CHOOSE_IMAGE -> if (intent.data != null) {
-                    val iconUri = intent.data
-                    iconUri?.let {
-                        startCropImage(it)
-                    } ?: showToast("uri is null")
-                }
-                REQUEST_CODE_CROP_IMAGE -> if (resultCode == RESULT_OK) {
-                    chooseImage = true
-                    try {
-                        val bitmap = BitmapFactory.decodeStream(
-                            contentResolver
-                                .openInputStream(cropImageUri))
-                        camera_p.updateBitmapView(object : StateObserver {
-                            override fun stateChange(
-                                type: EnumType,
-                                state: Boolean,
-                                content: String?,
-                            ) {
-                                changeView()
-                            }
-                        }, bitmap)
-                    } catch (e: FileNotFoundException) {
-                        e.printStackTrace()
-                    }
-                }
-                else -> {
-                }
-            }
-        }
-    }
-
-    private fun startCropImage(uri: Uri) {
-        val intent = cropImage(this, uri)
-        cropImageUri = intent.extras!![MediaStore.EXTRA_OUTPUT] as Uri
-        startActivityForResult(intent, REQUEST_CODE_CROP_IMAGE)
     }
 
     //开关灯光

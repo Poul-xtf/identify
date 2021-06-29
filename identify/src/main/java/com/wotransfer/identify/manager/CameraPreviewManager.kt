@@ -1,9 +1,12 @@
 package com.wotransfer.identify.manager
 
+import android.graphics.Bitmap
+import android.view.View
 import com.wotransfer.identify.observeInterface.StateObserver
 import com.wotransfer.identify.view.CameraPreviewImplView
 import com.wotransfer.identify.view.util.EnumStatus
 import com.wotransfer.identify.view.util.EnumType
+import kotlinx.android.synthetic.main.camera_im_view.view.*
 
 class CameraPreviewManager : BaseManager() {
 
@@ -48,6 +51,10 @@ class CameraPreviewManager : BaseManager() {
 
     fun startTakePhoto() {
         cameraPreview?.takePhoto(statusMap)
+    }
+
+    fun updateBitmapView(bitmap: Bitmap) {
+        cameraPreview?.updateBitmapView(bitmap)
     }
 }
 

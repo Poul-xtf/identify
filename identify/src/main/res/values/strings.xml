@@ -67,6 +67,8 @@
     <string name="i_toast_request_success">获取成功</string>
     <string name="i_toast_card">证件为空</string>
     <string name="i_toast_reference">reference为空</string>
+    <string name="i_toast_idType">idType为空</string>
+    <string name="i_toast_file">图片选择失败</string>
     <string name="i_toast_card_reference">未开启证件认证</string>
     <string name="close_photo">关闭拍照</string>
 

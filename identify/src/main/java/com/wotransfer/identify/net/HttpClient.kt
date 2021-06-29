@@ -9,8 +9,6 @@ import java.net.URL
 
 class HttpClient {
 
-    var file = "/storage/emulated/0/Android/data/com.wotransfer.identify/files/pic.png"
-
     fun dispatchRequest(
         url: String,
         path: String,

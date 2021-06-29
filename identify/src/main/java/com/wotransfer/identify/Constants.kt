@@ -3,6 +3,9 @@ package com.wotransfer.identify
 class Constants {
     companion object {
         const val KYC_TAG = "kyc_camera_log"
+        const val HTTP_SUCCESS_CODE = 0
+        const val HTTP_CODE = "code"
+        const val HTTP_MSG = "msg"
 
         //        const val url = "https://qa.pandaremit.com/"
         const val url = "https://atestidentify.pandaremit.com/"

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.hardware.camera2.CameraCharacteristics
+import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
@@ -81,17 +82,11 @@ class CameraPreviewImplView : FrameLayout,
         camera_crop.setImageBitmap(null)
     }
 
-    fun updateBitmapView(stateObserver: StateObserver? = null, bitmap: Bitmap) {
+    fun updateBitmapView(bitmap: Bitmap) {
         camera_p1.visibility = View.GONE
         iv_crop.visibility = View.INVISIBLE
         camera_crop.setImageBitmap(bitmap)
-        observerList[EnumStatus.CAMERA_REPEAT]?.run {
-            stateChange(EnumType.CARD, true, "")
-        } ?: run {
-            observerList[EnumStatus.CAMERA_REPEAT] = stateObserver!!
-            observerList[EnumStatus.CAMERA_REPEAT]?.stateChange(EnumType.CARD, true, "")
-
-        }
+        observerList[EnumStatus.CAMERA_REPEAT]?.stateChange(EnumType.CARD, true, "")
     }
 
     fun updateProgressMax(max: Int) {
@@ -129,15 +124,20 @@ class CameraPreviewImplView : FrameLayout,
             )
             resultUrl = takePhotoResult(resultUrl)
             val bitmap = BitmapFactory.decodeFile(resultUrl)
-            updateBitmapView(null, bitmap)
+            updateBitmapView(bitmap)
             return
         } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
-    fun setResultUrl(url: String) {
-        this.resultUrl = url
+    fun setResultUrl(url: Uri) {
+        val bitmap = BitmapFactory.decodeStream(
+            mContext?.contentResolver
+                ?.openInputStream(url))
+        val sBitmap = saveBitmap(mContext!!, bitmap)
+        this.resultUrl = sBitmap.toString()
+//        this.resultUrl = takePhotoResult(url.toString())
     }
 
     fun setObserver(type: EnumStatus, stateObserver: StateObserver) {
@@ -168,7 +168,7 @@ class CameraPreviewImplView : FrameLayout,
             idType!!,
             SpUtil.getString(mContext, Constants.NEED_OCR)!!.toInt(),
             SpUtil.getString(mContext, Constants.REFERENCE)!!,
-            getCropFile(mContext!!, resultUrl!!))
+            getCropFile2(mContext!!, resultUrl!!))
         startHttpRequest(this, upload_identity_path, params)
     }
 
