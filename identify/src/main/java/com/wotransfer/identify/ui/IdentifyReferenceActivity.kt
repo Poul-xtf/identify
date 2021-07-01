@@ -117,7 +117,7 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
     override fun onDestroy() {
         super.onDestroy()
         //取消认证
-        val params = getParams(Constants.CHOOSE_COUNTRY)
+        val params = getReParams(idTypeListBean?.model?.reference!!)
         startHttpRequest(this, cancel_reference_path, params)
     }
 }

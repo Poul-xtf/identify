@@ -7,6 +7,8 @@ class Constants {
         const val HTTP_CODE = "code"
         const val HTTP_MSG = "msg"
 
+        const val OCR_DATA = "ocrData"
+
         //        const val url = "https://qa.pandaremit.com/"
         const val url = "https://atestidentify.pandaremit.com/"
         const val FILE_PIC_NAME = "pictureCrop.png"

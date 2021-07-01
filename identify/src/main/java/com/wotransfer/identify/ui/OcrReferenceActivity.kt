@@ -31,10 +31,13 @@ class OcrReferenceActivity : Activity() {
     private var amount = 2
     private var momentLocal = 1
     private var cameraPreview: CameraPreviewManager? = null
+    private var alwaysReference: Boolean = false
 
     companion object {
         const val REQUEST_CODE_CHOOSE_IMAGE = 1
         const val REQUEST_CODE_CROP_IMAGE = 2
+        const val REQUEST_CODE = 0
+        const val REQUEST_CODE_SUCCESS = -1
         const val STATUS_TASK_FALSE = 1
     }
 
@@ -104,7 +107,7 @@ class OcrReferenceActivity : Activity() {
                         }
                         EnumType.CARD -> {
                             Log.d(KYC_TAG, "state=$state")
-                            launchStatusView(state)
+                            launchStatusView(state, content)
                         }
                         else -> {
                         }
@@ -128,11 +131,17 @@ class OcrReferenceActivity : Activity() {
         cameraPreview?.startTakePhoto()
     }
 
-    //认证结果
-    private fun launchStatusView(state: Boolean) {
+    //认证结果(无人脸)
+    private fun launchStatusView(state: Boolean, content: String?) {
+        alwaysReference = true
         val intent = Intent(this@OcrReferenceActivity, ReferenceResultActivity::class.java)
         intent.putExtra(Constants.RE_STATUS, state)
         startActivity(intent)
+        if (state) {
+            val intent = Intent()
+            intent.putExtra(Constants.OCR_DATA, content)
+            setResult(-1, intent)
+        }
         finished()
     }
 
@@ -146,9 +155,10 @@ class OcrReferenceActivity : Activity() {
         val intent = Intent(this@OcrReferenceActivity, KycCameraActivity::class.java)
         intent.putExtra(Constants.COUNTRY_CODE, content?.countryCode)
         intent.putExtra(Constants.REFERENCE, reference)
-        startActivity(intent)
-        finished()
+        startActivityForResult(intent, REQUEST_CODE)
+//        finished()
     }
+
 
     //重新拍摄
     fun repeatPhoto(view: View) {
@@ -179,27 +189,38 @@ class OcrReferenceActivity : Activity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
-        if (intent != null) {
-            when (requestCode) {
-                REQUEST_CODE_CHOOSE_IMAGE -> if (intent.data != null) {
+        when (requestCode) {
+            REQUEST_CODE_CHOOSE_IMAGE -> if (intent != null) {
+                if (intent.data != null) {
                     val iconUri = intent.data
                     iconUri?.let {
                         startCropImage(it)
                     }
                 }
-                REQUEST_CODE_CROP_IMAGE -> if (resultCode == RESULT_OK) {
-                    chooseImage = true
-                    try {
-                        val bitmap = BitmapFactory.decodeStream(
-                            contentResolver
-                                .openInputStream(cropImageUri))
-                        cameraPreview?.updateBitmapView(bitmap)
-                    } catch (e: FileNotFoundException) {
-                        e.printStackTrace()
+            }
+            REQUEST_CODE_CROP_IMAGE -> if (resultCode == RESULT_OK) {
+                chooseImage = true
+                try {
+                    val bitmap = BitmapFactory.decodeStream(
+                        contentResolver
+                            .openInputStream(cropImageUri))
+                    cameraPreview?.updateBitmapView(bitmap)
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
+            }
+            REQUEST_CODE -> {
+                //人脸识别回调
+                if (resultCode == REQUEST_CODE_SUCCESS) {
+                    //人脸认证成功
+                    intent?.let {
+                        val ocrData = it.getStringExtra(Constants.OCR_DATA)
+                        setResult(-1, Intent().putExtra(Constants.OCR_DATA, ocrData))
                     }
                 }
-                else -> {
-                }
+                finished()
+            }
+            else -> {
             }
         }
     }
@@ -238,6 +259,14 @@ class OcrReferenceActivity : Activity() {
 
     private fun finished() {
         this@OcrReferenceActivity.finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!alwaysReference && booleanFace == Constants.CLOSE_FACE) {
+            //未进行认证并且不需要进行人脸认证，则退出界面时取消认证
+            cameraPreview?.cancelReference()
+        }
     }
 
 }

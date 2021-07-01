@@ -1,12 +1,10 @@
 package com.wotransfer.identify.manager
 
 import android.graphics.Bitmap
-import android.view.View
 import com.wotransfer.identify.observeInterface.StateObserver
 import com.wotransfer.identify.view.CameraPreviewImplView
 import com.wotransfer.identify.view.util.EnumStatus
 import com.wotransfer.identify.view.util.EnumType
-import kotlinx.android.synthetic.main.camera_im_view.view.*
 
 class CameraPreviewManager : BaseManager() {
 
@@ -24,7 +22,10 @@ class CameraPreviewManager : BaseManager() {
         }
     }
 
-    fun startReferenceFaceOrCard(faceStatus: Boolean? = false, cardStatus: Boolean? = false): CameraPreviewManager? {
+    fun startReferenceFaceOrCard(
+        faceStatus: Boolean? = false,
+        cardStatus: Boolean? = false,
+    ): CameraPreviewManager? {
         faceStatus?.let {
             statusMap(EnumType.FACE, faceStatus)
         }
@@ -40,12 +41,12 @@ class CameraPreviewManager : BaseManager() {
     }
 
     fun addObserverFaceOrCardChange(stateObserver: StateObserver): CameraPreviewManager? {
-        cameraPreview?.setObserver(EnumStatus.CAMERA_TYPE,stateObserver)
+        cameraPreview?.setObserver(EnumStatus.CAMERA_TYPE, stateObserver)
         return instance
     }
 
     fun addObserverCameraChange(stateObserver: StateObserver): CameraPreviewManager? {
-        cameraPreview?.setObserver(EnumStatus.CAMERA_REPEAT,stateObserver)
+        cameraPreview?.setObserver(EnumStatus.CAMERA_REPEAT, stateObserver)
         return instance
     }
 
@@ -55,6 +56,10 @@ class CameraPreviewManager : BaseManager() {
 
     fun updateBitmapView(bitmap: Bitmap) {
         cameraPreview?.updateBitmapView(bitmap)
+    }
+
+    fun cancelReference() {
+        cameraPreview?.cancelReference()
     }
 }
 

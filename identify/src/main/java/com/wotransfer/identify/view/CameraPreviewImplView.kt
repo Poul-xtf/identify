@@ -32,8 +32,6 @@ class CameraPreviewImplView : FrameLayout,
 
     private var observerList = HashMap<EnumStatus, StateObserver>()
 
-    private var ocrData: String? = null
-
     private var mSurfaceViewWidth = 0
     private var mSurfaceViewHeight = 0
     private var mCameraID = CameraCharacteristics.LENS_FACING_BACK
@@ -183,16 +181,24 @@ class CameraPreviewImplView : FrameLayout,
         startHttpRequest(this, reference_path, params)
     }
 
+    /**
+     * cancel reference
+     */
+    fun cancelReference() {
+        val params = getReParams(SpUtil.getString(mContext, Constants.REFERENCE)!!)
+        startHttpRequest(this, cancel_reference_path, params)
+    }
+
 
     //证件上传/认证成功
     override fun onSuccess(path: String, content: String) {
         observerStatus()
         when (path) {
             upload_identity_path -> {
-                observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD_UP, true, ocrData)
+                observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD_UP, true, content)
             }
             reference_path -> {
-                observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD, true, ocrData)
+                observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD, true, content)
             }
         }
     }
@@ -200,7 +206,7 @@ class CameraPreviewImplView : FrameLayout,
     override fun onFiled(path: String, error: String) {
         observerStatus()
         mContext?.showToast(error)
-        observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD, false, ocrData)
+        observerList[EnumStatus.CAMERA_TYPE]!!.stateChange(EnumType.CARD, false, error)
     }
 
     override fun complete() {}

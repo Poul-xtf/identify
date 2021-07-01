@@ -3,6 +3,7 @@ package com.wotransfer.identify.example
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.google.gson.Gson
 import com.wotransfer.identify.Constants
@@ -44,9 +45,10 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
     fun startPhoto(view: View) {
         if (checkPermission())
             CameraLaunch()
-                .startView(LaunchType.CAMERA_OCR, Constants.CLOSE_FACE,
-                    Constants.OPEN_CARD, reference = reference, model = model)
+                .startView(this, LaunchType.CAMERA_OCR, Constants.CLOSE_FACE,
+                    Constants.OPEN_CARD, reference = reference, model = model, requestCode = 0)
     }
+
 
     /**
      * 人脸识别
@@ -55,8 +57,8 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
      */
     fun startFace(view: View) {
         CameraLaunch()
-            .startView(LaunchType.CAMERA_FACE,
-                country = "JPN")
+            .startView(this, LaunchType.CAMERA_FACE,
+                country = "JPN", reference = reference, requestCode = 0)
     }
 
     /**
@@ -67,19 +69,21 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
     fun startAllRe(view: View) {
         if (checkPermission())
             CameraLaunch()
-                .startView(LaunchType.ALL,
+                .startView(this, LaunchType.ALL,
                     Constants.OPEN_FACE,
                     Constants.OPEN_CARD,
                     reference = reference,
-                    model = model)
+                    model = model,
+                    requestCode = 0)
     }
+
 
     fun startNoAllRe(view: View) {
         if (checkPermission())
             CameraLaunch()
-                .startView(LaunchType.ALL,
+                .startView(this, LaunchType.ALL,
                     reference = reference,
-                    model = model)
+                    model = model, requestCode = 0)
     }
 
 
@@ -88,9 +92,17 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
      */
     fun startAll(view: View) {
         CameraLaunch()
-            .startView(LaunchType.CAMERA_VIEW,
+            .startView(this, LaunchType.CAMERA_VIEW,
                 Constants.OPEN_FACE,
-                Constants.OPEN_CARD)
+                Constants.OPEN_CARD, requestCode = 0)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == -1) {
+            Log.d("xxxx", data?.getStringExtra(Constants.OCR_DATA)!!)
+        }
     }
 
     /**

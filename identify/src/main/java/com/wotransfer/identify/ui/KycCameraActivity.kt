@@ -35,9 +35,12 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     private var isOpenSound = true
 
     private var liveNessList = arrayListOf<LivenessTypeEnum>()
-    private var country: String = ""
+    private var country: String? = null
     private var reference: String? = null
     private var file: File? = null
+    private var alwaysReference: Boolean = false//是否进行取消认证
+    private var referenceState: Boolean = false//是否认证成功
+    private var ocrData: String? = null
     private var nessType =
         arrayListOf(LivenessTypeEnum.Eye,
             LivenessTypeEnum.Mouth,
@@ -54,17 +57,29 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
         init()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!alwaysReference) {
+            cancelReference()
+        }
+    }
+
     private fun getLiveNessList() {
         liveNessList.add(nessType[Random().nextInt(6)])
     }
 
 
     fun finishBack(view: View) {
+        if (referenceState) {
+            val intent = Intent()
+            intent.putExtra(Constants.OCR_DATA, ocrData)
+            setResult(-1, intent)
+        }
         this@KycCameraActivity.finish()
     }
 
     private fun getIntentData() {
-        country = intent.getStringExtra(Constants.COUNTRY_CODE)!!
+        country = intent.getStringExtra(Constants.COUNTRY_CODE)
         reference = intent.getStringExtra(Constants.REFERENCE)
     }
 
@@ -113,13 +128,9 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
      * upload face image
      */
     private fun uploadImg() {
-        if (reference == null || reference == "") {
-            showToast(getString(R.string.i_tip_license_4))
-            return
-        }
         file?.let {
             val params = getParams(
-                country,
+                country!!,
                 Constants.OPEN_FACE,
                 "",
                 Constants.CLOSE_CARD,
@@ -137,12 +148,22 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
         startHttpRequest(this, reference_path, params)
     }
 
+    /**
+     * cancel reference
+     */
+    private fun cancelReference() {
+        val params = getReParams(reference!!)
+        startHttpRequest(this, cancel_reference_path, params)
+    }
+
+
     override fun onSuccess(path: String, content: String) {
         when (path) {
             upload_identity_path -> {
                 referenceImg()
             }
             reference_path -> {
+                ocrData = content
                 startAc(true)
             }
         }
@@ -161,6 +182,8 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     }
 
     private fun startAc(state: Boolean) {
+        alwaysReference = true
+        referenceState = state
         con_status.visibility = View.VISIBLE
         if (!state) {
             iv_back_success.getDrawable(this, R.drawable.shape_re_failed)
