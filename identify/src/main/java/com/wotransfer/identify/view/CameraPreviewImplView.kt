@@ -14,12 +14,12 @@ import androidx.annotation.RequiresApi
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.Constants.Companion.KYC_TAG
 import com.wotransfer.identify.R
+import com.wotransfer.identify.databinding.CameraImViewBinding
 import com.wotransfer.identify.net.*
 import com.wotransfer.identify.observeInterface.StateObserver
 import com.wotransfer.identify.util.*
 import com.wotransfer.identify.view.util.EnumStatus
 import com.wotransfer.identify.view.util.EnumType
-import kotlinx.android.synthetic.main.camera_im_view.view.*
 import java.io.IOException
 import kotlin.math.min
 
@@ -36,6 +36,7 @@ class CameraPreviewImplView : FrameLayout,
     private var mSurfaceViewHeight = 0
     private var mCameraID = CameraCharacteristics.LENS_FACING_BACK
     private var resultUrl: String? = null
+    lateinit var binding: CameraImViewBinding
 
     constructor(context: Context) : super(context) {
         mContext = context
@@ -53,7 +54,8 @@ class CameraPreviewImplView : FrameLayout,
     }
 
     private fun initView() {
-        inflate(mContext, R.layout.camera_im_view, this)
+        val root = View.inflate(mContext, R.layout.camera_im_view, this)
+        binding = CameraImViewBinding.bind(root)
         initWH()
     }
 
@@ -64,39 +66,39 @@ class CameraPreviewImplView : FrameLayout,
         val maxSize = screenMinSize / 9.0f * 16.0f
         mSurfaceViewWidth = screenMinSize.toInt()
         mSurfaceViewHeight = if (maxSize > screenHeight) screenHeight else maxSize.toInt()
-        val linearParams: LayoutParams = camera_p1.layoutParams as LayoutParams
+        val linearParams: LayoutParams = binding.cameraP1.layoutParams as LayoutParams
         linearParams.height = (screenMinSize / 9.0f * 16.0f).toInt()
         linearParams.width = screenMinSize.toInt()
-        camera_p1.layoutParams = linearParams
+        binding.cameraP1.layoutParams = linearParams
     }
 
     fun updateCropBView(url: String?) {
-        getLoadOfGlide(mContext!!, url, iv_crop)
+        getLoadOfGlide(mContext!!, url, binding.ivCrop)
     }
 
     fun updateView() {
-        camera_p1.visibility = View.VISIBLE
-        iv_crop.visibility = View.VISIBLE
-        camera_crop.setImageBitmap(null)
+        binding.cameraP1.visibility = View.VISIBLE
+        binding.ivCrop.visibility = View.VISIBLE
+        binding.cameraCrop.setImageBitmap(null)
     }
 
     fun updateBitmapView(bitmap: Bitmap) {
-        camera_p1.visibility = View.GONE
-        iv_crop.visibility = View.INVISIBLE
-        camera_crop.setImageBitmap(bitmap)
+        binding.cameraP1.visibility = View.GONE
+        binding.ivCrop.visibility = View.INVISIBLE
+        binding.cameraCrop.setImageBitmap(bitmap)
         observerList[EnumStatus.CAMERA_REPEAT]?.stateChange(EnumType.CARD, true, "")
     }
 
     fun updateProgressMax(max: Int) {
-        progressBar.max = max
+        binding.progressBar.max = max
     }
 
     fun updateProgress(progress: Int) {
-        progressBar.progress = progress
+        binding.progressBar.progress = progress
     }
 
     fun updateTor() {
-        camera_p1.openCloseTor()
+        binding.cameraP1.openCloseTor()
     }
 
     /**
@@ -116,9 +118,9 @@ class CameraPreviewImplView : FrameLayout,
                 mSurfaceViewHeight,
                 mCameraID,
                 resultUrl,
-                camera_crop,
-                camera_crop_container,
-                camera_p1
+                binding.cameraCrop,
+                binding.cameraCropContainer,
+                binding.cameraP1
             )
             resultUrl = takePhotoResult(resultUrl)
             val bitmap = BitmapFactory.decodeFile(resultUrl)
@@ -147,7 +149,7 @@ class CameraPreviewImplView : FrameLayout,
         this.statusMap = statusMap
         if (statusMap[EnumType.CARD]!!) {//判断是否需要证件认证
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                camera_p1?.startTakePicture(this)
+                binding.cameraP1?.startTakePicture(this)
             }
             return
         } else {

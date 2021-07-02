@@ -3,8 +3,6 @@ package com.wotransfer.identify.util.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
-import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
@@ -13,7 +11,6 @@ import androidx.core.widget.addTextChangedListener
 import com.google.gson.Gson
 import com.wotransfer.identify.R
 import com.wotransfer.identify.util.getJson
-import kotlinx.android.synthetic.main.my_list_view.view.*
 
 class AnySearchList : RelativeLayout {
 
@@ -24,6 +21,7 @@ class AnySearchList : RelativeLayout {
     private var viewAdapter: AnyAdapter? = null
     private var mListView: ExpandableListView? = null
     private var mySearchView: NySearchView? = null
+    private var etSearch: EditText? = null
     private var thisData: List<Model>? = null
     private var tempData: List<Model>? = null
     private var indexData = arrayListOf<String>()
@@ -55,6 +53,7 @@ class AnySearchList : RelativeLayout {
         val rootView = LayoutInflater.from(mContext).inflate(R.layout.my_list_view, this)
         mListView = rootView.findViewById(R.id.mListView)
         mySearchView = rootView.findViewById(R.id.my_search_view)
+        etSearch = rootView.findViewById(R.id.et_search)
         mySearchView?.setItemListener {
             indexData.forEachIndexed { index, model ->
                 if (it == model) {
@@ -63,7 +62,7 @@ class AnySearchList : RelativeLayout {
             }
         }
         tvEt?.text = textName
-        et_search.addTextChangedListener {
+        etSearch?.addTextChangedListener {
             if (it.toString() == "") {
                 thisData = tempData
                 setData()
@@ -74,7 +73,6 @@ class AnySearchList : RelativeLayout {
             tempData?.forEachIndexed { _, model ->
                 model.data.forEachIndexed { _, data ->
                     if (it.toString() == data.countryName) {
-//                        myModel.add(model)
                         listData.add(data)
                         myModel.add(Model(listData, model.index))
                         thisData = myModel

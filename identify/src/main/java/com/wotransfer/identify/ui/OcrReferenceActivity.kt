@@ -1,16 +1,15 @@
 package com.wotransfer.identify.ui
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.Constants.Companion.KYC_TAG
 import com.wotransfer.identify.R
+import com.wotransfer.identify.databinding.ActivityOcrViewBinding
 import com.wotransfer.identify.manager.CameraPreviewManager
 import com.wotransfer.identify.net.bean.IdConfigForSdkRO
 import com.wotransfer.identify.observeInterface.StateObserver
@@ -18,12 +17,10 @@ import com.wotransfer.identify.util.SpUtil
 import com.wotransfer.identify.util.cropImage
 import com.wotransfer.identify.util.showToast
 import com.wotransfer.identify.view.util.EnumType
-import kotlinx.android.synthetic.main.activity_ocr_view.*
-import kotlinx.android.synthetic.main.camera_im_view.*
 import java.io.FileNotFoundException
 import java.util.*
 
-class OcrReferenceActivity : Activity() {
+class OcrReferenceActivity : BaseKycActivity<ActivityOcrViewBinding>() {
     private var booleanFace: Int? = -1
     private var booleanCard: Int? = -1
     private var content: IdConfigForSdkRO? = null
@@ -43,14 +40,18 @@ class OcrReferenceActivity : Activity() {
 
     private lateinit var cropImageUri: Uri
     private var chooseImage: Boolean = false
+    lateinit var binding: ActivityOcrViewBinding
 
     fun finishBack(view: View) {
         finished()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ocr_view)
+    override fun getContentView(): ActivityOcrViewBinding {
+        binding = ActivityOcrViewBinding.inflate(layoutInflater)
+        return binding
+    }
+
+    override fun initView() {
         getIntentData()
     }
 
@@ -84,7 +85,7 @@ class OcrReferenceActivity : Activity() {
         cameraPreview = CameraPreviewManager.getInstance()
             ?.startReferenceFaceOrCard(booleanFace == Constants.OPEN_FACE,
                 cardStatus = booleanCard == Constants.OPEN_CARD)
-            ?.setCameraPreview(camera_p)
+            ?.setCameraPreview(binding.cameraP)
             ?.addObserverCameraChange(object : StateObserver {
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
                     changeView()
@@ -95,7 +96,7 @@ class OcrReferenceActivity : Activity() {
                         EnumType.CARD_UP -> {
                             if (momentLocal == amount) {
                                 if (booleanFace == Constants.CLOSE_FACE) {
-                                    camera_p.referenceImg()
+                                    binding.cameraP.referenceImg()
                                 } else {
                                     startFace()
                                 }
@@ -118,12 +119,12 @@ class OcrReferenceActivity : Activity() {
 
     private fun setTipWay() {
         content?.idConfigForSdkROList?.let {
-            tv_tip_title.text = it[momentLocal - 1].idName
-            camera_p.updateCropBView(it[momentLocal - 1].borderUrl)
+            binding.tvTipTitle.text = it[momentLocal - 1].idName
+            binding.cameraP.updateCropBView(it[momentLocal - 1].borderUrl)
         }
-        camera_p.updateProgressMax(amount)
-        camera_p.updateProgress(momentLocal)
-        tv_tip_way.text = String.format(getString(R.string.i_card_way), momentLocal, amount)
+        binding.cameraP.updateProgressMax(amount)
+        binding.cameraP.updateProgress(momentLocal)
+        binding.tvTipWay.text = String.format(getString(R.string.i_card_way), momentLocal, amount)
     }
 
     //拍照
@@ -138,8 +139,7 @@ class OcrReferenceActivity : Activity() {
         intent.putExtra(Constants.RE_STATUS, state)
         startActivity(intent)
         if (state) {
-            val intent = Intent()
-            intent.putExtra(Constants.OCR_DATA, content)
+            Intent().putExtra(Constants.OCR_DATA, content)
             setResult(-1, intent)
         }
         finished()
@@ -176,7 +176,7 @@ class OcrReferenceActivity : Activity() {
     fun getPhoto(view: View) {
         setResultUri()
         content?.idConfigForSdkROList?.let {
-            camera_p.uploadImg(it[momentLocal - 1].idType)
+            binding.cameraP.uploadImg(it[momentLocal - 1].idType)
         } ?: showToast(getString(R.string.i_toast_idType))
     }
 
@@ -184,7 +184,7 @@ class OcrReferenceActivity : Activity() {
         if (!chooseImage) {
             return
         }
-        camera_p.setResultUrl(cropImageUri)
+        binding.cameraP.setResultUrl(cropImageUri)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -232,29 +232,29 @@ class OcrReferenceActivity : Activity() {
     }
 
     private fun update() {
-        camera_p.updateView()
+        binding.cameraP.updateView()
         changeView2()
     }
 
     private fun changeView() {
-        rl_cancel_photo.visibility = View.VISIBLE
-        rl_get_photo.visibility = View.VISIBLE
-        rl_sd_photo.visibility = View.GONE
-        iv_album.visibility = View.GONE
-        iv_take.visibility = View.GONE
+        binding.rlCancelPhoto.visibility = View.VISIBLE
+        binding.rlGetPhoto.visibility = View.VISIBLE
+        binding.rlSdPhoto.visibility = View.GONE
+        binding.ivAlbum.visibility = View.GONE
+        binding.ivTake.visibility = View.GONE
     }
 
     private fun changeView2() {
-        rl_cancel_photo.visibility = View.GONE
-        rl_get_photo.visibility = View.GONE
-        rl_sd_photo.visibility = View.VISIBLE
-        iv_album.visibility = View.VISIBLE
-        iv_take.visibility = View.VISIBLE
+        binding.rlCancelPhoto.visibility = View.GONE
+        binding.rlGetPhoto.visibility = View.GONE
+        binding.rlSdPhoto.visibility = View.VISIBLE
+        binding.ivAlbum.visibility = View.VISIBLE
+        binding.ivTake.visibility = View.VISIBLE
     }
 
     //开关灯光
     fun changeTor(view: View) {
-        camera_p.updateTor()
+        binding.cameraP.updateTor()
     }
 
     private fun finished() {

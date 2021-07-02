@@ -1,35 +1,40 @@
 package com.wotransfer.identify.ui
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.View
 import com.google.gson.Gson
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.R
+import com.wotransfer.identify.databinding.ActivityIdentityViewBinding
 import com.wotransfer.identify.net.*
 import com.wotransfer.identify.net.bean.IdConfigForSdkRO
 import com.wotransfer.identify.net.bean.IdTypeListBean
 import com.wotransfer.identify.ui.adapter.ReferenceMessAdapter
 import com.wotransfer.identify.util.htmlFormat
 import com.wotransfer.identify.util.showToast
-import kotlinx.android.synthetic.main.activity_identity_view.*
-import kotlinx.android.synthetic.main.activity_kyc_view.*
 import org.json.JSONObject
 
-class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
+class IdentifyReferenceActivity : BaseKycActivity<ActivityIdentityViewBinding>(),
+    HttpCallBackListener {
     private var booleanFace: String? = null
     private var booleanCard: String? = null
     private var mList = arrayListOf<IdConfigForSdkRO>()
     private var idTypeListBean: IdTypeListBean? = null
+    lateinit var binding: ActivityIdentityViewBinding
 
     fun back(view: View) {
         this@IdentifyReferenceActivity.finish()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_identity_view)
-        initView()
+    override fun getContentView(): ActivityIdentityViewBinding {
+        binding = ActivityIdentityViewBinding.inflate(layoutInflater)
+        return binding
+    }
+
+    override fun initView() {
+        booleanCard = intent.getStringExtra(Constants.CARD)
+        booleanFace = intent.getStringExtra(Constants.FACE)
+        setText()
         getNetData()
     }
 
@@ -42,18 +47,20 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
         startHttpRequest(this, identity_list_path, params)
     }
 
-    private fun initView() {
-        booleanCard = intent.getStringExtra(Constants.CARD)
-        booleanFace = intent.getStringExtra(Constants.FACE)
-        setText()
-    }
-
     private fun setText() {
         val string = getString(R.string.i_text_reference_country, Constants.CHOOSE_COUNTRY_NAME)
-        tv_re_country.htmlFormat(string)
+        binding.tvReCountry.htmlFormat(string)
     }
 
     override fun onSuccess(path: String, content: String) {
+        when (path) {
+            identity_list_path -> {
+                dealData(content)
+            }
+        }
+    }
+
+    private fun dealData(content: String) {
         val gson = Gson()
 //        val content = getJson("idConfig.json", this)
         idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
@@ -66,16 +73,15 @@ class IdentifyReferenceActivity : BaseKycActivity(), HttpCallBackListener {
                 startViewUi(position)
             }
         })
-        ep_list.setAdapter(referenceMessAdapter)
-        ep_list.setGroupIndicator(null)
-        ep_list.setOnGroupCollapseListener {
+        binding.epList.setAdapter(referenceMessAdapter)
+        binding.epList.setGroupIndicator(null)
+        binding.epList.setOnGroupCollapseListener {
             referenceMessAdapter.notifyDataSetChanged()
         }
-        ep_list.setOnGroupClickListener { _, _, position, _ ->
+        binding.epList.setOnGroupClickListener { _, _, position, _ ->
             startViewUi(position)
             true
         }
-
     }
 
 

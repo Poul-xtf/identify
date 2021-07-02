@@ -1,24 +1,25 @@
 package com.wotransfer.identify.example
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.google.gson.Gson
 import com.wotransfer.identify.Constants
+import com.wotransfer.identify.example.databinding.ActivityMainBinding
 import com.wotransfer.identify.net.HttpCallBackListener
 import com.wotransfer.identify.net.bean.IdConfigForSdkRO
 import com.wotransfer.identify.net.bean.IdTypeListBean
 import com.wotransfer.identify.net.getListOfDocuments
 import com.wotransfer.identify.reference.CameraLaunch
 import com.wotransfer.identify.reference.CameraLaunch.LaunchType
-import com.wotransfer.identify.ui.BaseKycActivity
 import com.wotransfer.identify.util.showToast
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
 
-class MainActivity : BaseKycActivity(), HttpCallBackListener {
+class MainActivity : Activity(), HttpCallBackListener {
     private var model: IdConfigForSdkRO? = null
     private var reference: String? = null
     private var permissionList = arrayOf(
@@ -32,9 +33,12 @@ class MainActivity : BaseKycActivity(), HttpCallBackListener {
         var PERMISSION_STORAGE_CODE = 110
     }
 
+    lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     /**

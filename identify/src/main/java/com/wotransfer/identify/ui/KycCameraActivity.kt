@@ -2,7 +2,6 @@ package com.wotransfer.identify.ui
 
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.baidu.idl.face.platform.FaceEnvironment
@@ -14,23 +13,17 @@ import com.baidu.idl.face.platform.utils.Base64Utils
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.Constants.Companion.QUALITY_NORMAL
 import com.wotransfer.identify.R
+import com.wotransfer.identify.databinding.ActivityKycViewBinding
 import com.wotransfer.identify.faceutil.manager.QualityConfigManager
 import com.wotransfer.identify.faceutil.model.QualityConfig
 import com.wotransfer.identify.net.*
 import com.wotransfer.identify.util.getDrawable
 import com.wotransfer.identify.util.saveBitmap
 import com.wotransfer.identify.util.showToast
-import kotlinx.android.synthetic.main.activity_kyc_view.*
-import kotlinx.android.synthetic.main.activity_kyc_view.iv_back_success
-import kotlinx.android.synthetic.main.activity_kyc_view.iv_re_status
-import kotlinx.android.synthetic.main.activity_kyc_view.iv_re_status_2
-import kotlinx.android.synthetic.main.activity_kyc_view.tv_re_tip
-import kotlinx.android.synthetic.main.activity_kyc_view.tv_re_tip2
-import kotlinx.android.synthetic.main.activity_result_view.*
 import java.io.File
 import java.util.*
 
-class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
+class KycCameraActivity : BaseKycActivity<ActivityKycViewBinding>(), HttpCallBackListener {
     private var isLiveNessRandom = true
     private var isOpenSound = true
 
@@ -48,10 +41,14 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
             LivenessTypeEnum.HeadLeft,
             LivenessTypeEnum.HeadUp,
             LivenessTypeEnum.HeadDown)
+    lateinit var binding: ActivityKycViewBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_kyc_view)
+    override fun getContentView(): ActivityKycViewBinding {
+        binding = ActivityKycViewBinding.inflate(layoutInflater)
+        return binding
+    }
+
+    override fun initView() {
         getIntentData()
         getLiveNessList()
         init()
@@ -184,13 +181,13 @@ class KycCameraActivity : BaseKycActivity(), HttpCallBackListener {
     private fun startAc(state: Boolean) {
         alwaysReference = true
         referenceState = state
-        con_status.visibility = View.VISIBLE
+        binding.conStatus.visibility = View.VISIBLE
         if (!state) {
-            iv_back_success.getDrawable(this, R.drawable.shape_re_failed)
-            iv_re_status_2.visibility = View.VISIBLE
-            iv_re_status.visibility = View.GONE
-            tv_re_tip.text = getString(R.string.i_text_identify_failed)
-            tv_re_tip2.text = getString(R.string.i_text_identify_finish_failed)
+            binding.ivBackSuccess.getDrawable(this, R.drawable.shape_re_failed)
+            binding.ivReStatus2.visibility = View.VISIBLE
+            binding.ivReStatus.visibility = View.GONE
+            binding.tvReTip.text = getString(R.string.i_text_identify_failed)
+            binding.tvReTip2.text = getString(R.string.i_text_identify_finish_failed)
         }
     }
 

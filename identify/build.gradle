@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'maven'
 }
 
@@ -36,6 +35,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 uploadArchives {
@@ -53,7 +55,7 @@ uploadArchives {
                         password: '-GDm9X)m_aDu'
                 )
             }
-            pom.version = '1.0.6-SNAPSHOT'
+            pom.version = '1.0.7-SNAPSHOT'
             pom.artifactId = 'identify-android'
             pom.groupId = 'com.wotransfer'
         }
