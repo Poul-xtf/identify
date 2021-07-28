@@ -41,12 +41,6 @@ class KycCameraActivity : BaseKycActivity<ActivityKycViewBinding>(), HttpCallBac
             LivenessTypeEnum.HeadLeft,
             LivenessTypeEnum.HeadUp,
             LivenessTypeEnum.HeadDown)
-    lateinit var binding: ActivityKycViewBinding
-
-    override fun getContentView(): ActivityKycViewBinding {
-        binding = ActivityKycViewBinding.inflate(layoutInflater)
-        return binding
-    }
 
     override fun initView() {
         getIntentData()

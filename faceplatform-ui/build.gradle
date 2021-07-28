@@ -33,7 +33,7 @@ android {
 //                        password: '-GDm9X)m_aDu'
 //                )
 //            }
-//            pom.version = '1.0.3-SNAPSHOT'
+//            pom.version = '1.0.4-SNAPSHOT'
 //            pom.artifactId = 'identify-android-face-ui'
 //            pom.groupId = 'com.wotransfer'
 //        }

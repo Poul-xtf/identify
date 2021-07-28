@@ -1,5 +1,6 @@
 package com.wotransfer.identify.net
 
+import android.util.Log
 import com.wotransfer.identify.Constants
 import java.io.File
 
@@ -9,21 +10,23 @@ const val upload_identity_path = "wtocr/identify/ocr/upload/identity"//上传证
 const val reference_path = "wtocr/identify/ocr/recognize/identity"//认证图片
 const val cancel_reference_path = "wtocr/identify/ocr/recognize/cancel"//取消此次认证
 
-fun getUrl(): String {
-    return Constants.url
-}
+//fun getUrl(): String {
+//    return Constants.url
+//}
 
 //根据国家获取证件列表
 fun getParams(
     country: String,
     extend: String = "",
 ): Map<String, Any> {
-    return mapOf(
+    val params = mapOf(
         "appName" to Constants.APP_NAME,
         "country" to country,
         "extend" to extend,
         "source" to Constants.SOURCE
     )
+    Log.i(Constants.KYC_TAG, "根据国家获取证件列表-->${params}")
+    return params
 }
 
 //上传证件图片
@@ -35,7 +38,7 @@ fun getParams(
     reference: String,
     file: File,
 ): Map<String, Any> {
-    return mapOf(
+    val params = mapOf(
         "appName" to Constants.APP_NAME,
         "countryCode" to countryCode,
         "face" to face,
@@ -45,14 +48,18 @@ fun getParams(
         "source" to Constants.SOURCE,
         "file" to file
     )
+    Log.i(Constants.KYC_TAG, "上传证件图片-->${params}")
+    return params
 }
 
 fun getReParams(
     reference: String,
 ): Map<String, Any> {
-    return mapOf(
+    val params = mapOf(
         "appName" to Constants.APP_NAME,
         "reference" to reference,
         "source" to Constants.SOURCE
     )
+    Log.i(Constants.KYC_TAG, "认证或者取消认证-->${params}")
+    return params
 }

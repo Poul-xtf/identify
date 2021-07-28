@@ -6,14 +6,8 @@ import com.wotransfer.identify.Constants
 import com.wotransfer.identify.databinding.ActivityChangeViewBinding
 
 class ChangeCountryActivity : BaseKycActivity<ActivityChangeViewBinding>() {
-    lateinit var binding: ActivityChangeViewBinding
     fun back(view: View) {
         this@ChangeCountryActivity.finish()
-    }
-
-    override fun getContentView(): ActivityChangeViewBinding {
-        binding = ActivityChangeViewBinding.inflate(layoutInflater)
-        return binding
     }
 
     override fun initView() {

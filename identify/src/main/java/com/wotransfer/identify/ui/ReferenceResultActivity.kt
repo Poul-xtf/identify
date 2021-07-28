@@ -8,12 +8,6 @@ import com.wotransfer.identify.util.getDrawable
 
 class ReferenceResultActivity : BaseKycActivity<ActivityResultViewBinding>() {
 
-    lateinit var binding: ActivityResultViewBinding
-    override fun getContentView(): ActivityResultViewBinding {
-        binding = ActivityResultViewBinding.inflate(layoutInflater)
-        return binding
-    }
-
     override fun initView() {
         val booleanExtra = intent.getBooleanExtra(Constants.RE_STATUS, false)
         if (!booleanExtra) {

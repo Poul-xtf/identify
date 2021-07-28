@@ -161,10 +161,10 @@ class CameraPreviewImplView : FrameLayout,
      * upload img
      */
     fun uploadImg(idType: String?) {
-        Log.d(KYC_TAG, "resultUrl=$resultUrl")
+        Log.d(KYC_TAG, "resultUrl=${resultUrl}idType=$idType")
         val params = getParams(
             SpUtil.getString(mContext, Constants.COUNTRY_CODE)!!,
-            SpUtil.getString(mContext, Constants.NEED_FACE)!!.toInt(),
+            Constants.CLOSE_FACE,
             idType!!,
             SpUtil.getString(mContext, Constants.NEED_OCR)!!.toInt(),
             SpUtil.getString(mContext, Constants.REFERENCE)!!,
@@ -194,6 +194,8 @@ class CameraPreviewImplView : FrameLayout,
 
     //证件上传/认证成功
     override fun onSuccess(path: String, content: String) {
+        Log.d("rrr",path)
+        Log.d("rrr",content)
         observerStatus()
         when (path) {
             upload_identity_path -> {

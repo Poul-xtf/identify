@@ -55,7 +55,7 @@ uploadArchives {
                         password: '-GDm9X)m_aDu'
                 )
             }
-            pom.version = '1.0.7-SNAPSHOT'
+            pom.version = '1.0.14-SNAPSHOT'
             pom.artifactId = 'identify-android'
             pom.groupId = 'com.wotransfer'
         }
@@ -69,8 +69,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
 //    api project(path: ':faceplatform-ui')
-    api 'com.wotransfer:identify-android-face-ui:1.0.3-SNAPSHOT'
-//    api 'com.wotransfer:identify-android-face-lib:1.0.2-SNAPSHOT'
+    api 'com.wotransfer:identify-android-face-ui:1.0.4-SNAPSHOT'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

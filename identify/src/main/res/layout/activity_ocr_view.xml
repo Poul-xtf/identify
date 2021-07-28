@@ -60,13 +60,15 @@
 
     <RelativeLayout
         style="@style/style_hw"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/dimen_25">
+        android:background="@color/camera_black_40"
+        android:layout_height="@dimen/dimen_140"
+        android:layout_gravity="bottom">
 
         <RelativeLayout
             android:id="@+id/rl_sd_photo"
             android:layout_width="@dimen/dimen_40"
             android:layout_height="@dimen/dimen_40"
+            android:visibility="invisible"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dimen_26"
             android:background="@drawable/shape_camera_take"

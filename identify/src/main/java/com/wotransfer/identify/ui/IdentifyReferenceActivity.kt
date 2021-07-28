@@ -1,6 +1,7 @@
 package com.wotransfer.identify.ui
 
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import com.google.gson.Gson
 import com.wotransfer.identify.Constants
@@ -20,15 +21,9 @@ class IdentifyReferenceActivity : BaseKycActivity<ActivityIdentityViewBinding>()
     private var booleanCard: String? = null
     private var mList = arrayListOf<IdConfigForSdkRO>()
     private var idTypeListBean: IdTypeListBean? = null
-    lateinit var binding: ActivityIdentityViewBinding
 
     fun back(view: View) {
         this@IdentifyReferenceActivity.finish()
-    }
-
-    override fun getContentView(): ActivityIdentityViewBinding {
-        binding = ActivityIdentityViewBinding.inflate(layoutInflater)
-        return binding
     }
 
     override fun initView() {
@@ -64,6 +59,7 @@ class IdentifyReferenceActivity : BaseKycActivity<ActivityIdentityViewBinding>()
         val gson = Gson()
 //        val content = getJson("idConfig.json", this)
         idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
+        Log.d("xx->",idTypeListBean?.model!!.idConfigForSdkROList[0].bizIdType)
         idTypeListBean?.model?.idConfigForSdkROList?.forEach {
             mList.add(it)
         }

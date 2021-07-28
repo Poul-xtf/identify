@@ -117,5 +117,11 @@
         android:onClick="startAllView"
         android:text="@string/app_face_card_view" />
 
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60"
+        android:layout_marginLeft="@dimen/dimen_40"
+        android:layout_marginRight="@dimen/dimen_40"
+        android:onClick="changeIp"
+        android:text="@string/app_change_ip" />
 </LinearLayout>

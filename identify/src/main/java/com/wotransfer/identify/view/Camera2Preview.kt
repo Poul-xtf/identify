@@ -122,7 +122,9 @@ open class Camera2Preview : SurfaceView, SurfaceHolder.Callback, Handler.Callbac
         val handlerThread = HandlerThread("Camera2")
         handlerThread.start()
         childHandler = Handler(handlerThread.looper, this)
-        mCameraManager = mContext?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mCameraManager = mContext?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        }
         loadImageReader()
         if (!checkPermission()) {
             return

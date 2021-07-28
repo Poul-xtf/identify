@@ -2,10 +2,12 @@ package com.wotransfer.identify.example
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.google.gson.Gson
 import com.wotransfer.identify.Constants
 import com.wotransfer.identify.example.databinding.ActivityMainBinding
@@ -18,6 +20,7 @@ import com.wotransfer.identify.reference.CameraLaunch.LaunchType
 import com.wotransfer.identify.util.showToast
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
+
 
 class MainActivity : Activity(), HttpCallBackListener {
     private var model: IdConfigForSdkRO? = null
@@ -49,8 +52,10 @@ class MainActivity : Activity(), HttpCallBackListener {
     fun startPhoto(view: View) {
         if (checkPermission())
             CameraLaunch()
-                .startView(this, LaunchType.CAMERA_OCR, Constants.CLOSE_FACE,
-                    Constants.OPEN_CARD, reference = reference, model = model, requestCode = 0)
+                .startView(
+                    this, LaunchType.CAMERA_OCR, Constants.CLOSE_FACE,
+                    Constants.OPEN_CARD, reference = reference, model = model, requestCode = 0
+                )
     }
 
 
@@ -61,8 +66,10 @@ class MainActivity : Activity(), HttpCallBackListener {
      */
     fun startFace(view: View) {
         CameraLaunch()
-            .startView(this, LaunchType.CAMERA_FACE,
-                country = "JPN", reference = reference, requestCode = 0)
+            .startView(
+                this, LaunchType.CAMERA_FACE,
+                country = "JPN", reference = reference, requestCode = 0
+            )
     }
 
     /**
@@ -73,21 +80,25 @@ class MainActivity : Activity(), HttpCallBackListener {
     fun startAllRe(view: View) {
         if (checkPermission())
             CameraLaunch()
-                .startView(this, LaunchType.ALL,
+                .startView(
+                    this, LaunchType.ALL,
                     Constants.OPEN_FACE,
                     Constants.OPEN_CARD,
                     reference = reference,
                     model = model,
-                    requestCode = 0)
+                    requestCode = 0
+                )
     }
 
 
     fun startNoAllRe(view: View) {
         if (checkPermission())
             CameraLaunch()
-                .startView(this, LaunchType.ALL,
+                .startView(
+                    this, LaunchType.ALL,
                     reference = reference,
-                    model = model, requestCode = 0)
+                    model = model, requestCode = 0
+                )
     }
 
 
@@ -96,9 +107,11 @@ class MainActivity : Activity(), HttpCallBackListener {
      */
     fun startAll(view: View) {
         CameraLaunch()
-            .startView(this, LaunchType.CAMERA_VIEW,
+            .startView(
+                this, LaunchType.CAMERA_VIEW,
                 Constants.OPEN_FACE,
-                Constants.OPEN_CARD, requestCode = 0)
+                Constants.OPEN_CARD, requestCode = 0
+            )
     }
 
 
@@ -117,6 +130,23 @@ class MainActivity : Activity(), HttpCallBackListener {
     }
 
     /**
+     * 更改开发配置
+     */
+    fun changeIp(view: View) {
+        val items = arrayOf(Constants.url_qa, Constants.url_at, Constants.url_dev1)
+        val alertBuilder = AlertDialog.Builder(this)
+        var alertDialog2: AlertDialog? = null
+        alertBuilder.setTitle("选择域名")
+        alertBuilder.setSingleChoiceItems(items, 0) { _, i ->
+            Constants.url = items[i]
+            Toast.makeText(this@MainActivity, "配置成功", Toast.LENGTH_SHORT).show()
+            alertDialog2?.dismiss()
+        }
+        alertDialog2 = alertBuilder.create()
+        alertDialog2.show()
+    }
+
+    /**
      * 获取证件列表
      */
     fun getListDocument(view: View) {
@@ -129,11 +159,14 @@ class MainActivity : Activity(), HttpCallBackListener {
     override fun onSuccess(path: String, content: String) {
         val gson = Gson()
         val idTypeListBean = gson.fromJson(content, IdTypeListBean::class.java)
-        if (idTypeListBean.model.idConfigForSdkROList.isNotEmpty()) {
-            showToast(getString(R.string.i_toast_request_success))
-            model = idTypeListBean.model.idConfigForSdkROList[0]
+        idTypeListBean.model?.let {
+            if (it.idConfigForSdkROList.isNotEmpty()) {
+                showToast(getString(R.string.i_toast_request_success))
+                model = it.idConfigForSdkROList[0]
+            }
         }
-        reference = idTypeListBean.model.reference
+
+        reference = idTypeListBean.model?.reference
     }
 
     override fun onFiled(path: String, error: String) {

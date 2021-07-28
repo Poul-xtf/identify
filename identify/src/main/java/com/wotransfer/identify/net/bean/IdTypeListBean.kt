@@ -2,11 +2,10 @@ package com.wotransfer.identify.net.bean
 
 import java.io.Serializable
 
-
 data class IdTypeListBean(
-    val code: Int,
-    val model: Model,
-    val suc: Boolean,
+    val code: Int = -1,
+    val model: Model? = null,
+    val suc: Boolean = false
 )
 
 data class Model(
@@ -24,6 +23,7 @@ data class IdConfigForSdkRO(
     val idName: String,
     val idTag: String,
     val idType: String,
+    val bizIdType: String,
     val imageUrl: String,
     val needFace: Int,
     val needOcr: Int,
@@ -42,6 +42,7 @@ data class IdConfigForSdkROX(
     val idName: String,
     val idTag: String,
     val idType: String,
+    val bizIdType: String,
     val imageUrl: String,
     val needOcr: Int,
     val parentId: Int,
@@ -49,4 +50,4 @@ data class IdConfigForSdkROX(
     val sort: Int,
     val subtitle: String,
     val borderUrl: String,
-):Serializable
+) : Serializable

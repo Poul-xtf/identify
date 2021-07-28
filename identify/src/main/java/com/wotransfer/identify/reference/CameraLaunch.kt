@@ -5,6 +5,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import com.wotransfer.identify.Constants
+import com.wotransfer.identify.Constants.Companion.APP_NAME
+import com.wotransfer.identify.Constants.Companion.LICENSE_ID
+import com.wotransfer.identify.Constants.Companion.LICENSE_NAME
 import com.wotransfer.identify.R
 import com.wotransfer.identify.ui.IdentifyReferenceActivity
 import com.wotransfer.identify.ui.KycCameraActivity
@@ -24,9 +27,9 @@ class CameraLaunch {
             licenseFileName: String? = null,
         ) {
             mContext = context
-            Constants.APP_NAME = appName
-            Constants.LICENSE_ID = licenseId ?: ""
-            Constants.LICENSE_NAME = licenseFileName ?: ""
+            APP_NAME = appName
+            LICENSE_ID = licenseId ?: ""
+            LICENSE_NAME = licenseFileName ?: ""
         }
     }
 
@@ -41,9 +44,6 @@ class CameraLaunch {
         requestCode: Int,
     ) {
         mContext?.let {
-//            requestCode?.let { _ ->
-//                SpUtil.putString(it, Constants.REQUEST_CODE, requestCode.toString())
-//            }
             when (type) {
                 LaunchType.ALL -> {
                     if (model == null) {
@@ -78,7 +78,7 @@ class CameraLaunch {
                     context.startActivityForResult(intent, requestCode)
                 }
                 LaunchType.CAMERA_FACE -> {
-                    if (Constants.LICENSE_ID == "" || Constants.LICENSE_NAME == "") {
+                    if (LICENSE_ID == "" || LICENSE_NAME == "") {
                         it.showToast(it.getString(R.string.i_tip_license_1))
                         return
                     }

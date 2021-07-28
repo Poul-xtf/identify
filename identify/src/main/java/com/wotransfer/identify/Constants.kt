@@ -9,8 +9,12 @@ class Constants {
 
         const val OCR_DATA = "ocrData"
 
-        //        const val url = "https://qa.pandaremit.com/"
-        const val url = "https://atestidentify.pandaremit.com/"
+        const val url_qa = "https://qa.pandaremit.com/"
+        const val url_at = "https://atestidentify.pandaremit.com/"
+        const val url_dev1 = "https://dev1.pandaremit.com/"
+
+        var url = "https://dev1.pandaremit.com/"
+
         const val FILE_PIC_NAME = "pictureCrop.png"
         const val SOURCE = 3
         const val SP_KEY = "local_mess"

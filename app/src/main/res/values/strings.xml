@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">UserIdentify</string>
     <string name="app_token">获取token(注册sdk)</string>
     <string name="app_ocr_btn">Ocr认证</string>
@@ -8,5 +8,6 @@
     <string name="app_face_card_no">Ocr认证+人脸(业务未设置)</string>
     <string name="app_face_card_sdk_view">SDK界面</string>
     <string name="app_face_card_view">自定义view</string>
+    <string name="app_change_ip">配置环境</string>
 
 </resources>

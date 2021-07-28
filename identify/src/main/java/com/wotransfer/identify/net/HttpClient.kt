@@ -130,12 +130,15 @@ class HttpClient {
                         + "pic.png" + "\"" + LINE_END)
                 .append(LINE_END)
                 .append(LINE_END)//很关键
+            dos.writeBytes(strSb.toString())
+
             val `is`: InputStream = FileInputStream(file)
             val buffer = ByteArray(1024)
             var len: Int
             while (`is`.read(buffer).also { len = it } != -1) {
                 dos.write(buffer, 0, len)
             }
+            dos.writeBytes(LINE_END)
             `is`.close()
 //
 //            dos.writeBytes(PREFIX + BOUNDARY + LINE_END)
@@ -152,7 +155,8 @@ class HttpClient {
 //            dos.writeBytes(LINE_END)
 //            fStream.close()
 
-            dos.writeBytes(strSb.toString())
+//            dos.writeBytes(strSb.toString())
+
             dos.writeBytes(PREFIX + BOUNDARY + PREFIX + LINE_END)
             dos.flush()
             dos.close()

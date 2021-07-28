@@ -40,15 +40,9 @@ class OcrReferenceActivity : BaseKycActivity<ActivityOcrViewBinding>() {
 
     private lateinit var cropImageUri: Uri
     private var chooseImage: Boolean = false
-    lateinit var binding: ActivityOcrViewBinding
 
     fun finishBack(view: View) {
         finished()
-    }
-
-    override fun getContentView(): ActivityOcrViewBinding {
-        binding = ActivityOcrViewBinding.inflate(layoutInflater)
-        return binding
     }
 
     override fun initView() {
@@ -83,8 +77,10 @@ class OcrReferenceActivity : BaseKycActivity<ActivityOcrViewBinding>() {
 
     private fun initData() {
         cameraPreview = CameraPreviewManager.getInstance()
-            ?.startReferenceFaceOrCard(booleanFace == Constants.OPEN_FACE,
-                cardStatus = booleanCard == Constants.OPEN_CARD)
+            ?.startReferenceFaceOrCard(
+                booleanFace == Constants.OPEN_FACE,
+                cardStatus = booleanCard == Constants.OPEN_CARD
+            )
             ?.setCameraPreview(binding.cameraP)
             ?.addObserverCameraChange(object : StateObserver {
                 override fun stateChange(type: EnumType, state: Boolean, content: String?) {
@@ -139,8 +135,7 @@ class OcrReferenceActivity : BaseKycActivity<ActivityOcrViewBinding>() {
         intent.putExtra(Constants.RE_STATUS, state)
         startActivity(intent)
         if (state) {
-            Intent().putExtra(Constants.OCR_DATA, content)
-            setResult(-1, intent)
+            setResult(-1, Intent().putExtra(Constants.OCR_DATA, content))
         }
         finished()
     }
@@ -156,7 +151,6 @@ class OcrReferenceActivity : BaseKycActivity<ActivityOcrViewBinding>() {
         intent.putExtra(Constants.COUNTRY_CODE, content?.countryCode)
         intent.putExtra(Constants.REFERENCE, reference)
         startActivityForResult(intent, REQUEST_CODE)
-//        finished()
     }
 
 
@@ -175,6 +169,7 @@ class OcrReferenceActivity : BaseKycActivity<ActivityOcrViewBinding>() {
     //确认照片
     fun getPhoto(view: View) {
         setResultUri()
+        Log.i(KYC_TAG,"momentLocal:$momentLocal")
         content?.idConfigForSdkROList?.let {
             binding.cameraP.uploadImg(it[momentLocal - 1].idType)
         } ?: showToast(getString(R.string.i_toast_idType))
@@ -203,7 +198,8 @@ class OcrReferenceActivity : BaseKycActivity<ActivityOcrViewBinding>() {
                 try {
                     val bitmap = BitmapFactory.decodeStream(
                         contentResolver
-                            .openInputStream(cropImageUri))
+                            .openInputStream(cropImageUri)
+                    )
                     cameraPreview?.updateBitmapView(bitmap)
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()
