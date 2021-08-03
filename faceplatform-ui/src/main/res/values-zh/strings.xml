@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">Baidu-IDL-FaceSDK</string>
-    <string name="detect_no_face">No face identified</string>
-    <string name="detect_face_in">Move the face into the frame</string>
-    <string name="detect_zoom_in">Please keep your face closer</string>
-    <string name="detect_zoom_out">Please keep your face farther</string>
+    <string name="detect_no_face">未检测到人脸</string>
+    <string name="detect_face_in">把脸移入框内</string>
+    <string name="detect_zoom_in">请将脸部靠近一点</string>
+    <string name="detect_zoom_out">请将脸部离远一点</string>
 <!--    <string name="detect_head_up">请略微抬头</string>-->
 <!--    <string name="detect_head_down">请略微低头</string>-->
 <!--    <string name="detect_head_left">请略微向左转头</string>-->
 <!--    <string name="detect_head_right">请略微向右转头</string>-->
-    <string name="detect_head">Please face the camera</string>
-    <string name="detect_occ_face">Your face is obstructed</string>
+    <string name="detect_head">请保持正脸</string>
+    <string name="detect_occ_face">脸部有遮挡</string>
 <!--    <string name="detect_occ_left_eye">左眼有遮挡</string>-->
 <!--    <string name="detect_occ_right_eye">右眼有遮挡</string>-->
 <!--    <string name="detect_occ_nose">鼻子有遮挡</string>-->
@@ -17,30 +17,30 @@
 <!--    <string name="detect_occ_left_check">左脸颊有遮挡</string>-->
 <!--    <string name="detect_occ_right_check">右脸颊有遮挡</string>-->
 <!--    <string name="detect_occ_chin">下巴有遮挡</string>-->
-    <string name="detect_low_light">Please make the ambient light brighter</string>
-    <string name="detect_keep">Please hold the phone steady and look directly at the screen</string>
-    <string name="detect_standard">Please face the camera</string>
-    <string name="detect_timeout">Time out. Please follow the instruction and try again</string>
-    <string name="detect_left_eye_close">Left eye is not open</string>
-    <string name="detect_right_eye_close">Right eye is not open</string>
-    <string name="liveness_eye">Please wink</string>
-    <string name="liveness_mouth">Open your mouth</string>
-    <string name="liveness_head_left">Turn your head slowly to the left</string>
-    <string name="liveness_head_right">Turn your head slowly to the right</string>
-    <string name="liveness_head_up">Look up slowly</string>
-    <string name="liveness_head_down">Head down slowly</string>
-    <string name="liveness_good">Very good</string>
+    <string name="detect_low_light">请使环境光线再亮些</string>
+    <string name="detect_keep">请握稳手机，视线正对屏幕</string>
+    <string name="detect_standard">请正对手机</string>
+    <string name="detect_timeout">检测超时，请按照提示重试</string>
+    <string name="detect_left_eye_close">左眼未睁开</string>
+    <string name="detect_right_eye_close">右眼未睁开</string>
+    <string name="liveness_eye">眨眨眼</string>
+    <string name="liveness_mouth">张张嘴</string>
+    <string name="liveness_head_left">向左缓慢转头</string>
+    <string name="liveness_head_right">向右缓慢转头</string>
+    <string name="liveness_head_up">缓慢抬头</string>
+    <string name="liveness_head_down">缓慢低头</string>
+    <string name="liveness_good">非常好</string>
 
     <!--home string-->
     <string name="home_greet_txt">欢迎使用</string>
     <string name="home_greet_sdk_txt">百度人脸采集SDK</string>
-    <string name="home_light_txt">Moderate light</string>
-    <string name="home_light_explain_txt">Please ensure that the light is not too dark or too bright</string>
-    <string name="home_handset_txt">Please face the camera</string>
-    <string name="home_handset_explain_txt">Keep your face inside the frame</string>
-    <string name="home_mask_txt">Avoid occlusion</string>
-    <string name="home_mask_explain_txt">Please keep your face unobstructed</string>
-    <string name="home_but_txt">Begin face recognition</string>
+    <string name="home_light_txt">识别光线适中</string>
+    <string name="home_light_explain_txt">请保证光线不要过暗或过亮</string>
+    <string name="home_handset_txt">请正对手机</string>
+    <string name="home_handset_explain_txt">保持您的脸出现在取景框内</string>
+    <string name="home_mask_txt">避免遮挡</string>
+    <string name="home_mask_explain_txt">请保持您的脸部清晰无遮挡</string>
+    <string name="home_but_txt">开始人脸采集</string>
 
     <!--home agreement string-->
     <string name="home_agreement_titlebar_txt">人脸采集协议</string>
@@ -72,13 +72,13 @@
     <string name="setting_quality_txt">质量控制</string>
     <string name="setting_live_detect_txt">活体检测</string>
     <string name="setting_actionlive_txt">活体动作顺序随机</string>
-    <string name="setting_actionlive_blink_txt">Please wink</string>
-    <string name="setting_actionlive_shake_head_txt">Shake your head</string>
-    <string name="setting_actionlive_turn_left_txt">Shaking your head to the left</string>
-    <string name="setting_actionlive_turn_right_txt">Shaking your head to the right</string>
-    <string name="setting_actionlive_nod_txt">Head down</string>
-    <string name="setting_actionlive_look_up_txt">Head up</string>
-    <string name="setting_actionlive_open_mouth_txt">Open your mouth</string>
+    <string name="setting_actionlive_blink_txt">眨眨眼</string>
+    <string name="setting_actionlive_shake_head_txt">左右摇头</string>
+    <string name="setting_actionlive_turn_left_txt">向左摇头</string>
+    <string name="setting_actionlive_turn_right_txt">向右摇头</string>
+    <string name="setting_actionlive_nod_txt">向下低头</string>
+    <string name="setting_actionlive_look_up_txt">向上抬头</string>
+    <string name="setting_actionlive_open_mouth_txt">张张嘴</string>
     <!--    <string name="collect_bottom_txt">— 百度大脑技术支持 —</string>-->
     <string name="collect_bottom_txt">— 杭州我汇网络科技有限公司 —</string>
 

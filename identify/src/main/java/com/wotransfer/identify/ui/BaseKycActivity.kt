@@ -1,6 +1,7 @@
 package com.wotransfer.identify.ui
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.WindowManager
 import androidx.viewbinding.ViewBinding
+import com.wotransfer.identify.reference.Config
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 
@@ -62,4 +64,8 @@ abstract class BaseKycActivity<T : ViewBinding> : Activity() {
     }
 
     abstract fun initView()
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(Config.getLocalConfig())
+    }
 }

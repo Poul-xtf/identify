@@ -17,9 +17,11 @@ import com.wotransfer.identify.net.bean.IdTypeListBean
 import com.wotransfer.identify.net.getListOfDocuments
 import com.wotransfer.identify.reference.CameraLaunch
 import com.wotransfer.identify.reference.CameraLaunch.LaunchType
+import com.wotransfer.identify.reference.Config
 import com.wotransfer.identify.util.showToast
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.*
 
 
 class MainActivity : Activity(), HttpCallBackListener {
@@ -126,7 +128,8 @@ class MainActivity : Activity(), HttpCallBackListener {
      * 自定义view
      */
     fun startAllView(view: View) {
-        startActivity(Intent(this, MyIdentifyReferenceActivity::class.java))
+//        startActivity(Intent(this, MyIdentifyReferenceActivity::class.java))
+        Config<Locale>().setConfig(this,Config.ConfigType.Locale, Locale.TRADITIONAL_CHINESE)
     }
 
     /**

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="i_tip_camera">未申请相机权限</string>
+    <string name="i_tip_file">未申请文件权限</string>
+    <!--code=1  licenseId或者licenseName不正确-->
+    <!--code=2  licenseId或者licenseName缺少-->
+    <!--code=3  证件为空-->
+    <!--code=4  reference不正确-->
+    <string name="i_tip_license_1">code=1(licenseId或者licenseName不正确)</string>
+    <string name="i_tip_license_2">code=2(licenseId或者licenseName缺少)</string>
+    <string name="i_tip_license_3">code=3(证件为空)</string>
+    <string name="i_tip_license_4">code=4(reference不正确)</string>
+
+    <string name="i_text_identify">身份认证</string>
+    <string name="i_text_identify_success">认证成功</string>
+    <string name="i_text_identify_failed">认证失败</string>
+    <string name="i_text_identify_finish">恭喜你，完成了身份认证</string>
+    <string name="i_text_identify_finish_failed">身份认证失败</string>
+    <string name="i_text_reference_country"><Data><![CDATA[<font color="#222222"><b>%1$s</b></font>已被定为你方文件的签发国]]></Data></string>
+    <string name="i_text_change_country">更改国家</string>
+    <string name="i_text_reference">身份认证</string>
+
+    <string name="i_button_back">返回</string>
+    <string name="i_button_know">我知道了</string>
+
+    <string name="i_card_front">扫描证件正面</string>
+    <string name="i_card_back">扫描证件反面</string>
+    <string name="i_card_tip">把您的文件置于边框内，进行拍摄</string>
+    <string name="i_card_way">第%1$s步，共%2$s步</string>
+
+    <string name="i_toast_card_failed">证件列表获取失败</string>
+    <string name="i_toast_request">请求异常</string>
+    <string name="i_toast_request_success">获取成功</string>
+    <string name="i_toast_card">证件为空</string>
+    <string name="i_toast_reference">reference为空</string>
+    <string name="i_toast_idType">idType为空</string>
+    <string name="i_toast_file">图片选择失败</string>
+    <string name="i_toast_card_reference">未开启证件认证</string>
+
+    <string name="close_photo">关闭拍照</string>
+    <string name="i_sure">确定</string>
+    <string name="i_cancel">取消</string>
+    <string name="i_title_country">选择您的文件签发国家</string>
+    <string name="international_area_code">选择您的文件签发国家</string>
+    <string name="i_face_error">初始化失败 = json配置文件解析出错</string>
+    <string name="i_preview_error">配置失败</string>
+
+</resources>

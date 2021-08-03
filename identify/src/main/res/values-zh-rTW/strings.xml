@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="i_tip_camera">未申請相機權限</string>
+    <string name="i_tip_file">未申請文件權限</string>
+    <!--code=1  licenseId或者licenseName不正确-->
+    <!--code=2  licenseId或者licenseName缺少-->
+    <!--code=3  证件为空-->
+    <!--code=4  reference不正确-->
+    <string name="i_tip_license_1">code=1</string>
+    <string name="i_tip_license_2">code=2</string>
+    <string name="i_tip_license_3">code=3</string>
+    <string name="i_tip_license_4">code=4</string>
+
+    <string name="i_text_identify">身份認證</string>
+    <string name="i_text_identify_success">認證成功</string>
+    <string name="i_text_identify_failed">認證失敗</string>
+    <string name="i_text_identify_finish">恭喜你，完成了身份認證</string>
+    <string name="i_text_identify_finish_failed">身份認證失敗</string>
+    <string name="i_text_reference_country"><Data><![CDATA[<font color="#222222"><b>%1$s</b></font>已被定為你方文件的簽發國]]></Data></string>
+    <string name="i_text_change_country">更改國家</string>
+    <string name="i_text_reference">身份認證</string>
+
+    <string name="i_button_back">返回</string>
+    <string name="i_button_know">我知道了</string>
+
+    <string name="i_card_front">掃描證件正面</string>
+    <string name="i_card_back">掃描證件反面</string>
+    <string name="i_card_tip">把您的檔案置於邊框內，進行拍攝</string>
+    <string name="i_card_way">第%1$s步，共%2$s步</string>
+
+    <string name="i_toast_card_failed">證件清單獲取失敗</string>
+    <string name="i_toast_request">請求異常</string>
+    <string name="i_toast_request_success">獲取成功</string>
+    <string name="i_toast_card">證件為空</string>
+    <string name="i_toast_reference">reference為空</string>
+    <string name="i_toast_idType">idType為空</string>
+    <string name="i_toast_file">圖片選擇失敗</string>
+    <string name="i_toast_card_reference">未開啟證件認證</string>
+
+    <string name="close_photo">關閉拍照</string>
+    <string name="i_sure">確定</string>
+    <string name="i_cancel">取消</string>
+    <string name="i_title_country">請選擇您的檔案簽發國</string>
+    <string name="international_area_code">請選擇您的檔案簽發國</string>
+    <string name="i_face_error">初始化失敗 = json配置文件解析出錯</string>
+    <string name="i_preview_error">配置失敗</string>
+
+</resources>

@@ -1,76 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="i_tip_camera">未申请相机权限</string>
-    <string name="i_tip_file">未申请文件权限</string>
-
+    <string name="i_tip_camera">Haven’t apply for camera permission</string>
+    <string name="i_tip_file">File permission not requested</string>
     <!--code=1  licenseId或者licenseName不正确-->
     <!--code=2  licenseId或者licenseName缺少-->
     <!--code=3  证件为空-->
     <!--code=4  reference不正确-->
-    <string name="i_tip_license_1">code=1(licenseId或者licenseName不正确)</string>
-    <string name="i_tip_license_2">code=2(licenseId或者licenseName缺少)</string>
-    <string name="i_tip_license_3">code=3(证件为空)</string>
-    <string name="i_tip_license_4">code=4(reference不正确)</string>
+    <string name="i_tip_license_1">code=1</string>
+    <string name="i_tip_license_2">code=2</string>
+    <string name="i_tip_license_3">code=3</string>
+    <string name="i_tip_license_4">code=4</string>
 
-    <string name="i_face_error">初始化失败 = json配置文件解析出错</string>
-    <string name="i_preview_error">配置失败</string>
-
-
-    <string name="i_text_simple">证件上传示例</string>
-    <string name="i_text_perfect">四角完整</string>
-    <string name="i_text_evenly">亮度均匀</string>
-    <string name="i_text_clear">照片清晰</string>
-
-    <string name="i_text_miss">缺边</string>
-    <string name="i_text_blurry">模糊</string>
-    <string name="i_text_flash">闪光</string>
-
-    <string name="i_text_identify">身份认证</string>
-    <string name="i_text_identify_success">认证成功</string>
-    <string name="i_text_identify_failed">认证失败</string>
-    <string name="i_text_identify_finish">恭喜你，完成了身份认证</string>
-    <string name="i_text_identify_finish_failed">身份认证失败</string>
+    <string name="i_text_identify">ID verification</string>
+    <string name="i_text_identify_success">Verification success</string>
+    <string name="i_text_identify_failed">Verification failed</string>
+    <string name="i_text_identify_finish">Congrats! You have completed verification.</string>
+    <string name="i_text_identify_finish_failed">Verification failed</string>
     <string name="i_text_reference_country"><Data><![CDATA[<font color="#222222"><b>%1$s</b></font>已被定为你方文件的签发国]]></Data></string>
-    <string name="i_text_change_country">更改国家</string>
+    <string name="i_text_change_country">Change beneficiary country</string>
+    <string name="i_text_reference">ID verification</string>
 
-    <string name="i_button_back">返回</string>
-    <string name="i_button_know">我知道了</string>
-    <string name="i_text_passport">护照</string>
-    <string name="i_text_driver">驾照</string>
-    <string name="i_text_identity">身份证</string>
-    <string name="i_text_visa">签证</string>
+    <string name="i_button_back">back</string>
+    <string name="i_button_know">I see</string>
 
-    <string name="i_button_passport_front">护照主页</string>
-    <string name="i_button_passport_back">护照副页</string>
+    <string name="i_card_front">Scan the front side of the document</string>
+    <string name="i_card_back">Scan the back side of the document</string>
+    <string name="i_card_tip">Keep your ID inside the frame and shoot</string>
+    <string name="i_card_way"> Step %1$s, a total of %2$s steps</string>
 
-    <string name="i_button_visa">签证扫描文件</string>
+    <string name="i_toast_card_failed">Retrieve ID list failed</string>
+    <string name="i_toast_request">Request exception</string>
+    <string name="i_toast_request_success">Acquired success</string>
+    <string name="i_toast_card">ID list is null</string>
+    <string name="i_toast_reference">reference is null</string>
+    <string name="i_toast_idType">idType is null</string>
+    <string name="i_toast_file">Picture selection failed</string>
+    <string name="i_toast_card_reference">Haven’t started ID verification</string>
 
-    <string name="i_button_identify_front">扫描身份证正面</string>
-    <string name="i_button_identify_back">扫描身份证反面</string>
-
-    <string name="i_button_car_front">扫描驾驶证首页</string>
-    <string name="i_button_car_back">拍摄驾驶证副页</string>
-
-    <string name="i_card_front">扫描证件正面</string>
-    <string name="i_card_back">扫描证件反面</string>
-    <string name="i_card_tip">把您的文件置于边框内，进行拍摄</string>
-
-    <string name="i_card_way">第%1$s步，共%2$s步</string>
-    <string name="i_title_country">选择您的文件签发国家</string>
-
-    <string name="i_txt_reference">身份认证</string>
-    <string name="international_area_code">选择您的文件签发国家</string>
-    <string name="i_sure">确定</string>
-    <string name="i_cancel">取消</string>
-    <string name="i_toast_card_failed">证件列表获取失败</string>
-    <string name="i_toast_request">请求异常</string>
-    <string name="i_toast_request_success">获取成功</string>
-    <string name="i_toast_card">证件为空</string>
-    <string name="i_toast_reference">reference为空</string>
-    <string name="i_toast_idType">idType为空</string>
-    <string name="i_toast_file">图片选择失败</string>
-    <string name="i_toast_card_reference">未开启证件认证</string>
-    <string name="close_photo">关闭拍照</string>
-
+    <string name="close_photo">End shooting</string>
+    <string name="i_sure">sure</string>
+    <string name="i_cancel">cancel</string>
+    <string name="i_title_country">Please select the ID issuer</string>
+    <string name="international_area_code">Please select the ID issuer</string>
+    <string name="i_face_error">Initialization failed = json configuration file parsing error</string>
+    <string name="i_preview_error">Configuration failed</string>
 
 </resources>

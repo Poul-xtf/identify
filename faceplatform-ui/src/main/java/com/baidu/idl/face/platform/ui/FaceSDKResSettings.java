@@ -48,27 +48,27 @@ public class FaceSDKResSettings {
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeImageBlured,
                 R.string.detect_keep);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeOcclusionLeftEye,
-                R.string.detect_occ_left_eye);
+                R.string.detect_occ_face);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeOcclusionRightEye,
-                R.string.detect_occ_right_eye);
+                R.string.detect_occ_face);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeOcclusionNose,
-                R.string.detect_occ_nose);
+                R.string.detect_occ_face);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeOcclusionMouth,
-                R.string.detect_occ_mouth);
+                R.string.detect_occ_face);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeOcclusionLeftContour,
-                R.string.detect_occ_left_check);
+                R.string.detect_occ_face);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeOcclusionRightContour,
-                R.string.detect_occ_right_check);
+                R.string.detect_occ_face);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeOcclusionChinContour,
-                R.string.detect_occ_chin);
+                R.string.detect_occ_face);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodePitchOutofUpRange,
-                R.string.detect_head_down);
+                R.string.detect_head);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodePitchOutofDownRange,
-                R.string.detect_head_up);
+                R.string.detect_head);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeYawOutofLeftRange,
-                R.string.detect_head_right);
+                R.string.detect_head);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeYawOutofRightRange,
-                R.string.detect_head_left);
+                R.string.detect_head);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeTooFar,
                 R.string.detect_zoom_in);
         FaceEnvironment.setTipsId(FaceStatusNewEnum.DetectRemindCodeTooClose,

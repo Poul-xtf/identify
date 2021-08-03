@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">Baidu-IDL-FaceSDK</string>
+    <string name="detect_no_face">未檢測到人臉</string>
+    <string name="detect_face_in">把臉移入框內</string>
+    <string name="detect_zoom_in">請將臉部靠近一點</string>
+<!--    <string name="detect_zoom_out">请将脸部离远一点</string>-->
+<!--    <string name="detect_head_up">请略微抬头</string>-->
+<!--    <string name="detect_head_down">请略微低头</string>-->
+<!--    <string name="detect_head_left">请略微向左转头</string>-->
+<!--    <string name="detect_head_right">请略微向右转头</string>-->
+    <string name="detect_head">請保持正臉</string>
+    <string name="detect_occ_face">臉部有遮擋</string>
+<!--    <string name="detect_occ_left_eye">左眼有遮挡</string>-->
+<!--    <string name="detect_occ_right_eye">右眼有遮挡</string>-->
+<!--    <string name="detect_occ_nose">鼻子有遮挡</string>-->
+<!--    <string name="detect_occ_mouth">嘴部有遮挡</string>-->
+<!--    <string name="detect_occ_left_check">左脸颊有遮挡</string>-->
+<!--    <string name="detect_occ_right_check">右脸颊有遮挡</string>-->
+<!--    <string name="detect_occ_chin">下巴有遮挡</string>-->
+    <string name="detect_low_light">請使環境光線再亮些</string>
+    <string name="detect_keep">請握穩手機，視線正對荧幕</string>
+    <string name="detect_standard">請正對手機</string>
+    <string name="detect_timeout">檢測超時，請按照提示重試</string>
+    <string name="detect_left_eye_close">左眼未睜開</string>
+    <string name="detect_right_eye_close">右眼未睜開</string>
+    <string name="liveness_eye">眨眨眼</string>
+    <string name="liveness_mouth">張張嘴</string>
+    <string name="liveness_head_left">向左緩慢轉頭</string>
+    <string name="liveness_head_right">向右緩慢轉頭</string>
+    <string name="liveness_head_up">緩慢抬頭</string>
+    <string name="liveness_head_down">緩慢低頭</string>
+    <string name="liveness_good">非常好</string>
+
+    <!--home string-->
+    <string name="home_greet_txt">歡迎使用</string>
+    <string name="home_greet_sdk_txt">百度人臉採集SDK</string>
+    <string name="home_light_txt">識別光線適中</string>
+    <string name="home_light_explain_txt">請保證光線不要過暗或過亮</string>
+    <string name="home_handset_txt">請正對手機</string>
+    <string name="home_handset_explain_txt">保持您的臉出現在取景框內</string>
+    <string name="home_mask_txt">避免遮擋</string>
+    <string name="home_mask_explain_txt">請保持您的臉部清晰無遮擋</string>
+    <string name="home_but_txt">開始人臉採集</string>
+
+    <!--home agreement string-->
+    <string name="home_agreement_titlebar_txt">人臉採集協議</string>
+    <string name="home_agreement_functional_txt">功能說明</string>
+    <string name="home_agreement_functional_explain_txt">
+        為保障用戶賬戶的安全，提供更好的服務，在提供部分產品及服務之前,
+        採用人臉核身驗證功能對用戶的身份進行認證，
+        用於驗證操作人是否為賬戶持有者本人，
+        通過人臉識別結果評估是否為用戶提供後續產品或服務。該功能會請求權威數據源進行身份信息確認。
+    </string>
+    <string name="home_agreement_functional_explain_old_txt">
+        該功能會請求權威數據源進行身份信息確認。
+    </string>
+    <string name="home_agreement_permission_txt">授權與許可</string>
+    <string name="home_agreement_permission_explain_txt">
+        如您點擊“確認”或以其他方式選擇接受本協議規則，則視為您在使用人臉識別服務時，
+        同意並授權、獲取、使用您在申請過程中所提供的個人信息。
+    </string>
+    <string name="home_agreement_rmation_security_txt">信息安全聲明</string>
+    <string name="home_agreement_rmation_security_explaoin_txt">
+        承諾對您的個人信息嚴格保密，並基於國家監管部門認可的加密算法進行數據加密傳輸，數據加密存儲，
+        承諾盡到信息安全保護義務。
+    </string>
+
+    <!--setting string-->
+    <string name="setting_titlebar_txt">設置</string>
+    <string name="setting_prompt_txt">提示: 正式使用時，開發者可將前端設置功能隱藏</string>
+    <string name="setting_announcements_txt">語音播報</string>
+    <string name="setting_quality_txt">質量控制</string>
+    <string name="setting_live_detect_txt">活體檢測</string>
+    <string name="setting_actionlive_txt">活體動作順序隨機</string>
+    <string name="setting_actionlive_blink_txt">眨眨眼</string>
+    <string name="setting_actionlive_shake_head_txt">左右搖頭</string>
+    <string name="setting_actionlive_turn_left_txt">向左搖頭</string>
+    <string name="setting_actionlive_turn_right_txt">向右搖頭</string>
+    <string name="setting_actionlive_nod_txt">向下低頭</string>
+    <string name="setting_actionlive_look_up_txt">向上抬頭</string>
+    <string name="setting_actionlive_open_mouth_txt">張張嘴</string>
+    <!--    <string name="collect_bottom_txt">— 百度大腦技術支持 —</string>-->
+    <string name="collect_bottom_txt">— 杭州我匯網絡科技有限公司 —</string>
+</resources>
